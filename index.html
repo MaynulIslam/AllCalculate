@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AllCalculate.com - Free online calculators for finance, health, math, and everyday life. Mortgage, BMI, compound interest, age, GPA calculators and more.">
+  <meta name="keywords" content="free calculator, online calculator, mortgage calculator, BMI calculator, compound interest, age calculator, GPA calculator">
+  <title>AllCalculate.com - Free Online Calculators for Finance, Health &amp; Math</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#finance">💰 Finance</a></li>
+        <li><a href="#health">❤️ Health</a></li>
+        <li><a href="#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper">
+    <div class="ad-slot ad-leaderboard">Advertisement · 728×90</div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Free Online <span>Calculators</span><br>for Every Need</h1>
+      <p>From mortgage payments to BMI, compound interest to due dates — get instant, accurate results with our professional-grade calculator tools.</p>
+      <div class="hero-search">
+        <input type="text" id="searchInput" placeholder="Search calculators..." autocomplete="off">
+        <button onclick="searchCalcs()">Search</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-number">19+</div>
+          <div class="hero-stat-label">Calculators</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">100%</div>
+          <div class="hero-stat-label">Free Forever</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">Fast</div>
+          <div class="hero-stat-label">Instant Results</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- ===== FINANCE SECTION ===== -->
+    <section class="section" id="finance">
+      <div class="section-header">
+        <div class="section-icon finance">💰</div>
+        <div>
+          <div class="section-title">Finance Calculators</div>
+          <div class="section-subtitle">Mortgages, loans, investments, taxes, and more</div>
+        </div>
+      </div>
+      <div class="calc-grid">
+
+        <a href="mortgage.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe)">🏠</div>
+          <div class="calc-card-title">Mortgage Calculator</div>
+          <div class="calc-card-desc">Calculate monthly payments, total interest, and view full amortization schedule.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="loan-emi.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0)">💳</div>
+          <div class="calc-card-title">Loan / EMI Calculator</div>
+          <div class="calc-card-desc">Find your monthly EMI for any loan amount, rate, and tenure.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="compound-interest.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a)">📈</div>
+          <div class="calc-card-title">Compound Interest Calculator</div>
+          <div class="calc-card-desc">See how your money grows with the power of compound interest.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="salary-hourly.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #f3e8ff, #e9d5ff)">💵</div>
+          <div class="calc-card-title">Salary to Hourly Converter</div>
+          <div class="calc-card-desc">Convert annual salary to hourly rate and all pay period amounts.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="tax.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #fee2e2, #fecaca)">🧾</div>
+          <div class="calc-card-title">Tax Calculator</div>
+          <div class="calc-card-desc">Estimate your federal and state income tax based on 2024 brackets.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="retirement.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd)">🏦</div>
+          <div class="calc-card-title">Retirement Calculator</div>
+          <div class="calc-card-desc">Project your retirement savings and see if you're on track.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="tip.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #dcfce7, #a7f3d0)">🍽️</div>
+          <div class="calc-card-title">Tip Calculator</div>
+          <div class="calc-card-desc">Calculate tip amount, total bill, and split the check among friends.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper">
+      <div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div>
+    </div>
+
+    <!-- ===== HEALTH SECTION ===== -->
+    <section class="section" id="health">
+      <div class="section-header">
+        <div class="section-icon health">❤️</div>
+        <div>
+          <div class="section-title">Health Calculators</div>
+          <div class="section-subtitle">BMI, calories, pregnancy, body composition, and more</div>
+        </div>
+      </div>
+      <div class="calc-grid">
+
+        <a href="bmi.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #fee2e2, #fecaca)">⚖️</div>
+          <div class="calc-card-title">BMI Calculator</div>
+          <div class="calc-card-desc">Calculate your Body Mass Index and find your healthy weight range.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="calorie.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a)">🔥</div>
+          <div class="calc-card-title">Calorie Calculator</div>
+          <div class="calc-card-desc">Calculate daily calorie needs using Mifflin-St Jeor for weight goals.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="pregnancy.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #fce7f3, #fbcfe8)">🤰</div>
+          <div class="calc-card-title">Pregnancy / Due Date Calculator</div>
+          <div class="calc-card-desc">Calculate your due date, current week, and pregnancy milestones.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="body-fat.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd)">💪</div>
+          <div class="calc-card-title">Body Fat Calculator</div>
+          <div class="calc-card-desc">Estimate body fat percentage using the US Navy method.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ===== DATE & TIME SECTION ===== -->
+    <section class="section" id="datetime">
+      <div class="section-header">
+        <div class="section-icon datetime">📅</div>
+        <div>
+          <div class="section-title">Date &amp; Time Calculators</div>
+          <div class="section-subtitle">Age, date differences, time zones, and more</div>
+        </div>
+      </div>
+      <div class="calc-grid">
+
+        <a href="age.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe)">🎂</div>
+          <div class="calc-card-title">Age Calculator</div>
+          <div class="calc-card-desc">Calculate exact age in years, months, days — and your next birthday.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="days-between.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe)">📅</div>
+          <div class="calc-card-title">Days Between Dates Calculator</div>
+          <div class="calc-card-desc">Count exact days, weeks, and months between any two dates.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="timezone.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0)">🌍</div>
+          <div class="calc-card-title">Time Zone Converter</div>
+          <div class="calc-card-desc">Convert times between world time zones instantly.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ===== MATH & EVERYDAY SECTION ===== -->
+    <section class="section" id="math">
+      <div class="section-header">
+        <div class="section-icon math">📐</div>
+        <div>
+          <div class="section-title">Math &amp; Everyday Calculators</div>
+          <div class="section-subtitle">Percentages, science, GPA, unit conversion, and more</div>
+        </div>
+      </div>
+      <div class="calc-grid">
+
+        <a href="percentage.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a)">%</div>
+          <div class="calc-card-title">Percentage Calculator</div>
+          <div class="calc-card-desc">Solve any percentage problem: find %, increase/decrease, and more.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="scientific.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe)">🔬</div>
+          <div class="calc-card-title">Scientific Calculator</div>
+          <div class="calc-card-desc">Full scientific calculator with trig, logarithms, powers, and more.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="gpa.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0)">🎓</div>
+          <div class="calc-card-title">GPA Calculator</div>
+          <div class="calc-card-desc">Calculate your GPA by entering course grades and credit hours.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="unit-converter.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #f3e8ff, #e9d5ff)">📏</div>
+          <div class="calc-card-title">Unit Converter</div>
+          <div class="calc-card-desc">Convert length, weight, temperature, volume, speed, and more.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+        <a href="square-footage.html" class="calc-card">
+          <div class="calc-card-icon" style="background: linear-gradient(135deg, #fee2e2, #fecaca)">📐</div>
+          <div class="calc-card-title">Square Footage Calculator</div>
+          <div class="calc-card-desc">Calculate room area for flooring, painting, and renovation projects.</div>
+          <div class="calc-card-arrow">→</div>
+        </a>
+
+      </div>
+    </section>
+
+  </div><!-- /.main-content -->
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav toggle
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Search functionality
+    const calcData = [
+      { name: 'Mortgage Calculator', url: 'mortgage.html', keywords: 'mortgage payment house loan' },
+      { name: 'Loan / EMI Calculator', url: 'loan-emi.html', keywords: 'loan emi monthly payment' },
+      { name: 'Compound Interest Calculator', url: 'compound-interest.html', keywords: 'compound interest savings investment' },
+      { name: 'Salary to Hourly Converter', url: 'salary-hourly.html', keywords: 'salary hourly wage pay' },
+      { name: 'Tax Calculator', url: 'tax.html', keywords: 'tax federal income bracket' },
+      { name: 'Retirement Calculator', url: 'retirement.html', keywords: 'retirement savings 401k' },
+      { name: 'Tip Calculator', url: 'tip.html', keywords: 'tip restaurant gratuity split' },
+      { name: 'BMI Calculator', url: 'bmi.html', keywords: 'bmi body mass index weight' },
+      { name: 'Calorie Calculator', url: 'calorie.html', keywords: 'calories daily intake bmr' },
+      { name: 'Pregnancy Calculator', url: 'pregnancy.html', keywords: 'pregnancy due date weeks' },
+      { name: 'Body Fat Calculator', url: 'body-fat.html', keywords: 'body fat percentage navy' },
+      { name: 'Age Calculator', url: 'age.html', keywords: 'age birthday years old' },
+      { name: 'Days Between Dates', url: 'days-between.html', keywords: 'days between dates weeks' },
+      { name: 'Time Zone Converter', url: 'timezone.html', keywords: 'timezone convert world clock' },
+      { name: 'Percentage Calculator', url: 'percentage.html', keywords: 'percentage percent increase decrease' },
+      { name: 'Scientific Calculator', url: 'scientific.html', keywords: 'scientific math sin cos log' },
+      { name: 'GPA Calculator', url: 'gpa.html', keywords: 'gpa grade point average college' },
+      { name: 'Unit Converter', url: 'unit-converter.html', keywords: 'unit convert length weight temperature' },
+      { name: 'Square Footage Calculator', url: 'square-footage.html', keywords: 'square footage area room floor' }
+    ];
+
+    function searchCalcs() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!q) return;
+      const match = calcData.find(c => c.name.toLowerCase().includes(q) || c.keywords.includes(q));
+      if (match) {
+        window.location.href = match.url;
+      } else {
+        alert('No calculator found for "' + q + '". Try keywords like "mortgage", "BMI", or "tip".');
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') searchCalcs();
+    });
+  </script>
+
+</body>
+</html>

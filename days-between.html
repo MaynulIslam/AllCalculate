@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate the exact number of days, weeks, and months between two dates. Count business days, weekends, and more.">
+  <title>Days Between Dates Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .date-swap-row { display:flex; align-items:flex-end; gap:12px; }
+    .date-swap-row .form-group { flex:1; margin-bottom:0; }
+    .swap-btn { flex-shrink:0; width:44px; height:44px; border-radius:10px; border:2px solid #e2e8f0; background:white; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; margin-bottom:0; color:#475569; }
+    .swap-btn:hover { background:#f1f5f9; border-color:#cbd5e1; }
+    .date-range-summary { background:#f0f9ff; border:1px solid #bae6fd; border-radius:12px; padding:14px 18px; margin-top:16px; font-size:0.9rem; color:#0369a1; font-weight:500; text-align:center; line-height:1.5; }
+    .timeline-bar { position:relative; height:12px; border-radius:6px; background:#e2e8f0; margin:20px 0 8px; overflow:hidden; }
+    .timeline-fill { position:absolute; left:0; top:0; height:100%; border-radius:6px; background:linear-gradient(90deg, #6366f1, #8b5cf6); transition:width .4s; }
+    .weekday-badges { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .weekday-badge { padding:4px 12px; border-radius:99px; font-size:0.8rem; font-weight:600; background:#f1f5f9; color:#475569; }
+    .weekday-badge.start { background:#dbeafe; color:#1d4ed8; }
+    .weekday-badge.end { background:#dcfce7; color:#15803d; }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#datetime">Date &amp; Time</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Days Between Dates</span>
+  </div>
+  <h1>Days Between Dates Calculator</h1>
+  <p>Count exact days, weeks, months, and business days between any two dates.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <!-- Date inputs with swap -->
+        <div class="date-swap-row" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label" for="startDate">Start Date</label>
+            <input class="form-input" type="date" id="startDate">
+          </div>
+          <button class="swap-btn" onclick="swapDates()" title="Swap dates">⇄</button>
+          <div class="form-group">
+            <label class="form-label" for="endDate">End Date</label>
+            <input class="form-input" type="date" id="endDate">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:0.9rem;font-weight:500;color:#475569;">
+            <input type="checkbox" id="excludeWeekends" style="width:18px;height:18px;cursor:pointer;">
+            Exclude weekends from business day count
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="holidayCountry">Holiday Calendar</label>
+          <select class="form-select" id="holidayCountry">
+            <option value="none">None (no holidays excluded)</option>
+            <option value="us">United States</option>
+            <option value="intl">International</option>
+          </select>
+          <p style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Holiday exclusion coming soon. Currently counts all weekdays as business days.</p>
+        </div>
+
+        <div class="form-row">
+          <button class="btn-calculate" onclick="calcDaysBetween()">Calculate</button>
+          <button class="btn-reset" onclick="resetDays()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div id="daysResults" class="hidden">
+          <div class="divider"></div>
+
+          <div class="date-range-summary" id="dateRangeSummary"></div>
+
+          <div class="results-box" style="margin-top:16px;">
+            <div class="results-title">Date Difference</div>
+            <div class="result-primary">
+              <div class="result-primary-label">Total Calendar Days</div>
+              <div class="result-primary-value" id="resTotalDays">—</div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="result-item-label">Calendar Weeks</div>
+                <div class="result-item-value" id="resCalWeeks">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Business Days (Mon–Fri)</div>
+                <div class="result-item-value" id="resBizDays">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Weekend Days</div>
+                <div class="result-item-value" id="resWeekends">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Months (approx.)</div>
+                <div class="result-item-value" id="resMonths">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Years (approx.)</div>
+                <div class="result-item-value" id="resYears">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Total Hours</div>
+                <div class="result-item-value" id="resHours">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Total Minutes</div>
+                <div class="result-item-value" id="resMinutes">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Total Seconds</div>
+                <div class="result-item-value" id="resSeconds">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekday badges -->
+          <div style="margin-top:18px;">
+            <p style="font-size:0.85rem;font-weight:600;color:#475569;margin-bottom:8px;">Day of week</p>
+            <div class="weekday-badges">
+              <div class="weekday-badge start" id="startDayBadge">—</div>
+              <div class="weekday-badge" style="background:#f1f5f9;color:#94a3b8;">to</div>
+              <div class="weekday-badge end" id="endDayBadge">—</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>Understanding Date Calculations</h2>
+      <p>Whether you're planning a project deadline, calculating loan terms, or counting down to an event, knowing the exact number of days between two dates is essential.</p>
+
+      <div class="formula-box">
+        <strong>Total Days:</strong> (End Date − Start Date) ÷ 86,400,000 ms<br>
+        <strong>Business Days:</strong> Count weekdays (Mon–Fri) in the range<br>
+        <strong>Weeks:</strong> Math.floor(totalDays / 7)<br>
+        <strong>Months (approx.):</strong> totalDays / 30.4375
+      </div>
+
+      <h3>What Are Business Days?</h3>
+      <p>Business days (also called working days) are Monday through Friday, excluding weekends. They are commonly used for calculating deadlines, processing times, shipping estimates, and financial settlements. Some calculations also exclude public holidays.</p>
+
+      <h3>Common Use Cases</h3>
+      <ul>
+        <li><strong>Project Deadlines:</strong> Count working days remaining until a deliverable is due.</li>
+        <li><strong>Loan Terms:</strong> Calculate the exact number of days interest accrues over a loan period.</li>
+        <li><strong>Event Countdowns:</strong> How many days until your wedding, vacation, or graduation.</li>
+        <li><strong>Contract Periods:</strong> Verify service agreements and subscription durations.</li>
+        <li><strong>Legal Deadlines:</strong> Courts and legal documents often specify exact calendar or business day requirements.</li>
+      </ul>
+
+      <h3>Date Range Tips</h3>
+      <p>When counting days inclusively (counting both the start and end date), add 1 to the result. By default, this calculator counts exclusively (start date to end date, not including the end date) — the standard convention for most practical purposes.</p>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget">
+      <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="age.html">Age Calculator</a></li>
+        <li><a href="timezone.html">Time Zone Converter</a></li>
+        <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+        <li><a href="retirement.html">Retirement Calculator</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // Set default end date to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  document.getElementById('endDate').value = todayStr;
+
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function swapDates() {
+    const s = document.getElementById('startDate').value;
+    const e = document.getElementById('endDate').value;
+    document.getElementById('startDate').value = e;
+    document.getElementById('endDate').value = s;
+    if (s || e) calcDaysBetween();
+  }
+
+  function formatLongDate(d) {
+    return `${DAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  }
+
+  function countBusinessDays(start, end) {
+    let count = 0;
+    const cur = new Date(start);
+    while (cur < end) {
+      const dow = cur.getDay();
+      if (dow !== 0 && dow !== 6) count++;
+      cur.setDate(cur.getDate() + 1);
+    }
+    return count;
+  }
+
+  function calcDaysBetween() {
+    const startVal = document.getElementById('startDate').value;
+    const endVal = document.getElementById('endDate').value;
+    if (!startVal || !endVal) { alert('Please select both a start and end date.'); return; }
+
+    let startDate = new Date(startVal + 'T00:00:00');
+    let endDate = new Date(endVal + 'T00:00:00');
+
+    // Ensure start <= end (use absolute value approach)
+    let swapped = false;
+    if (startDate > endDate) {
+      [startDate, endDate] = [endDate, startDate];
+      swapped = true;
+    }
+
+    const totalDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const calWeeks = Math.floor(totalDays / 7);
+    const bizDays = countBusinessDays(startDate, endDate);
+    const weekendDays = totalDays - bizDays;
+    const months = (totalDays / 30.4375).toFixed(1);
+    const years = (totalDays / 365.25).toFixed(2);
+    const hours = (totalDays * 24).toLocaleString();
+    const minutes = (totalDays * 1440).toLocaleString();
+    const seconds = (totalDays * 86400).toLocaleString();
+
+    const startDow = DAYS[startDate.getDay()];
+    const endDow = DAYS[endDate.getDay()];
+
+    // Date range summary
+    const summaryText = `From ${formatLongDate(startDate)} to ${formatLongDate(endDate)}`;
+    document.getElementById('dateRangeSummary').textContent = summaryText;
+
+    document.getElementById('resTotalDays').textContent = totalDays.toLocaleString() + (totalDays === 1 ? ' day' : ' days');
+    document.getElementById('resCalWeeks').textContent = calWeeks.toLocaleString() + (totalDays % 7 > 0 ? ` weeks, ${totalDays % 7} days` : ' weeks');
+    document.getElementById('resBizDays').textContent = bizDays.toLocaleString();
+    document.getElementById('resWeekends').textContent = weekendDays.toLocaleString();
+    document.getElementById('resMonths').textContent = months;
+    document.getElementById('resYears').textContent = years;
+    document.getElementById('resHours').textContent = hours;
+    document.getElementById('resMinutes').textContent = minutes;
+    document.getElementById('resSeconds').textContent = seconds;
+
+    document.getElementById('startDayBadge').textContent = `Start: ${startDow}`;
+    document.getElementById('endDayBadge').textContent = `End: ${endDow}`;
+
+    document.getElementById('daysResults').classList.remove('hidden');
+  }
+
+  function resetDays() {
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = todayStr;
+    document.getElementById('excludeWeekends').checked = false;
+    document.getElementById('holidayCountry').value = 'none';
+    document.getElementById('daysResults').classList.add('hidden');
+  }
+</script>
+</body>
+</html>

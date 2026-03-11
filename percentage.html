@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free percentage calculator — find what percent of a number is, calculate percentage change, and solve any percentage problem.">
+  <title>Percentage Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <a href="index.html#math">Math &amp; Everyday</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Percentage Calculator</span>
+    </div>
+    <h1>Percentage Calculator</h1>
+    <p>Solve any percentage problem — find %, calculate change, discounts, and more.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+          <!-- Tabs -->
+          <div class="tabs" style="margin-bottom:24px">
+            <button class="tab-btn active" onclick="switchTab(0, this)">X% of Y</button>
+            <button class="tab-btn" onclick="switchTab(1, this)">X is what % of Y?</button>
+            <button class="tab-btn" onclick="switchTab(2, this)">% Change</button>
+            <button class="tab-btn" onclick="switchTab(3, this)">Increase / Decrease</button>
+          </div>
+
+          <!-- Tab 1: What is X% of Y? -->
+          <div class="tab-panel" id="tab-0">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">What is X% of Y?</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Percentage (X)</label>
+                <div class="input-group">
+                  <input id="pct1X" class="form-input has-suffix" type="number" placeholder="15" oninput="calcTab1()">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Of Number (Y)</label>
+                <input id="pct1Y" class="form-input" type="number" placeholder="200" oninput="calcTab1()">
+              </div>
+            </div>
+            <div id="result1" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:8px">
+              <div style="font-size:1.6rem;font-weight:800;color:#f97316" id="result1Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result1Grid"></div>
+            </div>
+          </div>
+
+          <!-- Tab 2: X is what % of Y? -->
+          <div class="tab-panel hidden" id="tab-1">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">X is what % of Y?</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Value (X)</label>
+                <input id="pct2X" class="form-input" type="number" placeholder="30" oninput="calcTab2()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Total (Y)</label>
+                <input id="pct2Y" class="form-input" type="number" placeholder="200" oninput="calcTab2()">
+              </div>
+            </div>
+            <div style="text-align:center;font-size:0.9rem;color:#64748b;margin-bottom:8px">X is <strong>what percent</strong> of Y?</div>
+            <div id="result2" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:8px">
+              <div style="font-size:1.6rem;font-weight:800;color:#f97316" id="result2Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result2Grid"></div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Percentage Change -->
+          <div class="tab-panel hidden" id="tab-2">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Percentage Change</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">From Value</label>
+                <input id="pct3From" class="form-input" type="number" placeholder="50" oninput="calcTab3()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">To Value</label>
+                <input id="pct3To" class="form-input" type="number" placeholder="75" oninput="calcTab3()">
+              </div>
+            </div>
+            <div id="result3" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:8px">
+              <div style="font-size:1.6rem;font-weight:800;color:#f97316" id="result3Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result3Grid"></div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Increase/Decrease by % -->
+          <div class="tab-panel hidden" id="tab-3">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Increase / Decrease by Percentage</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Starting Value</label>
+                <input id="pct4Val" class="form-input" type="number" placeholder="100" oninput="calcTab4()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Percentage</label>
+                <div class="input-group">
+                  <input id="pct4Pct" class="form-input has-suffix" type="number" placeholder="20" oninput="calcTab4()">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:16px">
+              <button id="toggleIncrease" class="tab-btn active" onclick="setToggle('increase')" style="font-size:0.85rem;padding:8px 20px">Increase</button>
+              <button id="toggleDecrease" class="tab-btn" onclick="setToggle('decrease')" style="font-size:0.85rem;padding:8px 20px">Decrease</button>
+            </div>
+            <div id="result4" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:8px">
+              <div style="font-size:1.6rem;font-weight:800;color:#f97316" id="result4Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result4Grid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>What is a Percentage?</h2>
+        <p>A percentage is a number or ratio expressed as a fraction of 100. The word "percent" comes from the Latin <em>per centum</em>, meaning "by the hundred." Percentages are used everywhere — from calculating discounts and tax to understanding statistics and grades.</p>
+
+        <h3>Common Percentage Formulas</h3>
+        <div class="formula-box">
+          <strong>What is X% of Y?</strong><br>
+          Result = (X / 100) × Y<br><br>
+          <strong>X is what % of Y?</strong><br>
+          Percentage = (X / Y) × 100<br><br>
+          <strong>Percentage Change</strong><br>
+          Change % = ((New − Old) / |Old|) × 100<br><br>
+          <strong>Increase by %</strong><br>
+          New Value = Original × (1 + %/100)<br><br>
+          <strong>Decrease by %</strong><br>
+          New Value = Original × (1 − %/100)
+        </div>
+
+        <h3>Real-World Examples</h3>
+        <ul>
+          <li><strong>Discounts:</strong> A $80 jacket is 25% off → 25% of 80 = $20 saved → you pay $60</li>
+          <li><strong>Sales Tax:</strong> A $50 item with 8% tax → 8% of 50 = $4 → total $54</li>
+          <li><strong>Tip Calculation:</strong> 20% tip on a $65 bill → 20% of 65 = $13 tip</li>
+          <li><strong>Grade Score:</strong> You got 42 out of 50 → 42 is 84% of 50</li>
+          <li><strong>Pay Raise:</strong> Salary of $50,000 with a 5% raise → new salary is $52,500</li>
+          <li><strong>Stock Change:</strong> Stock went from $120 to $150 → that's a 25% increase</li>
+        </ul>
+
+        <h3>How to Quickly Estimate Percentages in Your Head</h3>
+        <ul>
+          <li><strong>10%:</strong> Move the decimal point one place left (10% of 250 = 25)</li>
+          <li><strong>5%:</strong> Half of 10% (5% of 250 = 12.5)</li>
+          <li><strong>20%:</strong> Double 10% (20% of 250 = 50)</li>
+          <li><strong>25%:</strong> Divide by 4 (25% of 200 = 50)</li>
+          <li><strong>50%:</strong> Divide by 2 (50% of 180 = 90)</li>
+          <li><strong>1%:</strong> Move the decimal two places left (1% of 3,500 = 35)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="tip.html">💡 Tip Calculator</a></li>
+          <li><a href="tax.html">🧾 Tax Calculator</a></li>
+          <li><a href="salary-hourly.html">💼 Salary to Hourly</a></li>
+          <li><a href="gpa.html">🎓 GPA Calculator</a></li>
+          <li><a href="compound-interest.html">📈 Compound Interest</a></li>
+          <li><a href="discount.html">🏷️ Discount Calculator</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-widget" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px">
+        <div class="sidebar-widget-title" style="color:#16a34a">Quick Reference</div>
+        <table style="width:100%;font-size:0.85rem;border-collapse:collapse">
+          <thead><tr style="border-bottom:1px solid #bbf7d0"><th style="text-align:left;padding:4px 6px;color:#166534">%</th><th style="text-align:left;padding:4px 6px;color:#166534">Fraction</th><th style="text-align:left;padding:4px 6px;color:#166534">Decimal</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:4px 6px">10%</td><td style="padding:4px 6px">1/10</td><td style="padding:4px 6px">0.10</td></tr>
+            <tr style="background:#f0fdf4"><td style="padding:4px 6px">25%</td><td style="padding:4px 6px">1/4</td><td style="padding:4px 6px">0.25</td></tr>
+            <tr><td style="padding:4px 6px">33.3%</td><td style="padding:4px 6px">1/3</td><td style="padding:4px 6px">0.333</td></tr>
+            <tr style="background:#f0fdf4"><td style="padding:4px 6px">50%</td><td style="padding:4px 6px">1/2</td><td style="padding:4px 6px">0.50</td></tr>
+            <tr><td style="padding:4px 6px">75%</td><td style="padding:4px 6px">3/4</td><td style="padding:4px 6px">0.75</td></tr>
+            <tr style="background:#f0fdf4"><td style="padding:4px 6px">100%</td><td style="padding:4px 6px">1/1</td><td style="padding:4px 6px">1.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    let pct4Mode = 'increase';
+
+    function switchTab(index, btn) {
+      document.querySelectorAll('.tab-panel').forEach((p, i) => {
+        p.classList.toggle('hidden', i !== index);
+      });
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function setToggle(mode) {
+      pct4Mode = mode;
+      document.getElementById('toggleIncrease').classList.toggle('active', mode === 'increase');
+      document.getElementById('toggleDecrease').classList.toggle('active', mode === 'decrease');
+      calcTab4();
+    }
+
+    function fmtNum(n) {
+      if (!isFinite(n)) return 'N/A';
+      // Round to 6 significant digits, trim trailing zeros
+      let s = parseFloat(n.toPrecision(10)).toString();
+      if (Math.abs(n) >= 1000) return n.toLocaleString('en-US', {maximumFractionDigits: 4});
+      return parseFloat(n.toFixed(8)).toString();
+    }
+
+    function makeResultItem(label, value) {
+      return `<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px">
+        <div style="font-size:0.75rem;color:#64748b;margin-bottom:2px">${label}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1e293b">${value}</div>
+      </div>`;
+    }
+
+    function calcTab1() {
+      const x = parseFloat(document.getElementById('pct1X').value);
+      const y = parseFloat(document.getElementById('pct1Y').value);
+      const box = document.getElementById('result1');
+      if (isNaN(x) || isNaN(y)) { box.classList.add('hidden'); return; }
+      const result = (x / 100) * y;
+      box.classList.remove('hidden');
+      document.getElementById('result1Primary').innerHTML = `${fmtNum(x)}% of ${fmtNum(y)} = <span style="color:#f97316">${fmtNum(result)}</span>`;
+      document.getElementById('result1Grid').innerHTML =
+        makeResultItem('Result', fmtNum(result)) +
+        makeResultItem('As a Fraction', `${fmtNum(result)} / ${fmtNum(y)}`) +
+        makeResultItem('Remaining (100% − X%)', fmtNum(y - result)) +
+        makeResultItem('Remaining %', fmtNum(100 - x) + '%');
+    }
+
+    function calcTab2() {
+      const x = parseFloat(document.getElementById('pct2X').value);
+      const y = parseFloat(document.getElementById('pct2Y').value);
+      const box = document.getElementById('result2');
+      if (isNaN(x) || isNaN(y) || y === 0) { box.classList.add('hidden'); return; }
+      const pct = (x / y) * 100;
+      box.classList.remove('hidden');
+      document.getElementById('result2Primary').innerHTML = `${fmtNum(x)} is <span style="color:#f97316">${fmtNum(pct)}%</span> of ${fmtNum(y)}`;
+      document.getElementById('result2Grid').innerHTML =
+        makeResultItem('Percentage', fmtNum(pct) + '%') +
+        makeResultItem('Decimal', fmtNum(x / y)) +
+        makeResultItem('Remainder', fmtNum(y - x)) +
+        makeResultItem('Remainder %', fmtNum(100 - pct) + '%');
+    }
+
+    function calcTab3() {
+      const from = parseFloat(document.getElementById('pct3From').value);
+      const to = parseFloat(document.getElementById('pct3To').value);
+      const box = document.getElementById('result3');
+      if (isNaN(from) || isNaN(to) || from === 0) { box.classList.add('hidden'); return; }
+      const change = to - from;
+      const pct = (change / Math.abs(from)) * 100;
+      const direction = change >= 0 ? 'increase' : 'decrease';
+      const color = change >= 0 ? '#16a34a' : '#dc2626';
+      box.classList.remove('hidden');
+      document.getElementById('result3Primary').innerHTML =
+        `From ${fmtNum(from)} to ${fmtNum(to)} is a <span style="color:${color}">${fmtNum(Math.abs(pct))}% ${direction}</span>`;
+      document.getElementById('result3Grid').innerHTML =
+        makeResultItem('Percentage Change', (change >= 0 ? '+' : '') + fmtNum(pct) + '%') +
+        makeResultItem('Amount of Change', (change >= 0 ? '+' : '') + fmtNum(change)) +
+        makeResultItem('Original Value', fmtNum(from)) +
+        makeResultItem('New Value', fmtNum(to));
+    }
+
+    function calcTab4() {
+      const val = parseFloat(document.getElementById('pct4Val').value);
+      const pct = parseFloat(document.getElementById('pct4Pct').value);
+      const box = document.getElementById('result4');
+      if (isNaN(val) || isNaN(pct)) { box.classList.add('hidden'); return; }
+      let newVal, amtChange, reverseLabel, reversePct;
+      if (pct4Mode === 'increase') {
+        amtChange = val * (pct / 100);
+        newVal = val + amtChange;
+        reverseLabel = '% decrease to return';
+        reversePct = (amtChange / newVal) * 100;
+      } else {
+        amtChange = val * (pct / 100);
+        newVal = val - amtChange;
+        reverseLabel = '% increase to return';
+        reversePct = newVal !== 0 ? (amtChange / newVal) * 100 : 0;
+      }
+      box.classList.remove('hidden');
+      document.getElementById('result4Primary').innerHTML =
+        `${fmtNum(val)} ${pct4Mode}d by ${fmtNum(pct)}% = <span style="color:#f97316">${fmtNum(newVal)}</span>`;
+      document.getElementById('result4Grid').innerHTML =
+        makeResultItem('Result', fmtNum(newVal)) +
+        makeResultItem('Amount of Change', (pct4Mode === 'increase' ? '+' : '-') + fmtNum(Math.abs(amtChange))) +
+        makeResultItem('Original Value', fmtNum(val)) +
+        makeResultItem(reverseLabel, fmtNum(reversePct) + '%');
+    }
+  </script>
+</body>
+</html>

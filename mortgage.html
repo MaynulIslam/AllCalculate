@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your monthly mortgage payment, total interest paid, and view a full amortization schedule. Free mortgage calculator with 2024 rates.">
+  <meta name="keywords" content="mortgage calculator, monthly payment, amortization schedule, home loan, interest rate, down payment">
+  <title>Mortgage Calculator - Monthly Payment &amp; Amortization | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper">
+    <div class="ad-slot ad-leaderboard">Advertisement · 728×90</div>
+  </div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html#finance">Finance</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Mortgage Calculator</span>
+    </div>
+    <h1>Mortgage Calculator</h1>
+    <p>Calculate monthly payments, total interest, and get a full payment-by-payment amortization schedule.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+
+          <div class="form-group">
+            <label class="form-label" for="homePrice">Home Price</label>
+            <div class="input-group">
+              <span class="input-prefix">$</span>
+              <input class="form-input has-prefix" type="number" id="homePrice" placeholder="350,000" min="0" step="1000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Down Payment</label>
+            <div class="form-row">
+              <div class="input-group">
+                <span class="input-prefix">$</span>
+                <input class="form-input has-prefix" type="number" id="downPaymentDollar" placeholder="70,000" min="0" step="1000">
+              </div>
+              <div class="input-group">
+                <input class="form-input has-suffix" type="number" id="downPaymentPct" placeholder="20" min="0" max="100" step="0.1">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loanTerm">Loan Term</label>
+            <select class="form-select" id="loanTerm">
+              <option value="30" selected>30 Years</option>
+              <option value="25">25 Years</option>
+              <option value="20">20 Years</option>
+              <option value="15">15 Years</option>
+              <option value="10">10 Years</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="interestRate">Annual Interest Rate</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="interestRate" placeholder="6.5" min="0" max="30" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="startDate">Start Date <span style="color:#94a3b8;font-weight:400;">(optional)</span></label>
+            <input class="form-input" type="month" id="startDate">
+          </div>
+
+          <button class="btn-calculate" onclick="calculateMortgage()">Calculate Mortgage</button>
+          <button class="btn-reset" onclick="resetMortgage()" style="margin-top:10px;">Reset</button>
+
+          <div id="mortgageResults" class="hidden" style="margin-top:28px;">
+            <div class="results-box">
+              <div class="results-title">Mortgage Breakdown</div>
+              <div class="result-primary">
+                <div class="result-primary-label">Monthly Payment</div>
+                <div class="result-primary-value" id="monthlyPayment">$0.00</div>
+              </div>
+              <div class="result-grid">
+                <div class="result-item">
+                  <div class="result-item-label">Principal Amount</div>
+                  <div class="result-item-value" id="principalAmount">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Total Payment</div>
+                  <div class="result-item-value" id="totalPayment">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Total Interest Paid</div>
+                  <div class="result-item-value" id="totalInterest">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Loan-to-Value Ratio</div>
+                  <div class="result-item-value" id="ltvRatio">0%</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:20px;">
+              <button class="btn-calculate" id="amortToggleBtn" onclick="toggleAmortization()" style="background:linear-gradient(135deg,#334155,#475569);">
+                View Amortization Schedule
+              </button>
+            </div>
+
+            <div id="amortContainer" class="hidden" style="margin-top:20px;">
+              <div class="amort-table-container">
+                <table class="amort-table" id="amortTable">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Payment</th>
+                      <th>Principal</th>
+                      <th>Interest</th>
+                      <th>Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="amortBody"></tbody>
+                </table>
+              </div>
+              <button class="btn-calculate" id="showAllBtn" onclick="showAllAmort()" style="margin-top:12px;background:linear-gradient(135deg,#334155,#475569);">
+                Show All Payments
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px">
+        <div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div>
+      </div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>How to Use the Mortgage Calculator</h2>
+        <p>Enter your <strong>home price</strong>, <strong>down payment</strong>, <strong>loan term</strong>, and <strong>interest rate</strong> to instantly see your estimated monthly mortgage payment along with a full breakdown of costs.</p>
+
+        <h3>Understanding Each Field</h3>
+        <ul>
+          <li><strong>Home Price:</strong> The total purchase price of the property.</li>
+          <li><strong>Down Payment:</strong> The upfront amount you pay. Enter it as a dollar amount or percentage — they sync automatically. A 20% down payment avoids Private Mortgage Insurance (PMI).</li>
+          <li><strong>Loan Term:</strong> How long you have to repay the loan. A shorter term means higher monthly payments but significantly less interest paid overall.</li>
+          <li><strong>Annual Interest Rate:</strong> The yearly interest rate on your mortgage. Even a 0.5% difference can save or cost tens of thousands over the life of the loan.</li>
+          <li><strong>Start Date:</strong> Optional. Used to generate dated amortization schedule entries.</li>
+        </ul>
+
+        <h3>The Mortgage Payment Formula</h3>
+        <div class="formula-box">
+          M = P × [r(1+r)^n] / [(1+r)^n − 1]
+          <br><br>
+          Where:
+          M = Monthly payment
+          P = Principal loan amount (home price − down payment)
+          r = Monthly interest rate (annual rate ÷ 12 ÷ 100)
+          n = Total number of payments (years × 12)
+        </div>
+
+        <h3>Tips for Reducing Your Mortgage Cost</h3>
+        <ul>
+          <li><strong>Increase your down payment:</strong> Every dollar reduces your loan principal and lowers your monthly payment.</li>
+          <li><strong>Choose a shorter loan term:</strong> A 15-year mortgage typically offers a lower interest rate and you pay far less total interest, though monthly payments are higher.</li>
+          <li><strong>Shop for rates:</strong> Even 0.25% less in interest rate can save thousands over 30 years.</li>
+          <li><strong>Make extra payments:</strong> Applying extra money to the principal reduces the balance faster, shortening your loan and saving on interest.</li>
+        </ul>
+
+        <h3>Loan-to-Value (LTV) Ratio</h3>
+        <p>LTV = (Loan Amount ÷ Home Price) × 100. Lenders use this ratio to assess risk. An LTV above 80% typically requires PMI (Private Mortgage Insurance), which adds to your monthly cost. Aim for 80% or below to avoid this expense.</p>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <!-- AD SLOT: Sidebar 300x250 -->
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly Converter</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function () {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Full amortization data stored globally
+    var amortData = [];
+    var showingAll = false;
+
+    // Sync down payment dollar <-> percent
+    document.getElementById('homePrice').addEventListener('input', syncFromDollar);
+    document.getElementById('downPaymentDollar').addEventListener('input', syncFromDollar);
+    document.getElementById('downPaymentPct').addEventListener('input', syncFromPct);
+
+    function syncFromDollar() {
+      var price = parseFloat(document.getElementById('homePrice').value) || 0;
+      var dollar = parseFloat(document.getElementById('downPaymentDollar').value) || 0;
+      if (price > 0) {
+        var pct = (dollar / price) * 100;
+        document.getElementById('downPaymentPct').value = pct > 0 ? pct.toFixed(2) : '';
+      }
+    }
+
+    function syncFromPct() {
+      var price = parseFloat(document.getElementById('homePrice').value) || 0;
+      var pct = parseFloat(document.getElementById('downPaymentPct').value) || 0;
+      if (price > 0) {
+        var dollar = (pct / 100) * price;
+        document.getElementById('downPaymentDollar').value = dollar > 0 ? dollar.toFixed(0) : '';
+      }
+    }
+
+    function fmt(n) {
+      return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function fmtInt(n) {
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+
+    function calculateMortgage() {
+      var homePrice = parseFloat(document.getElementById('homePrice').value);
+      var downDollar = parseFloat(document.getElementById('downPaymentDollar').value) || 0;
+      var downPct = parseFloat(document.getElementById('downPaymentPct').value) || 0;
+      var loanTerm = parseInt(document.getElementById('loanTerm').value);
+      var annualRate = parseFloat(document.getElementById('interestRate').value);
+      var startDateVal = document.getElementById('startDate').value;
+
+      if (!homePrice || homePrice <= 0) { alert('Please enter a valid home price.'); return; }
+      if (!annualRate || annualRate <= 0) { alert('Please enter a valid interest rate.'); return; }
+
+      // Resolve down payment
+      if (!downDollar && downPct) { downDollar = (downPct / 100) * homePrice; }
+      if (downDollar >= homePrice) { alert('Down payment cannot exceed the home price.'); return; }
+
+      var principal = homePrice - downDollar;
+      var r = annualRate / 12 / 100;
+      var n = loanTerm * 12;
+
+      // Monthly payment: M = P * [r(1+r)^n] / [(1+r)^n - 1]
+      var monthlyPayment;
+      if (r === 0) {
+        monthlyPayment = principal / n;
+      } else {
+        var factor = Math.pow(1 + r, n);
+        monthlyPayment = principal * (r * factor) / (factor - 1);
+      }
+
+      var totalPayment = monthlyPayment * n;
+      var totalInterest = totalPayment - principal;
+      var ltv = (principal / homePrice) * 100;
+
+      document.getElementById('monthlyPayment').textContent = fmt(monthlyPayment);
+      document.getElementById('principalAmount').textContent = fmtInt(principal);
+      document.getElementById('totalPayment').textContent = fmtInt(totalPayment);
+      document.getElementById('totalInterest').textContent = fmtInt(totalInterest);
+      document.getElementById('ltvRatio').textContent = ltv.toFixed(1) + '%';
+
+      // Build amortization schedule
+      amortData = [];
+      var balance = principal;
+      var startDate = startDateVal ? new Date(startDateVal + '-01') : null;
+
+      for (var i = 1; i <= n; i++) {
+        var interestPayment = balance * r;
+        var principalPayment = monthlyPayment - interestPayment;
+        balance -= principalPayment;
+        if (balance < 0) balance = 0;
+
+        var label = i;
+        if (startDate) {
+          var d = new Date(startDate);
+          d.setMonth(d.getMonth() + i - 1);
+          label = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        amortData.push({
+          num: label,
+          payment: monthlyPayment,
+          principal: principalPayment,
+          interest: interestPayment,
+          balance: balance
+        });
+      }
+
+      document.getElementById('mortgageResults').classList.remove('hidden');
+      document.getElementById('amortContainer').classList.add('hidden');
+      document.getElementById('amortToggleBtn').textContent = 'View Amortization Schedule';
+      showingAll = false;
+      renderAmortTable(12);
+    }
+
+    function renderAmortTable(limit) {
+      var tbody = document.getElementById('amortBody');
+      tbody.innerHTML = '';
+      var count = limit ? Math.min(limit, amortData.length) : amortData.length;
+      for (var i = 0; i < count; i++) {
+        var row = amortData[i];
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + row.num + '</td>' +
+          '<td>' + fmt(row.payment) + '</td>' +
+          '<td>' + fmt(row.principal) + '</td>' +
+          '<td>' + fmt(row.interest) + '</td>' +
+          '<td>' + fmtInt(row.balance) + '</td>';
+        tbody.appendChild(tr);
+      }
+      var showAllBtn = document.getElementById('showAllBtn');
+      if (amortData.length > 12 && !showingAll) {
+        showAllBtn.classList.remove('hidden');
+        showAllBtn.textContent = 'Show All ' + amortData.length + ' Payments';
+      } else {
+        showAllBtn.classList.add('hidden');
+      }
+    }
+
+    function toggleAmortization() {
+      var container = document.getElementById('amortContainer');
+      var btn = document.getElementById('amortToggleBtn');
+      if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        btn.textContent = 'Hide Amortization Schedule';
+        renderAmortTable(showingAll ? 0 : 12);
+      } else {
+        container.classList.add('hidden');
+        btn.textContent = 'View Amortization Schedule';
+      }
+    }
+
+    function showAllAmort() {
+      showingAll = true;
+      renderAmortTable(0);
+    }
+
+    function resetMortgage() {
+      document.getElementById('homePrice').value = '';
+      document.getElementById('downPaymentDollar').value = '';
+      document.getElementById('downPaymentPct').value = '';
+      document.getElementById('loanTerm').value = '30';
+      document.getElementById('interestRate').value = '';
+      document.getElementById('startDate').value = '';
+      document.getElementById('mortgageResults').classList.add('hidden');
+      amortData = [];
+      showingAll = false;
+    }
+  </script>
+</body>
+</html>

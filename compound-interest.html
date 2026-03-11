@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate compound interest and see how your investment grows over time. Compare daily, monthly, quarterly, and annual compounding.">
+  <meta name="keywords" content="compound interest calculator, investment growth, compounding frequency, annual return, savings calculator">
+  <title>Compound Interest Calculator - Investment Growth | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .growth-table-container {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid #1e293b;
+      margin-top: 20px;
+    }
+    .growth-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .growth-table th {
+      background: #0f172a;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 10px 14px;
+      text-align: right;
+      border-bottom: 1px solid #1e293b;
+    }
+    .growth-table th:first-child { text-align: left; }
+    .growth-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #1e293b;
+      color: #e2e8f0;
+      text-align: right;
+    }
+    .growth-table td:first-child { text-align: left; color: #94a3b8; font-weight: 500; }
+    .growth-table tr:last-child td { border-bottom: none; }
+    .growth-table tr:hover td { background: #1e293b44; }
+    .growth-table td.highlight { color: #f97316; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper">
+    <div class="ad-slot ad-leaderboard">Advertisement · 728×90</div>
+  </div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html#finance">Finance</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Compound Interest Calculator</span>
+    </div>
+    <h1>Compound Interest Calculator</h1>
+    <p>Discover the power of compounding — see how your money grows with different rates and frequencies.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+
+          <div class="form-group">
+            <label class="form-label" for="principal">Principal Amount</label>
+            <div class="input-group">
+              <span class="input-prefix">$</span>
+              <input class="form-input has-prefix" type="number" id="principal" placeholder="10,000" min="0" step="100">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="ciRate">Annual Interest Rate</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="ciRate" placeholder="7" min="0" max="100" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Time Period</label>
+            <div class="form-row">
+              <input class="form-input" type="number" id="ciYears" placeholder="10" min="0" max="100" step="1">
+              <select class="form-select" id="ciTimeUnit">
+                <option value="years" selected>Years</option>
+                <option value="months">Months</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="compFreq">Compound Frequency</label>
+            <select class="form-select" id="compFreq">
+              <option value="1">Annually (once a year)</option>
+              <option value="2">Semi-annually (twice a year)</option>
+              <option value="4">Quarterly (4× a year)</option>
+              <option value="12" selected>Monthly (12× a year)</option>
+              <option value="365">Daily (365× a year)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="monthlyContrib">Additional Monthly Contribution <span style="color:#94a3b8;font-weight:400;">(optional)</span></label>
+            <div class="input-group">
+              <span class="input-prefix">$</span>
+              <input class="form-input has-prefix" type="number" id="monthlyContrib" placeholder="0" min="0" step="10" value="0">
+            </div>
+          </div>
+
+          <button class="btn-calculate" onclick="calculateCI()">Calculate Growth</button>
+          <button class="btn-reset" onclick="resetCI()" style="margin-top:10px;">Reset</button>
+
+          <div id="ciResults" class="hidden" style="margin-top:28px;">
+            <div class="results-box">
+              <div class="results-title">Investment Growth Summary</div>
+              <div class="result-primary">
+                <div class="result-primary-label">Final Balance</div>
+                <div class="result-primary-value" id="finalBalance">$0.00</div>
+              </div>
+              <div class="result-grid">
+                <div class="result-item">
+                  <div class="result-item-label">Principal Invested</div>
+                  <div class="result-item-value" id="ciPrincipalOut">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Total Interest Earned</div>
+                  <div class="result-item-value" id="ciTotalInterest">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Contributions Total</div>
+                  <div class="result-item-value" id="ciContribTotal">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Return on Investment</div>
+                  <div class="result-item-value" id="ciROI">0%</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:20px;">
+              <div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:4px;">Year-by-Year Growth</div>
+              <div style="font-size:13px;color:#64748b;margin-bottom:0;">Track how your investment compounds over time.</div>
+            </div>
+            <div class="growth-table-container">
+              <table class="growth-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Balance</th>
+                    <th>Interest Earned</th>
+                    <th>Total Contributions</th>
+                  </tr>
+                </thead>
+                <tbody id="growthTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px">
+        <div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div>
+      </div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>The Power of Compound Interest</h2>
+        <p>Compound interest is often called the "eighth wonder of the world." Unlike simple interest (which is calculated only on the principal), compound interest is calculated on both the initial principal and the accumulated interest from previous periods. This causes wealth to grow at an accelerating rate.</p>
+
+        <h3>The Compound Interest Formula</h3>
+        <div class="formula-box">
+          A = P × (1 + r/n)^(n × t)
+          <br><br>
+          Where:
+          A = Final amount
+          P = Principal (initial investment)
+          r = Annual interest rate (as a decimal, e.g., 0.07 for 7%)
+          n = Number of times interest compounds per year
+          t = Time in years
+          <br><br>
+          For additional monthly contributions, the formula uses
+          the Future Value of an Annuity component added to the
+          compound growth of the principal.
+        </div>
+
+        <h3>The Rule of 72</h3>
+        <p>A quick way to estimate how long it takes for an investment to double: divide 72 by the annual interest rate.</p>
+        <div class="formula-box">
+          Doubling Time ≈ 72 ÷ Annual Interest Rate
+          <br><br>
+          Example: At 7% annual return, your money doubles in
+          roughly 72 ÷ 7 = ~10.3 years.
+          At 10%, it doubles in ~7.2 years.
+        </div>
+
+        <h3>Compound vs. Simple Interest</h3>
+        <p>On a $10,000 investment at 7% over 20 years:</p>
+        <ul>
+          <li><strong>Simple interest:</strong> $10,000 + (10,000 × 0.07 × 20) = $24,000</li>
+          <li><strong>Compound interest (annually):</strong> $10,000 × (1.07)^20 ≈ $38,697</li>
+          <li><strong>Compound interest (monthly):</strong> ≈ $40,065</li>
+        </ul>
+        <p>More frequent compounding means more growth. Daily compounding yields slightly more than monthly, which yields more than annually.</p>
+
+        <h3>The Impact of Regular Contributions</h3>
+        <p>Adding even small regular contributions dramatically accelerates growth. For example, adding $200/month to a $10,000 investment at 7% for 20 years results in a final balance of over $130,000 — compared to $38,697 without contributions. Start early and contribute consistently for maximum effect.</p>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <!-- AD SLOT: Sidebar 300x250 -->
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly Converter</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function () {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    function fmt(n) {
+      return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function fmtInt(n) {
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+
+    function calculateCI() {
+      var P = parseFloat(document.getElementById('principal').value);
+      var annualRate = parseFloat(document.getElementById('ciRate').value);
+      var timeVal = parseFloat(document.getElementById('ciYears').value);
+      var timeUnit = document.getElementById('ciTimeUnit').value;
+      var n = parseInt(document.getElementById('compFreq').value);
+      var monthlyContrib = parseFloat(document.getElementById('monthlyContrib').value) || 0;
+
+      if (!P || P <= 0) { alert('Please enter a valid principal amount.'); return; }
+      if (!annualRate || annualRate < 0) { alert('Please enter a valid interest rate.'); return; }
+      if (!timeVal || timeVal <= 0) { alert('Please enter a valid time period.'); return; }
+
+      // Convert time to years
+      var t = timeUnit === 'months' ? timeVal / 12 : timeVal;
+      var r = annualRate / 100;
+
+      // Use month-by-month simulation for accuracy, especially with contributions
+      var totalMonths = Math.round(t * 12);
+      var rMonthly = r / 12;  // effective monthly rate (approximate)
+
+      // For compounding frequency != monthly, we use the effective monthly rate derived from compounding freq
+      // effective monthly rate = (1 + r/n)^(n/12) - 1
+      var effMonthlyRate;
+      if (r === 0) {
+        effMonthlyRate = 0;
+      } else {
+        effMonthlyRate = Math.pow(1 + r / n, n / 12) - 1;
+      }
+
+      var balance = P;
+      var totalContributions = 0;
+      var yearlyData = [];
+      var startBalance = P;
+
+      for (var month = 1; month <= totalMonths; month++) {
+        balance = balance * (1 + effMonthlyRate);
+        balance += monthlyContrib;
+        totalContributions += monthlyContrib;
+
+        // Record at end of each year (every 12 months) and at the final month
+        if (month % 12 === 0 || month === totalMonths) {
+          var yearNum = Math.ceil(month / 12);
+          var interestEarnedThisYear = balance - startBalance - (monthlyContrib * Math.min(12, month - (yearNum - 1) * 12));
+          // Simpler: track cumulative interest = balance - P - totalContributions
+          var cumulativeInterest = balance - P - totalContributions;
+          yearlyData.push({
+            year: timeUnit === 'months' ? 'Mo ' + month : 'Year ' + yearNum,
+            balance: balance,
+            interestEarned: cumulativeInterest,
+            totalContrib: totalContributions
+          });
+          startBalance = balance;
+        }
+      }
+
+      var finalBalance = balance;
+      var totalInterestEarned = finalBalance - P - totalContributions;
+      var totalInvested = P + totalContributions;
+      var roi = totalInvested > 0 ? (totalInterestEarned / totalInvested) * 100 : 0;
+
+      document.getElementById('finalBalance').textContent = fmt(finalBalance);
+      document.getElementById('ciPrincipalOut').textContent = fmtInt(P);
+      document.getElementById('ciTotalInterest').textContent = fmtInt(totalInterestEarned);
+      document.getElementById('ciContribTotal').textContent = fmtInt(totalContributions);
+      document.getElementById('ciROI').textContent = roi.toFixed(1) + '%';
+
+      // Build year-by-year table
+      var tbody = document.getElementById('growthTableBody');
+      tbody.innerHTML = '';
+
+      // Limit to 30 rows for display; if months mode show every month up to 30
+      var displayData = yearlyData.slice(0, 30);
+      for (var i = 0; i < displayData.length; i++) {
+        var row = displayData[i];
+        var tr = document.createElement('tr');
+        var isLast = i === displayData.length - 1;
+        tr.innerHTML =
+          '<td>' + row.year + '</td>' +
+          '<td class="' + (isLast ? 'highlight' : '') + '">' + fmtInt(row.balance) + '</td>' +
+          '<td>' + fmtInt(row.interestEarned) + '</td>' +
+          '<td>' + fmtInt(row.totalContrib) + '</td>';
+        tbody.appendChild(tr);
+      }
+
+      document.getElementById('ciResults').classList.remove('hidden');
+    }
+
+    function resetCI() {
+      document.getElementById('principal').value = '';
+      document.getElementById('ciRate').value = '';
+      document.getElementById('ciYears').value = '';
+      document.getElementById('ciTimeUnit').value = 'years';
+      document.getElementById('compFreq').value = '12';
+      document.getElementById('monthlyContrib').value = '0';
+      document.getElementById('ciResults').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

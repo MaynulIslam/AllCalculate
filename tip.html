@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate tip amount, total bill, and split the check between any number of people. Simple, fast tip calculator.">
+  <title>Tip Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .tip-quick-btn {
+      padding: 6px 14px;
+      border: 2px solid #e2e8f0;
+      background: white;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      color: #475569;
+      transition: all 0.15s ease;
+    }
+    .tip-quick-btn:hover {
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+    .tip-quick-btn.active {
+      border-color: #2563eb;
+      background: #2563eb;
+      color: white;
+    }
+    .per-person-card {
+      background: linear-gradient(135deg, #1e40af, #2563eb);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      color: white;
+      margin-top: 20px;
+    }
+    .per-person-card .pp-label {
+      font-size: 0.9rem;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+    .per-person-card .pp-value {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .per-person-card .pp-sub {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#finance">Finance</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Tip Calculator</span>
+  </div>
+  <h1>Tip Calculator</h1>
+  <p>Calculate your tip, total bill, and how much each person owes — instantly.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <div class="form-group">
+          <label class="form-label" for="billAmount">Bill Amount</label>
+          <div class="input-group has-prefix">
+            <span class="input-prefix">$</span>
+            <input class="form-input" type="number" id="billAmount" placeholder="47.50" min="0" step="0.01">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tip Percentage</label>
+          <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+            <button class="tip-quick-btn" onclick="setTip(10)">10%</button>
+            <button class="tip-quick-btn" onclick="setTip(15)">15%</button>
+            <button class="tip-quick-btn active" onclick="setTip(18)">18%</button>
+            <button class="tip-quick-btn" onclick="setTip(20)">20%</button>
+            <button class="tip-quick-btn" onclick="setTip(25)">25%</button>
+          </div>
+          <div class="input-group has-suffix">
+            <input class="form-input" type="number" id="tipPct" value="18" min="0" max="100" step="1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="numPeople">Number of People</label>
+            <input class="form-input" type="number" id="numPeople" value="1" min="1" max="100" step="1">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px">
+            <label style="display:flex;align-items:center;gap:10px;font-size:0.9rem;color:#475569;cursor:pointer;user-select:none">
+              <input type="checkbox" id="roundTotal" style="width:18px;height:18px;accent-color:#2563eb">
+              Round up total
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:8px">
+          <button class="btn-calculate" onclick="calculateTip()">Calculate</button>
+          <button class="btn-reset" onclick="resetTip()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div id="tipResults" class="hidden" style="margin-top:28px">
+          <div class="results-box">
+            <div class="results-title">Tip Breakdown</div>
+            <div class="result-primary">
+              <div class="result-primary-label">Tip Amount</div>
+              <div class="result-primary-value" id="resTipAmount">$0.00</div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="result-item-label">Tip %</div>
+                <div class="result-item-value" id="resTipPct">18%</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Total Bill</div>
+                <div class="result-item-value" id="resTotalBill">$0.00</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Per Person Total</div>
+                <div class="result-item-value" id="resPerPersonTotal">$0.00</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Tip Per Person</div>
+                <div class="result-item-value" id="resTipPerPerson">$0.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="per-person-card" id="perPersonCard">
+            <div class="pp-label">Each person pays</div>
+            <div class="pp-value" id="ppValue">$0.00</div>
+            <div class="pp-sub" id="ppSub">includes $0.00 tip</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>Tipping Guide: How Much Should You Tip?</h2>
+
+      <h3>Restaurant Tipping Etiquette</h3>
+      <p>In the United States, tipping at a sit-down restaurant is customary and expected. Standard practice is <strong>15–20%</strong> for adequate service, and <strong>20–25%</strong> for excellent service. For buffets or counter service, 10% is generally appropriate.</p>
+
+      <h3>Tipping in Other Situations</h3>
+      <ul>
+        <li><strong>Food delivery:</strong> $3–5 minimum, or 15–20% for larger orders</li>
+        <li><strong>Bartenders:</strong> $1–2 per drink, or 15–20% of the tab</li>
+        <li><strong>Hair stylists / barbers:</strong> 15–20%</li>
+        <li><strong>Taxi / rideshare:</strong> 15–20% (often pre-prompted in app)</li>
+        <li><strong>Hotel housekeeping:</strong> $2–5 per night</li>
+        <li><strong>Hotel bellhop:</strong> $1–2 per bag</li>
+        <li><strong>Spa services:</strong> 15–20%</li>
+        <li><strong>Moving services:</strong> $20–50 per mover for a full day</li>
+      </ul>
+
+      <h3>International Tipping Norms</h3>
+      <p>Tipping customs vary widely around the world. In Japan, tipping is considered rude and may even be refused. In Australia and New Zealand, tipping is not expected but appreciated for exceptional service. In much of Europe, rounding up or leaving small change is common. In Canada, tipping norms are similar to the US.</p>
+
+      <h3>History of Tipping</h3>
+      <p>The word "tip" may derive from 17th-century English coffeehouses, where jars labeled "To Insure Promptness" (T.I.P.) were placed on tables. Tipping became widespread in the US after the Civil War, when restaurant workers — often formerly enslaved people — were paid little or nothing and relied entirely on tips. This history continues to shape ongoing debates about tipping culture and minimum wage laws today.</p>
+
+      <div class="formula-box">
+        <strong>Tip Calculation:</strong><br>
+        Tip Amount = Bill Amount × (Tip % / 100)<br>
+        Total Bill = Bill Amount + Tip Amount<br>
+        Per Person = Total Bill / Number of People
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget"><div class="ad-slot ad-rectangle">Advertisement · 300×250</div></div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="salary-hourly.html">Salary to Hourly Calculator</a></li>
+        <li><a href="tax.html">Tax Calculator</a></li>
+        <li><a href="percentage.html">Percentage Calculator</a></li>
+        <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+        <li><a href="retirement.html">Retirement Calculator</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // Auto-calculate on any input change
+  ['billAmount', 'tipPct', 'numPeople', 'roundTotal'].forEach(function(id) {
+    var el = document.getElementById(id);
+    el.addEventListener('change', autoCalc);
+    if (id !== 'roundTotal') el.addEventListener('input', autoCalc);
+  });
+
+  // Sync tipPct input to quick buttons
+  document.getElementById('tipPct').addEventListener('input', function() {
+    updateQuickBtns(parseFloat(this.value));
+    autoCalc();
+  });
+
+  function setTip(pct) {
+    document.getElementById('tipPct').value = pct;
+    updateQuickBtns(pct);
+    autoCalc();
+  }
+
+  function updateQuickBtns(pct) {
+    var btns = document.querySelectorAll('.tip-quick-btn');
+    btns.forEach(function(btn) {
+      btn.classList.remove('active');
+      if (parseFloat(btn.textContent) === pct) {
+        btn.classList.add('active');
+      }
+    });
+  }
+
+  function autoCalc() {
+    var bill = parseFloat(document.getElementById('billAmount').value);
+    if (!isNaN(bill) && bill > 0) {
+      calculateTip();
+    }
+  }
+
+  function fmtMoney(n) {
+    return '$' + n.toFixed(2);
+  }
+
+  function calculateTip() {
+    var bill = parseFloat(document.getElementById('billAmount').value) || 0;
+    var tipPct = parseFloat(document.getElementById('tipPct').value) || 0;
+    var numPeople = Math.max(1, parseInt(document.getElementById('numPeople').value) || 1);
+    var roundUp = document.getElementById('roundTotal').checked;
+
+    if (bill <= 0) {
+      alert('Please enter a valid bill amount.');
+      return;
+    }
+
+    var tipAmount = bill * (tipPct / 100);
+    var totalBill = bill + tipAmount;
+
+    if (roundUp) {
+      totalBill = Math.ceil(totalBill);
+      tipAmount = totalBill - bill;
+    }
+
+    var perPersonTotal = totalBill / numPeople;
+    var tipPerPerson = tipAmount / numPeople;
+
+    document.getElementById('resTipAmount').textContent = fmtMoney(tipAmount);
+    document.getElementById('resTipPct').textContent = tipPct.toFixed(0) + '%';
+    document.getElementById('resTotalBill').textContent = fmtMoney(totalBill);
+    document.getElementById('resPerPersonTotal').textContent = fmtMoney(perPersonTotal);
+    document.getElementById('resTipPerPerson').textContent = fmtMoney(tipPerPerson);
+
+    document.getElementById('ppValue').textContent = fmtMoney(perPersonTotal);
+    if (numPeople === 1) {
+      document.getElementById('ppSub').textContent = 'includes ' + fmtMoney(tipAmount) + ' tip';
+    } else {
+      document.getElementById('ppSub').textContent = 'includes ' + fmtMoney(tipPerPerson) + ' tip · ' + numPeople + ' people';
+    }
+
+    document.getElementById('tipResults').classList.remove('hidden');
+  }
+
+  function resetTip() {
+    document.getElementById('billAmount').value = '';
+    document.getElementById('tipPct').value = '18';
+    document.getElementById('numPeople').value = '1';
+    document.getElementById('roundTotal').checked = false;
+    updateQuickBtns(18);
+    document.getElementById('tipResults').classList.add('hidden');
+  }
+</script>
+</body>
+</html>

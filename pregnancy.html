@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your pregnancy due date, current week, trimester, and key milestones from your last menstrual period.">
+  <title>Pregnancy Due Date Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .trimester-bar-wrap { margin: 20px 0 8px; }
+    .trimester-bar-track { position:relative; height:28px; border-radius:14px; overflow:visible; background:#e2e8f0; }
+    .trimester-segment { position:absolute; top:0; height:100%; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:600; color:#fff; }
+    .trimester-pointer { position:absolute; top:-6px; width:16px; height:40px; transform:translateX(-50%); }
+    .trimester-pointer::after { content:''; display:block; width:4px; height:40px; background:#1e293b; border-radius:2px; margin:0 auto; }
+    .trimester-labels { display:flex; justify-content:space-between; margin-top:6px; font-size:0.75rem; color:#64748b; }
+    .milestone-table { width:100%; border-collapse:collapse; margin-top:16px; font-size:0.875rem; }
+    .milestone-table th { background:#f1f5f9; padding:9px 14px; text-align:left; font-weight:600; color:#475569; }
+    .milestone-table td { padding:9px 14px; border-bottom:1px solid #f1f5f9; color:#334155; }
+    .milestone-table tr.milestone-passed td { color:#94a3b8; text-decoration:line-through; }
+    .milestone-table tr.milestone-current td { background:#fef3c7; font-weight:600; }
+    .milestone-badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:0.7rem; font-weight:700; }
+    .badge-passed { background:#dcfce7; color:#15803d; }
+    .badge-upcoming { background:#dbeafe; color:#1d4ed8; }
+    .badge-current { background:#fef3c7; color:#b45309; }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#health">Health</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Pregnancy Calculator</span>
+  </div>
+  <h1>Pregnancy &amp; Due Date Calculator</h1>
+  <p>Calculate your due date, current pregnancy week, and important milestones.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" id="tab-lmp" onclick="switchTab('lmp')">By LMP</button>
+          <button class="tab-btn" id="tab-conception" onclick="switchTab('conception')">By Conception</button>
+          <button class="tab-btn" id="tab-duedate" onclick="switchTab('duedate')">By Due Date</button>
+        </div>
+
+        <!-- Tab 1: LMP -->
+        <div id="panel-lmp">
+          <div class="form-group" style="margin-top:20px">
+            <label class="form-label" for="lmpDate">Last Menstrual Period (LMP)</label>
+            <input class="form-input" type="date" id="lmpDate">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cycleLength">Average Cycle Length</label>
+            <select class="form-select" id="cycleLength">
+              <option value="21">21 days</option>
+              <option value="22">22 days</option>
+              <option value="23">23 days</option>
+              <option value="24">24 days</option>
+              <option value="25">25 days</option>
+              <option value="26">26 days</option>
+              <option value="27">27 days</option>
+              <option value="28" selected>28 days (standard)</option>
+              <option value="29">29 days</option>
+              <option value="30">30 days</option>
+              <option value="31">31 days</option>
+              <option value="32">32 days</option>
+              <option value="33">33 days</option>
+              <option value="34">34 days</option>
+              <option value="35">35 days</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tab 2: Conception -->
+        <div id="panel-conception" class="hidden">
+          <div class="form-group" style="margin-top:20px">
+            <label class="form-label" for="conceptionDate">Conception Date</label>
+            <input class="form-input" type="date" id="conceptionDate">
+          </div>
+        </div>
+
+        <!-- Tab 3: Due Date (reverse) -->
+        <div id="panel-duedate" class="hidden">
+          <div class="form-group" style="margin-top:20px">
+            <label class="form-label" for="knownDueDate">Known Due Date</label>
+            <input class="form-input" type="date" id="knownDueDate">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:8px">
+          <button class="btn-calculate" onclick="calcPregnancy()">Calculate</button>
+          <button class="btn-reset" onclick="resetPregnancy()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div id="pregnancyResults" class="hidden">
+          <div class="divider"></div>
+          <div class="results-box">
+            <div class="results-title">Pregnancy Summary</div>
+            <div class="result-primary">
+              <div class="result-primary-label">Estimated Due Date</div>
+              <div class="result-primary-value" id="resDueDate">—</div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="result-item-label">Current Week &amp; Day</div>
+                <div class="result-item-value" id="resWeek">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Trimester</div>
+                <div class="result-item-value" id="resTrimester">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Days Remaining</div>
+                <div class="result-item-value" id="resDaysLeft">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Conception Date (est.)</div>
+                <div class="result-item-value" id="resConception">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trimester Progress Bar -->
+          <div style="margin-top:24px;">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:12px;">Trimester Progress</h3>
+            <div class="trimester-bar-wrap">
+              <div class="trimester-bar-track" id="trimesterBar">
+                <div class="trimester-segment" style="left:0;width:30%;background:#6366f1;border-radius:14px 0 0 14px;">1st</div>
+                <div class="trimester-segment" style="left:30%;width:37.5%;background:#8b5cf6;">2nd</div>
+                <div class="trimester-segment" style="left:67.5%;width:32.5%;background:#a855f7;border-radius:0 14px 14px 0;">3rd</div>
+                <div class="trimester-pointer" id="trimesterPointer" style="left:0%">
+                  <div style="width:4px;height:40px;background:#1e293b;border-radius:2px;margin:0 auto;margin-top:-6px;"></div>
+                </div>
+              </div>
+              <div class="trimester-labels">
+                <span>Week 1</span>
+                <span>Week 12</span>
+                <span>Week 27</span>
+                <span>Week 40</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Milestone Table -->
+          <div style="margin-top:24px;">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:12px;">Key Pregnancy Milestones</h3>
+            <table class="milestone-table">
+              <thead>
+                <tr>
+                  <th>Milestone</th>
+                  <th>Week</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="milestoneBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>How Pregnancy Due Date is Calculated</h2>
+      <p>The standard method for calculating your due date is <strong>Naegele's Rule</strong>, based on the first day of your Last Menstrual Period (LMP).</p>
+
+      <div class="formula-box">
+        <strong>LMP Method:</strong> Due Date = LMP + 280 days (40 weeks)<br>
+        Adjusted for cycle length: ± (cycle − 28) days<br><br>
+        <strong>Conception Method:</strong> Due Date = Conception Date + 266 days (38 weeks)
+      </div>
+
+      <h3>Understanding Your Trimesters</h3>
+      <ul>
+        <li><strong>First Trimester (Weeks 1–12):</strong> Organ development begins. Most miscarriages occur in this period. Morning sickness is common.</li>
+        <li><strong>Second Trimester (Weeks 13–27):</strong> Often called the "golden period." Baby's movements become noticeable. Anatomy scan at week 20.</li>
+        <li><strong>Third Trimester (Weeks 28–40):</strong> Rapid growth phase. Baby gains weight and prepares for birth.</li>
+      </ul>
+
+      <h3>Important Notes</h3>
+      <p>Due dates are estimates — only about 5% of babies are born on their exact due date. A healthy full-term pregnancy is between 37–42 weeks. Always consult your healthcare provider for personalized medical guidance.</p>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget">
+      <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="bmi.html">BMI Calculator</a></li>
+        <li><a href="calorie.html">Calorie Calculator</a></li>
+        <li><a href="body-fat.html">Body Fat Calculator</a></li>
+        <li><a href="age.html">Age Calculator</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  let activeTab = 'lmp';
+
+  function switchTab(tab) {
+    activeTab = tab;
+    ['lmp','conception','duedate'].forEach(t => {
+      document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
+      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    });
+    document.getElementById('pregnancyResults').classList.add('hidden');
+  }
+
+  function formatDate(d) {
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function addDays(d, n) {
+    const r = new Date(d);
+    r.setDate(r.getDate() + n);
+    return r;
+  }
+
+  function calcPregnancy() {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    let lmpDate, dueDate, conceptionDate;
+
+    if (activeTab === 'lmp') {
+      const lmpVal = document.getElementById('lmpDate').value;
+      if (!lmpVal) { alert('Please enter your LMP date.'); return; }
+      lmpDate = new Date(lmpVal + 'T00:00:00');
+      const cycleAdj = parseInt(document.getElementById('cycleLength').value) - 28;
+      dueDate = addDays(lmpDate, 280 + cycleAdj);
+      conceptionDate = addDays(lmpDate, 14 + cycleAdj);
+    } else if (activeTab === 'conception') {
+      const cVal = document.getElementById('conceptionDate').value;
+      if (!cVal) { alert('Please enter a conception date.'); return; }
+      conceptionDate = new Date(cVal + 'T00:00:00');
+      dueDate = addDays(conceptionDate, 266);
+      lmpDate = addDays(conceptionDate, -14);
+    } else {
+      const dVal = document.getElementById('knownDueDate').value;
+      if (!dVal) { alert('Please enter a due date.'); return; }
+      dueDate = new Date(dVal + 'T00:00:00');
+      lmpDate = addDays(dueDate, -280);
+      conceptionDate = addDays(lmpDate, 14);
+    }
+
+    // Days since LMP
+    const daysSinceLMP = Math.floor((today - lmpDate) / (1000 * 60 * 60 * 24));
+    const currentWeek = Math.floor(daysSinceLMP / 7);
+    const currentDay = daysSinceLMP % 7;
+    const daysRemaining = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+    let trimesterLabel, trimesterNum;
+    if (currentWeek <= 12) { trimesterLabel = '1st Trimester'; trimesterNum = 1; }
+    else if (currentWeek <= 27) { trimesterLabel = '2nd Trimester'; trimesterNum = 2; }
+    else { trimesterLabel = '3rd Trimester'; trimesterNum = 3; }
+
+    document.getElementById('resDueDate').textContent = formatDate(dueDate);
+    document.getElementById('resWeek').textContent = currentWeek >= 0 ? `${currentWeek} weeks, ${currentDay} days` : 'Not yet started';
+    document.getElementById('resTrimester').textContent = trimesterLabel;
+    document.getElementById('resDaysLeft').textContent = daysRemaining > 0 ? daysRemaining + ' days' : 'Past due date';
+    document.getElementById('resConception').textContent = formatDate(conceptionDate);
+
+    // Trimester pointer
+    const progress = Math.max(0, Math.min(100, (daysSinceLMP / 280) * 100));
+    document.getElementById('trimesterPointer').style.left = progress + '%';
+
+    // Milestones
+    const milestones = [
+      { name: 'Heartbeat detectable', week: 6 },
+      { name: 'End of 1st Trimester', week: 12 },
+      { name: 'Anatomy Scan', week: 20 },
+      { name: 'Viability (baby can survive outside womb)', week: 24 },
+      { name: 'End of 2nd Trimester', week: 27 },
+      { name: 'Pre-term range begins', week: 37 },
+      { name: 'Full Term', week: 40 }
+    ];
+
+    let milestoneHTML = '';
+    milestones.forEach(m => {
+      const mDate = addDays(lmpDate, m.week * 7);
+      const isPassed = today > mDate;
+      const isCurrent = currentWeek === m.week;
+      let badge, rowClass = '';
+      if (isPassed) { badge = '<span class="milestone-badge badge-passed">Passed</span>'; rowClass = 'milestone-passed'; }
+      else if (isCurrent) { badge = '<span class="milestone-badge badge-current">This week</span>'; rowClass = 'milestone-current'; }
+      else { badge = '<span class="milestone-badge badge-upcoming">Upcoming</span>'; rowClass = ''; }
+      milestoneHTML += `<tr class="${rowClass}">
+        <td>${m.name}</td>
+        <td>Week ${m.week}</td>
+        <td>${formatDate(mDate)}</td>
+        <td>${badge}</td>
+      </tr>`;
+    });
+    document.getElementById('milestoneBody').innerHTML = milestoneHTML;
+    document.getElementById('pregnancyResults').classList.remove('hidden');
+  }
+
+  function resetPregnancy() {
+    document.getElementById('lmpDate').value = '';
+    document.getElementById('conceptionDate').value = '';
+    document.getElementById('knownDueDate').value = '';
+    document.getElementById('cycleLength').value = '28';
+    document.getElementById('pregnancyResults').classList.add('hidden');
+    switchTab('lmp');
+  }
+</script>
+</body>
+</html>

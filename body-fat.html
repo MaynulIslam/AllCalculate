@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your body fat percentage using the US Navy method. Get your fitness category and ideal body fat range.">
+  <title>Body Fat Percentage Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .bf-gradient-bar { position:relative; height:32px; border-radius:16px; background:linear-gradient(to right,#3b82f6 0%,#22c55e 20%,#eab308 40%,#f97316 65%,#ef4444 100%); margin:16px 0 8px; overflow:visible; }
+    .bf-pointer { position:absolute; top:-8px; transform:translateX(-50%); }
+    .bf-pointer-line { width:4px; height:48px; background:#1e293b; border-radius:2px; margin:0 auto; }
+    .bf-pointer-label { position:absolute; top:-22px; left:50%; transform:translateX(-50%); font-size:0.75rem; font-weight:700; color:#1e293b; white-space:nowrap; background:white; border:2px solid #1e293b; border-radius:6px; padding:1px 7px; }
+    .bf-bar-labels { display:flex; justify-content:space-between; font-size:0.7rem; color:#64748b; padding:0 2px; margin-top:4px; }
+    .category-badge { display:inline-block; padding:4px 16px; border-radius:99px; font-size:0.85rem; font-weight:700; margin-top:4px; }
+    .cat-essential { background:#dbeafe; color:#1d4ed8; }
+    .cat-athletic  { background:#dcfce7; color:#15803d; }
+    .cat-fitness   { background:#fef9c3; color:#854d0e; }
+    .cat-average   { background:#fed7aa; color:#c2410c; }
+    .cat-obese     { background:#fee2e2; color:#b91c1c; }
+    .ideal-range-box { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-top:16px; }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#health">Health</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Body Fat Calculator</span>
+  </div>
+  <h1>Body Fat Calculator</h1>
+  <p>Estimate your body fat percentage using the scientifically validated US Navy method.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <!-- Sex Toggle -->
+        <div class="form-group">
+          <label class="form-label">Sex</label>
+          <div class="toggle-group">
+            <button class="toggle-btn active" id="sexMale" onclick="setSex('male')">Male</button>
+            <button class="toggle-btn" id="sexFemale" onclick="setSex('female')">Female</button>
+          </div>
+        </div>
+
+        <!-- Unit Toggle -->
+        <div class="form-group">
+          <label class="form-label">Measurement Units</label>
+          <div class="toggle-group">
+            <button class="toggle-btn active" id="bfUnitIn" onclick="setBFUnit('imperial')">Imperial (inches)</button>
+            <button class="toggle-btn" id="bfUnitCm" onclick="setBFUnit('metric')">Metric (cm)</button>
+          </div>
+        </div>
+
+        <!-- Male Inputs -->
+        <div id="maleInputs">
+          <div class="form-group">
+            <label class="form-label" for="bfHeightM">Height</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfHeightM" placeholder="72" min="40" max="120" step="0.1">
+              <span class="input-suffix" id="sfxHeightM">in</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bfWaistM">Waist (at navel)</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfWaistM" placeholder="34" min="10" max="100" step="0.1">
+              <span class="input-suffix" id="sfxWaistM">in</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bfNeckM">Neck (below larynx)</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfNeckM" placeholder="16" min="5" max="60" step="0.1">
+              <span class="input-suffix" id="sfxNeckM">in</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Female Inputs -->
+        <div id="femaleInputs" class="hidden">
+          <div class="form-group">
+            <label class="form-label" for="bfHeightF">Height</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfHeightF" placeholder="65" min="40" max="100" step="0.1">
+              <span class="input-suffix" id="sfxHeightF">in</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bfWaistF">Waist (narrowest point)</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfWaistF" placeholder="30" min="10" max="100" step="0.1">
+              <span class="input-suffix" id="sfxWaistF">in</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bfHipsF">Hips (widest point)</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfHipsF" placeholder="38" min="10" max="100" step="0.1">
+              <span class="input-suffix" id="sfxHipsF">in</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bfNeckF">Neck (below larynx)</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfNeckF" placeholder="13" min="5" max="60" step="0.1">
+              <span class="input-suffix" id="sfxNeckF">in</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex:1">
+            <label class="form-label" for="bfAge">Age (optional)</label>
+            <input class="form-input" type="number" id="bfAge" placeholder="30" min="10" max="120">
+          </div>
+          <div class="form-group" style="flex:1">
+            <label class="form-label" for="bfWeight">Weight (optional)</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="bfWeight" placeholder="170" min="50" max="800">
+              <span class="input-suffix" id="sfxWeight">lbs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button class="btn-calculate" onclick="calcBodyFat()">Calculate</button>
+          <button class="btn-reset" onclick="resetBodyFat()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div id="bfResults" class="hidden">
+          <div class="divider"></div>
+          <div class="results-box">
+            <div class="results-title">Body Fat Analysis</div>
+            <div class="result-primary">
+              <div class="result-primary-label">Body Fat Percentage</div>
+              <div class="result-primary-value" id="resBF">—</div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="result-item-label">Category</div>
+                <div class="result-item-value" id="resCat">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Lean Mass %</div>
+                <div class="result-item-value" id="resLean">—</div>
+              </div>
+              <div class="result-item" id="fatMassRow">
+                <div class="result-item-label">Fat Mass (approx.)</div>
+                <div class="result-item-value" id="resFatMass">—</div>
+              </div>
+              <div class="result-item" id="leanMassRow">
+                <div class="result-item-label">Lean Body Mass</div>
+                <div class="result-item-value" id="resLeanMass">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual gradient bar -->
+          <div style="margin-top:24px;">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:4px;">Body Fat Category Scale</h3>
+            <div class="bf-gradient-bar" id="bfBar">
+              <div class="bf-pointer" id="bfPointer" style="left:50%">
+                <div class="bf-pointer-label" id="bfPointerLabel">—</div>
+                <div class="bf-pointer-line"></div>
+              </div>
+            </div>
+            <div class="bf-bar-labels" id="bfBarLabels">
+              <span>Essential</span><span>Athletic</span><span>Fitness</span><span>Average</span><span>Obese</span>
+            </div>
+          </div>
+
+          <!-- Ideal range box -->
+          <div class="ideal-range-box" id="idealRangeBox">
+            <strong>Ideal Body Fat Range for your profile:</strong>
+            <span id="idealRange">—</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>US Navy Body Fat Method</h2>
+      <p>The US Navy method uses body circumference measurements to estimate body fat percentage. It was developed by Hodgdon and Beckett at the Naval Health Research Center.</p>
+
+      <div class="formula-box">
+        <strong>Male (inches):</strong> BF% = 86.010 × log₁₀(waist − neck) − 70.041 × log₁₀(height) + 36.76<br><br>
+        <strong>Female (inches):</strong> BF% = 163.205 × log₁₀(waist + hip − neck) − 97.684 × log₁₀(height) − 78.387
+      </div>
+
+      <h3>How to Measure Correctly</h3>
+      <ul>
+        <li><strong>Height:</strong> Stand straight without shoes, measure to the top of your head.</li>
+        <li><strong>Neck:</strong> Measure just below the larynx (Adam's apple), sloping downward to the front.</li>
+        <li><strong>Waist (Male):</strong> Measure at the navel level.</li>
+        <li><strong>Waist (Female):</strong> Measure at the narrowest point, usually above the navel.</li>
+        <li><strong>Hips (Female):</strong> Measure at the widest point below the waist.</li>
+      </ul>
+
+      <h3>Body Fat Categories</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:0.875rem;margin-top:12px;">
+        <thead>
+          <tr style="background:#f1f5f9;">
+            <th style="padding:8px 12px;text-align:left;">Category</th>
+            <th style="padding:8px 12px;text-align:center;">Men</th>
+            <th style="padding:8px 12px;text-align:center;">Women</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px 12px;">Essential Fat</td><td style="padding:8px 12px;text-align:center;">2–5%</td><td style="padding:8px 12px;text-align:center;">10–13%</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px 12px;">Athletic</td><td style="padding:8px 12px;text-align:center;">6–13%</td><td style="padding:8px 12px;text-align:center;">14–20%</td></tr>
+          <tr><td style="padding:8px 12px;">Fitness</td><td style="padding:8px 12px;text-align:center;">14–17%</td><td style="padding:8px 12px;text-align:center;">21–24%</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px 12px;">Average</td><td style="padding:8px 12px;text-align:center;">18–24%</td><td style="padding:8px 12px;text-align:center;">25–31%</td></tr>
+          <tr><td style="padding:8px 12px;">Obese</td><td style="padding:8px 12px;text-align:center;">25%+</td><td style="padding:8px 12px;text-align:center;">32%+</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget">
+      <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="bmi.html">BMI Calculator</a></li>
+        <li><a href="calorie.html">Calorie Calculator</a></li>
+        <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+        <li><a href="age.html">Age Calculator</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  let currentSex = 'male';
+  let currentBFUnit = 'imperial';
+
+  function setSex(sex) {
+    currentSex = sex;
+    document.getElementById('sexMale').classList.toggle('active', sex === 'male');
+    document.getElementById('sexFemale').classList.toggle('active', sex === 'female');
+    document.getElementById('maleInputs').classList.toggle('hidden', sex !== 'male');
+    document.getElementById('femaleInputs').classList.toggle('hidden', sex !== 'female');
+    document.getElementById('bfResults').classList.add('hidden');
+  }
+
+  function setBFUnit(unit) {
+    currentBFUnit = unit;
+    document.getElementById('bfUnitIn').classList.toggle('active', unit === 'imperial');
+    document.getElementById('bfUnitCm').classList.toggle('active', unit === 'metric');
+    const sfx = unit === 'imperial' ? 'in' : 'cm';
+    const wSfx = unit === 'imperial' ? 'lbs' : 'kg';
+    ['sfxHeightM','sfxWaistM','sfxNeckM','sfxHeightF','sfxWaistF','sfxHipsF','sfxNeckF'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = sfx;
+    });
+    document.getElementById('sfxWeight').textContent = wSfx;
+    // Update placeholders
+    if (unit === 'imperial') {
+      document.getElementById('bfHeightM').placeholder = '72';
+      document.getElementById('bfWaistM').placeholder = '34';
+      document.getElementById('bfNeckM').placeholder = '16';
+      document.getElementById('bfHeightF').placeholder = '65';
+      document.getElementById('bfWaistF').placeholder = '30';
+      document.getElementById('bfHipsF').placeholder = '38';
+      document.getElementById('bfNeckF').placeholder = '13';
+      document.getElementById('bfWeight').placeholder = '170';
+    } else {
+      document.getElementById('bfHeightM').placeholder = '183';
+      document.getElementById('bfWaistM').placeholder = '86';
+      document.getElementById('bfNeckM').placeholder = '41';
+      document.getElementById('bfHeightF').placeholder = '165';
+      document.getElementById('bfWaistF').placeholder = '76';
+      document.getElementById('bfHipsF').placeholder = '97';
+      document.getElementById('bfNeckF').placeholder = '33';
+      document.getElementById('bfWeight').placeholder = '77';
+    }
+    document.getElementById('bfResults').classList.add('hidden');
+  }
+
+  function toInches(val) {
+    return currentBFUnit === 'imperial' ? val : val / 2.54;
+  }
+
+  function calcBodyFat() {
+    let bf;
+
+    if (currentSex === 'male') {
+      const heightIn = toInches(parseFloat(document.getElementById('bfHeightM').value));
+      const waistIn  = toInches(parseFloat(document.getElementById('bfWaistM').value));
+      const neckIn   = toInches(parseFloat(document.getElementById('bfNeckM').value));
+      if (!heightIn || !waistIn || !neckIn) { alert('Please fill in all required measurements.'); return; }
+      if (waistIn <= neckIn) { alert('Waist measurement must be greater than neck measurement.'); return; }
+      bf = 86.010 * Math.log10(waistIn - neckIn) - 70.041 * Math.log10(heightIn) + 36.76;
+    } else {
+      const heightIn = toInches(parseFloat(document.getElementById('bfHeightF').value));
+      const waistIn  = toInches(parseFloat(document.getElementById('bfWaistF').value));
+      const hipsIn   = toInches(parseFloat(document.getElementById('bfHipsF').value));
+      const neckIn   = toInches(parseFloat(document.getElementById('bfNeckF').value));
+      if (!heightIn || !waistIn || !hipsIn || !neckIn) { alert('Please fill in all required measurements.'); return; }
+      bf = 163.205 * Math.log10(waistIn + hipsIn - neckIn) - 97.684 * Math.log10(heightIn) - 78.387;
+    }
+
+    bf = Math.max(0, Math.min(60, bf));
+
+    // Category
+    let category, catClass, idealMin, idealMax, pointerPct;
+    if (currentSex === 'male') {
+      // Scale: essential 0-5, athletic 5-13, fitness 14-17, average 18-24, obese 25+
+      // Map 0-40% to 0-100% bar
+      if (bf < 5)       { category = 'Essential Fat'; catClass = 'cat-essential'; idealMin = 2; idealMax = 5; }
+      else if (bf < 14) { category = 'Athletic'; catClass = 'cat-athletic'; idealMin = 6; idealMax = 13; }
+      else if (bf < 18) { category = 'Fitness'; catClass = 'cat-fitness'; idealMin = 14; idealMax = 17; }
+      else if (bf < 25) { category = 'Average'; catClass = 'cat-average'; idealMin = 18; idealMax = 24; }
+      else              { category = 'Obese'; catClass = 'cat-obese'; idealMin = 25; idealMax = 40; }
+      pointerPct = Math.min(98, Math.max(2, (bf / 40) * 100));
+    } else {
+      if (bf < 14)      { category = 'Essential Fat'; catClass = 'cat-essential'; idealMin = 10; idealMax = 13; }
+      else if (bf < 21) { category = 'Athletic'; catClass = 'cat-athletic'; idealMin = 14; idealMax = 20; }
+      else if (bf < 25) { category = 'Fitness'; catClass = 'cat-fitness'; idealMin = 21; idealMax = 24; }
+      else if (bf < 32) { category = 'Average'; catClass = 'cat-average'; idealMin = 25; idealMax = 31; }
+      else              { category = 'Obese'; catClass = 'cat-obese'; idealMin = 32; idealMax = 50; }
+      pointerPct = Math.min(98, Math.max(2, (bf / 50) * 100));
+    }
+
+    const lean = (100 - bf).toFixed(1);
+    const bfDisplay = bf.toFixed(1) + '%';
+
+    document.getElementById('resBF').textContent = bfDisplay;
+    document.getElementById('resCat').innerHTML = `<span class="category-badge ${catClass}">${category}</span>`;
+    document.getElementById('resLean').textContent = lean + '%';
+
+    // Optional weight-based fat/lean mass
+    const weightVal = parseFloat(document.getElementById('bfWeight').value);
+    if (weightVal) {
+      const isMetric = currentBFUnit === 'metric';
+      const unit = isMetric ? 'kg' : 'lbs';
+      const fatMass = (weightVal * bf / 100).toFixed(1);
+      const leanMass = (weightVal * (100 - bf) / 100).toFixed(1);
+      document.getElementById('resFatMass').textContent = fatMass + ' ' + unit;
+      document.getElementById('resLeanMass').textContent = leanMass + ' ' + unit;
+    } else {
+      document.getElementById('resFatMass').textContent = 'Enter weight above';
+      document.getElementById('resLeanMass').textContent = 'Enter weight above';
+    }
+
+    // Move pointer
+    document.getElementById('bfPointer').style.left = pointerPct + '%';
+    document.getElementById('bfPointerLabel').textContent = bfDisplay;
+
+    document.getElementById('idealRange').textContent = ` ${idealMin}% – ${idealMax}% (${category})`;
+    document.getElementById('bfResults').classList.remove('hidden');
+  }
+
+  function resetBodyFat() {
+    ['bfHeightM','bfWaistM','bfNeckM','bfHeightF','bfWaistF','bfHipsF','bfNeckF','bfAge','bfWeight'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('bfResults').classList.add('hidden');
+  }
+</script>
+</body>
+</html>

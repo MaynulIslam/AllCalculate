@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your exact age in years, months, and days. Find your next birthday, days lived, and more age statistics.">
+  <title>Age Calculator — How Old Am I? | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .zodiac-card { display:flex; align-items:center; gap:14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; margin-top:16px; }
+    .zodiac-symbol { font-size:2.5rem; line-height:1; }
+    .zodiac-info { flex:1; }
+    .zodiac-name { font-size:1.1rem; font-weight:700; color:#1e293b; }
+    .zodiac-dates { font-size:0.8rem; color:#64748b; margin-top:2px; }
+    .zodiac-trait { font-size:0.85rem; color:#475569; margin-top:4px; }
+    .bday-countdown { background:linear-gradient(135deg,#fef3c7,#fde68a); border-radius:12px; padding:16px 20px; margin-top:16px; text-align:center; }
+    .bday-countdown-number { font-size:2.5rem; font-weight:800; color:#b45309; line-height:1; }
+    .bday-countdown-label { font-size:0.85rem; color:#78350f; margin-top:4px; font-weight:500; }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#datetime">Date &amp; Time</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Age Calculator</span>
+  </div>
+  <h1>Age Calculator</h1>
+  <p>Find your exact age in years, months, and days — plus fun age statistics.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <div class="form-group">
+          <label class="form-label" for="dob">Date of Birth</label>
+          <input class="form-input" type="date" id="dob">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ageAsOf">Calculate Age As Of</label>
+          <input class="form-input" type="date" id="ageAsOf">
+        </div>
+
+        <div class="form-row">
+          <button class="btn-calculate" onclick="calcAge()">Calculate</button>
+          <button class="btn-reset" onclick="resetAge()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div id="ageResults" class="hidden">
+          <div class="divider"></div>
+          <div class="results-box">
+            <div class="results-title">Your Age</div>
+            <div class="result-primary">
+              <div class="result-primary-label">Exact Age</div>
+              <div class="result-primary-value" id="resAge">—</div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="result-item-label">Total Months</div>
+                <div class="result-item-value" id="resMonths">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Total Weeks</div>
+                <div class="result-item-value" id="resWeeks">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Total Days</div>
+                <div class="result-item-value" id="resDays">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Approximate Hours</div>
+                <div class="result-item-value" id="resHours">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Next Birthday</div>
+                <div class="result-item-value" id="resNextBday">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Days Until Birthday</div>
+                <div class="result-item-value" id="resBdayDays">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Age on Next Birthday</div>
+                <div class="result-item-value" id="resNextAge">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Day of the Week Born</div>
+                <div class="result-item-value" id="resBornDay">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Birthday countdown -->
+          <div class="bday-countdown" id="bdayCountdown">
+            <div class="bday-countdown-number" id="bdayCountNum">—</div>
+            <div class="bday-countdown-label" id="bdayCountLabel">days until your next birthday</div>
+          </div>
+
+          <!-- Zodiac card -->
+          <div class="zodiac-card" id="zodiacCard">
+            <div class="zodiac-symbol" id="zodiacSymbol">♈</div>
+            <div class="zodiac-info">
+              <div class="zodiac-name" id="zodiacName">Aries</div>
+              <div class="zodiac-dates" id="zodiacDates">March 21 – April 19</div>
+              <div class="zodiac-trait" id="zodiacTrait">Bold, ambitious, and energetic</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>How Age is Calculated</h2>
+      <p>Age calculation is more nuanced than simply subtracting years. This calculator accounts for the exact number of days in each month, leap years, and the day-of-month boundary.</p>
+
+      <div class="formula-box">
+        <strong>Exact Age:</strong> Compare year, month, and day components<br>
+        <strong>Total Days:</strong> (As-Of Date − Birth Date) in milliseconds ÷ 86,400,000<br>
+        <strong>Total Weeks:</strong> Math.floor(totalDays / 7)<br>
+        <strong>Total Months:</strong> (years × 12) + remaining months
+      </div>
+
+      <h3>Age in Different Cultures</h3>
+      <ul>
+        <li><strong>Western:</strong> Age increments on your birthday each year.</li>
+        <li><strong>East Asian (Traditional):</strong> You are born at age 1, and gain a year on Lunar New Year — so you may be 1–2 years "older" by this system.</li>
+        <li><strong>Korean System:</strong> Similar to East Asian traditional counting.</li>
+      </ul>
+
+      <h3>Leap Year Considerations</h3>
+      <p>People born on February 29 (leap day) officially celebrate their birthday on February 28 or March 1 in non-leap years, depending on convention. This calculator uses February 28 as the observed birthday in non-leap years for counting purposes.</p>
+
+      <h3>Fun Age Facts</h3>
+      <ul>
+        <li>The oldest verified human ever was Jeanne Calment of France, who lived to 122 years, 164 days.</li>
+        <li>By age 70, the average person has slept roughly 230,000 hours (about 26 years).</li>
+        <li>Your heart beats approximately 100,000 times per day — over 3.6 billion times in a lifetime.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget">
+      <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="days-between.html">Days Between Dates</a></li>
+        <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+        <li><a href="bmi.html">BMI Calculator</a></li>
+        <li><a href="timezone.html">Time Zone Converter</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // Set default "as of" to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  document.getElementById('ageAsOf').value = todayStr;
+
+  // Auto-calc on input change
+  document.getElementById('dob').addEventListener('change', function() { if (document.getElementById('dob').value) calcAge(); });
+  document.getElementById('ageAsOf').addEventListener('change', function() { if (document.getElementById('dob').value) calcAge(); });
+
+  const ZODIAC = [
+    { name: 'Capricorn',   symbol: '♑', dates: 'Dec 22 – Jan 19',  m1:12, d1:22, m2:1,  d2:19,  trait: 'Disciplined, responsible, and ambitious' },
+    { name: 'Aquarius',    symbol: '♒', dates: 'Jan 20 – Feb 18',  m1:1,  d1:20, m2:2,  d2:18,  trait: 'Innovative, independent, and humanitarian' },
+    { name: 'Pisces',      symbol: '♓', dates: 'Feb 19 – Mar 20',  m1:2,  d1:19, m2:3,  d2:20,  trait: 'Imaginative, compassionate, and intuitive' },
+    { name: 'Aries',       symbol: '♈', dates: 'Mar 21 – Apr 19',  m1:3,  d1:21, m2:4,  d2:19,  trait: 'Bold, ambitious, and energetic' },
+    { name: 'Taurus',      symbol: '♉', dates: 'Apr 20 – May 20',  m1:4,  d1:20, m2:5,  d2:20,  trait: 'Reliable, patient, and practical' },
+    { name: 'Gemini',      symbol: '♊', dates: 'May 21 – Jun 20',  m1:5,  d1:21, m2:6,  d2:20,  trait: 'Curious, adaptable, and witty' },
+    { name: 'Cancer',      symbol: '♋', dates: 'Jun 21 – Jul 22',  m1:6,  d1:21, m2:7,  d2:22,  trait: 'Nurturing, intuitive, and protective' },
+    { name: 'Leo',         symbol: '♌', dates: 'Jul 23 – Aug 22',  m1:7,  d1:23, m2:8,  d2:22,  trait: 'Charismatic, confident, and creative' },
+    { name: 'Virgo',       symbol: '♍', dates: 'Aug 23 – Sep 22',  m1:8,  d1:23, m2:9,  d2:22,  trait: 'Analytical, kind, and hardworking' },
+    { name: 'Libra',       symbol: '♎', dates: 'Sep 23 – Oct 22',  m1:9,  d1:23, m2:10, d2:22,  trait: 'Diplomatic, fair-minded, and social' },
+    { name: 'Scorpio',     symbol: '♏', dates: 'Oct 23 – Nov 21',  m1:10, d1:23, m2:11, d2:21,  trait: 'Passionate, resourceful, and brave' },
+    { name: 'Sagittarius', symbol: '♐', dates: 'Nov 22 – Dec 21',  m1:11, d1:22, m2:12, d2:21,  trait: 'Optimistic, freedom-loving, and humorous' }
+  ];
+
+  function getZodiac(month, day) {
+    for (const z of ZODIAC) {
+      if (z.m1 === 12) {
+        if ((month === 12 && day >= z.d1) || (month === 1 && day <= z.d2)) return z;
+      } else {
+        if ((month === z.m1 && day >= z.d1) || (month === z.m2 && day <= z.d2)) return z;
+      }
+    }
+    return ZODIAC[0];
+  }
+
+  const DAYS_OF_WEEK = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  function calcAge() {
+    const dobVal = document.getElementById('dob').value;
+    const asOfVal = document.getElementById('ageAsOf').value;
+    if (!dobVal || !asOfVal) { alert('Please fill in both dates.'); return; }
+
+    const dob = new Date(dobVal + 'T00:00:00');
+    const asOf = new Date(asOfVal + 'T00:00:00');
+
+    if (dob > asOf) { alert('Date of birth cannot be after the "as of" date.'); return; }
+
+    // Exact age
+    let years = asOf.getFullYear() - dob.getFullYear();
+    let months = asOf.getMonth() - dob.getMonth();
+    let days = asOf.getDate() - dob.getDate();
+
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(asOf.getFullYear(), asOf.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    // Totals
+    const totalDays = Math.floor((asOf - dob) / (1000 * 60 * 60 * 24));
+    const totalWeeks = Math.floor(totalDays / 7);
+    const totalMonths = years * 12 + months;
+    const totalHours = totalDays * 24;
+
+    // Next birthday
+    const thisYear = asOf.getFullYear();
+    let nextBday = new Date(thisYear, dob.getMonth(), dob.getDate());
+    if (nextBday <= asOf) {
+      nextBday = new Date(thisYear + 1, dob.getMonth(), dob.getDate());
+    }
+    const daysUntilBday = Math.ceil((nextBday - asOf) / (1000 * 60 * 60 * 24));
+    const ageOnNextBday = nextBday.getFullYear() - dob.getFullYear();
+
+    // Day born
+    const bornDayOfWeek = DAYS_OF_WEEK[dob.getDay()];
+
+    // Format
+    const ageStr = `${years} ${years === 1 ? 'year' : 'years'}, ${months} ${months === 1 ? 'month' : 'months'}, ${days} ${days === 1 ? 'day' : 'days'}`;
+    const nextBdayStr = nextBday.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    document.getElementById('resAge').textContent = years + ' Years Old';
+    document.getElementById('resMonths').textContent = totalMonths.toLocaleString();
+    document.getElementById('resWeeks').textContent = totalWeeks.toLocaleString();
+    document.getElementById('resDays').textContent = totalDays.toLocaleString();
+    document.getElementById('resHours').textContent = totalHours.toLocaleString();
+    document.getElementById('resNextBday').textContent = nextBdayStr;
+    document.getElementById('resBdayDays').textContent = daysUntilBday + ' days';
+    document.getElementById('resNextAge').textContent = ageOnNextBday;
+    document.getElementById('resBornDay').textContent = bornDayOfWeek;
+
+    // Birthday countdown
+    document.getElementById('bdayCountNum').textContent = daysUntilBday;
+    document.getElementById('bdayCountLabel').textContent = daysUntilBday === 0 ? 'Happy Birthday! 🎂' : `days until your ${ageOnNextBday}${ordinal(ageOnNextBday)} birthday`;
+
+    // Zodiac
+    const z = getZodiac(dob.getMonth() + 1, dob.getDate());
+    document.getElementById('zodiacSymbol').textContent = z.symbol;
+    document.getElementById('zodiacName').textContent = z.name;
+    document.getElementById('zodiacDates').textContent = z.dates;
+    document.getElementById('zodiacTrait').textContent = z.trait;
+
+    document.getElementById('ageResults').classList.remove('hidden');
+  }
+
+  function ordinal(n) {
+    const s = ['th','st','nd','rd'];
+    const v = n % 100;
+    return s[(v - 20) % 10] || s[v] || s[0];
+  }
+
+  function resetAge() {
+    document.getElementById('dob').value = '';
+    document.getElementById('ageAsOf').value = todayStr;
+    document.getElementById('ageResults').classList.add('hidden');
+  }
+</script>
+</body>
+</html>

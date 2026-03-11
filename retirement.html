@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate how much you'll have at retirement. Project your 401k savings, see if you're on track, and plan for a comfortable retirement.">
+  <title>Retirement Savings Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .progress-track{background:#e2e8f0;border-radius:8px;height:12px;overflow:hidden;margin-top:8px}
+    .progress-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#2563eb,#7c3aed);transition:width 0.5s ease}
+    .on-track-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;margin-top:10px}
+    .badge-good{background:#dcfce7;color:#16a34a}
+    .badge-warn{background:#fef9c3;color:#b45309}
+    .badge-behind{background:#fee2e2;color:#dc2626}
+    .growth-chart{display:flex;align-items:flex-end;gap:3px;height:80px;margin-top:16px;padding:0 4px}
+    .chart-bar{flex:1;background:linear-gradient(180deg,#2563eb,#7c3aed);border-radius:3px 3px 0 0;min-height:4px;transition:height 0.4s ease}
+    .chart-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:#94a3b8;margin-top:4px;padding:0 4px}
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#finance">Finance</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Retirement Calculator</span>
+  </div>
+  <h1>Retirement Savings Calculator</h1>
+  <p>Project your retirement savings and see if you're on track to retire comfortably.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="currentAge">Current Age</label>
+            <input class="form-input" type="number" id="currentAge" placeholder="30" min="16" max="99">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="retireAge">Retirement Age</label>
+            <input class="form-input" type="number" id="retireAge" placeholder="65" min="17" max="99">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="currentSavings">Current Savings</label>
+            <div class="input-group has-prefix">
+              <span class="input-prefix">$</span>
+              <input class="form-input" type="number" id="currentSavings" placeholder="25,000" min="0" step="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="monthlyContrib">Monthly Contribution</label>
+            <div class="input-group has-prefix">
+              <span class="input-prefix">$</span>
+              <input class="form-input" type="number" id="monthlyContrib" placeholder="500" min="0" step="1">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="annualSalary">Annual Salary</label>
+            <div class="input-group has-prefix">
+              <span class="input-prefix">$</span>
+              <input class="form-input" type="number" id="annualSalary" placeholder="70,000" min="0" step="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="employerMatch">Employer Match</label>
+            <div class="input-group has-suffix">
+              <input class="form-input" type="number" id="employerMatch" placeholder="50" min="0" max="200" step="1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="matchLimit">Match Limit (% of salary)</label>
+            <div class="input-group has-suffix">
+              <input class="form-input" type="number" id="matchLimit" placeholder="6" min="0" max="100" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="annualReturn">Expected Annual Return</label>
+            <div class="input-group has-suffix">
+              <input class="form-input" type="number" id="annualReturn" value="7" min="0" max="30" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="inflationRate">Inflation Rate</label>
+            <div class="input-group has-suffix">
+              <input class="form-input" type="number" id="inflationRate" value="3" min="0" max="20" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="form-group"></div>
+        </div>
+
+        <div class="form-row" style="margin-top:8px">
+          <button class="btn-calculate" onclick="calculateRetirement()">Calculate</button>
+          <button class="btn-reset" onclick="resetRetirement()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div id="retirementResults" class="hidden" style="margin-top:28px">
+          <div class="results-box">
+            <div class="results-title">Retirement Projection</div>
+            <div class="result-primary">
+              <div class="result-primary-label">Projected Balance at Retirement</div>
+              <div class="result-primary-value" id="resBalance">$0</div>
+            </div>
+            <div id="onTrackBadge" style="text-align:center;margin-bottom:8px"></div>
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="result-item-label">Years to Retirement</div>
+                <div class="result-item-value" id="resYears">0</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Your Total Contributions</div>
+                <div class="result-item-value" id="resYourContrib">$0</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Employer Contributions</div>
+                <div class="result-item-value" id="resEmployerContrib">$0</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Investment Growth</div>
+                <div class="result-item-value" id="resGrowth">$0</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Inflation-Adjusted Balance</div>
+                <div class="result-item-value" id="resInflAdj">$0</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Monthly Withdrawal (4% Rule)</div>
+                <div class="result-item-value" id="resMonthlyWithdraw">$0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Growth visualization -->
+          <div style="margin-top:20px;background:#f8fafc;border-radius:12px;padding:20px">
+            <div style="font-size:0.9rem;font-weight:600;color:#475569;margin-bottom:8px">Balance Growth Over Time</div>
+            <div class="growth-chart" id="growthChart"></div>
+            <div class="chart-labels" id="chartLabels"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>How to Plan for Retirement</h2>
+      <p>Retirement planning is about ensuring your money outlasts you. The power of <strong>compound growth</strong> means that starting early, even with small amounts, can make an enormous difference by retirement.</p>
+
+      <h3>The 4% Rule</h3>
+      <p>The 4% rule is a widely-used guideline suggesting you can safely withdraw 4% of your retirement portfolio per year without depleting your savings over a 30-year retirement. To retire with $50,000 per year in income, you would need approximately $1,250,000 saved.</p>
+
+      <h3>Compound Growth</h3>
+      <p>The earlier you start, the more time your money has to grow. A 25-year-old investing $300/month at 7% returns will have significantly more at 65 than a 35-year-old investing $600/month — the extra decade of compounding is that powerful.</p>
+
+      <h3>Catch-Up Contributions</h3>
+      <p>If you're 50 or older, the IRS allows higher annual contribution limits to 401(k) and IRA accounts. For 2024, the 401(k) limit is $23,000 ($30,500 with catch-up). The IRA limit is $7,000 ($8,000 with catch-up). Take full advantage of these limits.</p>
+
+      <h3>Social Security</h3>
+      <p>Social Security benefits are not included in this projection. The average monthly Social Security benefit as of 2024 is approximately $1,900. You can get your personal estimate at ssa.gov. Social Security should be considered supplemental income, not the foundation of your retirement plan.</p>
+
+      <div class="formula-box">
+        <strong>Future Value Formula:</strong><br>
+        FV = PV × (1 + r)^n + PMT × [((1 + r)^n − 1) / r]<br>
+        Where: PV = current savings, r = monthly rate, n = months, PMT = monthly contribution<br><br>
+        <strong>Inflation-Adjusted Balance:</strong> Balance / (1 + inflation)^years
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget"><div class="ad-slot ad-rectangle">Advertisement · 300×250</div></div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="compound-interest.html">Compound Interest Calculator</a></li>
+        <li><a href="tax.html">Tax Calculator</a></li>
+        <li><a href="salary-hourly.html">Salary to Hourly Calculator</a></li>
+        <li><a href="mortgage.html">Mortgage Calculator</a></li>
+        <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function calculateRetirement() {
+    var currentAge = parseInt(document.getElementById('currentAge').value) || 0;
+    var retireAge = parseInt(document.getElementById('retireAge').value) || 65;
+    var currentSavings = parseFloat(document.getElementById('currentSavings').value) || 0;
+    var monthlyContrib = parseFloat(document.getElementById('monthlyContrib').value) || 0;
+    var annualSalary = parseFloat(document.getElementById('annualSalary').value) || 0;
+    var employerMatchPct = parseFloat(document.getElementById('employerMatch').value) || 0;
+    var matchLimitPct = parseFloat(document.getElementById('matchLimit').value) || 0;
+    var annualReturn = parseFloat(document.getElementById('annualReturn').value) || 7;
+    var inflationRate = parseFloat(document.getElementById('inflationRate').value) || 3;
+
+    if (currentAge <= 0 || retireAge <= currentAge) {
+      alert('Please enter a valid current age and a retirement age greater than your current age.');
+      return;
+    }
+
+    var years = retireAge - currentAge;
+    var months = years * 12;
+    var monthlyRate = annualReturn / 100 / 12;
+    var inflationMonthly = inflationRate / 100 / 12;
+
+    // Employer match calculation
+    // Employer matches employerMatchPct% of employee contribution, up to matchLimitPct% of salary
+    var maxMatchableContrib = (matchLimitPct / 100) * annualSalary / 12; // monthly cap
+    var effectiveMonthlyContrib = Math.min(monthlyContrib, maxMatchableContrib);
+    var monthlyEmployerMatch = effectiveMonthlyContrib * (employerMatchPct / 100);
+    var totalMonthlyContrib = monthlyContrib + monthlyEmployerMatch;
+
+    // Future value of current savings
+    var fvSavings;
+    if (monthlyRate === 0) {
+      fvSavings = currentSavings;
+    } else {
+      fvSavings = currentSavings * Math.pow(1 + monthlyRate, months);
+    }
+
+    // Future value of monthly contributions (annuity)
+    var fvContribs;
+    if (monthlyRate === 0) {
+      fvContribs = totalMonthlyContrib * months;
+    } else {
+      fvContribs = totalMonthlyContrib * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+    }
+
+    var totalBalance = fvSavings + fvContribs;
+
+    // Your contributions vs employer contributions breakdown
+    var yourTotalContrib = monthlyContrib * months;
+    var employerTotalContrib = monthlyEmployerMatch * months;
+    var investmentGrowth = totalBalance - currentSavings - yourTotalContrib - employerTotalContrib;
+
+    // Inflation adjusted
+    var inflationAdjusted = totalBalance / Math.pow(1 + inflationRate / 100, years);
+
+    // 4% rule monthly withdrawal
+    var monthlyWithdraw = (totalBalance * 0.04) / 12;
+
+    // On track check: rough guideline - by retirement should have 10-12x salary
+    var targetBalance = annualSalary * 10;
+    var onTrackStatus = 'good';
+    var onTrackText = 'On Track';
+    if (annualSalary > 0) {
+      var ratio = totalBalance / targetBalance;
+      if (ratio >= 1) { onTrackStatus = 'good'; onTrackText = 'On Track'; }
+      else if (ratio >= 0.7) { onTrackStatus = 'warn'; onTrackText = 'Nearly On Track'; }
+      else { onTrackStatus = 'behind'; onTrackText = 'May Need to Save More'; }
+    }
+
+    document.getElementById('resBalance').textContent = fmt(totalBalance);
+    document.getElementById('resYears').textContent = years + ' yrs';
+    document.getElementById('resYourContrib').textContent = fmt(yourTotalContrib);
+    document.getElementById('resEmployerContrib').textContent = fmt(employerTotalContrib);
+    document.getElementById('resGrowth').textContent = fmt(investmentGrowth);
+    document.getElementById('resInflAdj').textContent = fmt(inflationAdjusted);
+    document.getElementById('resMonthlyWithdraw').textContent = fmt(monthlyWithdraw) + '/mo';
+
+    var badge = document.getElementById('onTrackBadge');
+    badge.innerHTML = '<span class="on-track-badge badge-' + onTrackStatus + '">' + onTrackText + '</span>';
+
+    // Build growth chart - sample at intervals
+    var chart = document.getElementById('growthChart');
+    var labels = document.getElementById('chartLabels');
+    chart.innerHTML = '';
+    labels.innerHTML = '';
+
+    var numBars = Math.min(years, 20);
+    var step = years / numBars;
+    var balances = [];
+    var labelYears = [];
+
+    for (var i = 1; i <= numBars; i++) {
+      var m = Math.round(step * i * 12);
+      var fvS = monthlyRate === 0 ? currentSavings : currentSavings * Math.pow(1 + monthlyRate, m);
+      var fvC = monthlyRate === 0 ? totalMonthlyContrib * m : totalMonthlyContrib * ((Math.pow(1 + monthlyRate, m) - 1) / monthlyRate);
+      balances.push(fvS + fvC);
+      labelYears.push(currentAge + Math.round(step * i));
+    }
+
+    var maxBal = Math.max.apply(null, balances);
+    for (var k = 0; k < balances.length; k++) {
+      var bar = document.createElement('div');
+      bar.className = 'chart-bar';
+      bar.style.height = Math.max(4, (balances[k] / maxBal) * 80) + 'px';
+      bar.title = 'Age ' + labelYears[k] + ': ' + fmt(balances[k]);
+      chart.appendChild(bar);
+    }
+
+    // Only show first, middle, last labels
+    var labelsData = ['Age ' + labelYears[0], 'Age ' + labelYears[Math.floor(numBars / 2)], 'Age ' + labelYears[numBars - 1]];
+    for (var l = 0; l < 3; l++) {
+      var span = document.createElement('span');
+      span.textContent = labelsData[l];
+      labels.appendChild(span);
+    }
+
+    document.getElementById('retirementResults').classList.remove('hidden');
+  }
+
+  function resetRetirement() {
+    ['currentAge','retireAge','currentSavings','monthlyContrib','annualSalary','employerMatch','matchLimit'].forEach(function(id) {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('annualReturn').value = '7';
+    document.getElementById('inflationRate').value = '3';
+    document.getElementById('retirementResults').classList.add('hidden');
+  }
+</script>
+</body>
+</html>

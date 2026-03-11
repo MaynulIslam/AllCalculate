@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Convert time between world time zones instantly. See the current time in any city around the world.">
+  <title>Time Zone Converter — World Clock | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .tz-to-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .tz-to-row select { flex:1; }
+    .tz-remove-btn { width:34px; height:34px; border-radius:8px; border:1px solid #e2e8f0; background:white; color:#94a3b8; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s; }
+    .tz-remove-btn:hover { background:#fee2e2; border-color:#fca5a5; color:#dc2626; }
+    .add-tz-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; border:2px dashed #cbd5e1; background:transparent; color:#64748b; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all .15s; margin-top:4px; }
+    .add-tz-btn:hover { border-color:#6366f1; color:#6366f1; background:#f0f0ff; }
+
+    /* Conversion result card */
+    .conv-results-card { background:white; border-radius:16px; padding:24px; margin-top:20px; box-shadow:0 4px 6px rgba(0,0,0,0.07); border:1px solid #e2e8f0; }
+    .conv-result-row { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid #f1f5f9; }
+    .conv-result-row:last-child { border-bottom:none; }
+    .conv-flag { font-size:1.6rem; line-height:1; flex-shrink:0; width:36px; text-align:center; }
+    .conv-tz-name { font-size:0.8rem; color:#64748b; font-weight:500; }
+    .conv-time { font-size:1.3rem; font-weight:800; color:#1e293b; line-height:1.2; }
+    .conv-offset { font-size:0.78rem; color:#94a3b8; margin-top:2px; }
+    .conv-day-badge { padding:2px 8px; border-radius:99px; font-size:0.7rem; font-weight:700; margin-left:auto; flex-shrink:0; }
+    .badge-same { background:#dcfce7; color:#15803d; }
+    .badge-next { background:#dbeafe; color:#1d4ed8; }
+    .badge-prev { background:#fef3c7; color:#b45309; }
+
+    /* World clock */
+    .world-clock-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:14px; margin-top:16px; }
+    .world-clock-card { background:white; border-radius:12px; padding:14px 16px; border:1px solid #e2e8f0; box-shadow:0 2px 4px rgba(0,0,0,0.04); }
+    .wc-city { font-size:0.78rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; }
+    .wc-time { font-size:1.4rem; font-weight:800; color:#1e293b; line-height:1.2; margin:4px 0 2px; }
+    .wc-date { font-size:0.72rem; color:#94a3b8; }
+    .wc-flag { font-size:1.1rem; }
+    .from-time-display { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; margin-bottom:16px; display:none; }
+    .from-time-display.visible { display:block; }
+    .from-label { font-size:0.78rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
+    .from-value { font-size:1.2rem; font-weight:700; color:#1e293b; }
+  </style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#datetime">Date &amp; Time</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Time Zone Converter</span>
+  </div>
+  <h1>Time Zone Converter</h1>
+  <p>Convert times between any world time zones instantly.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <div class="form-group">
+          <label class="form-label" for="fromTz">From Time Zone</label>
+          <select class="form-select" id="fromTz"></select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="tzDate">Date</label>
+            <input class="form-input" type="date" id="tzDate">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="tzTime">Time</label>
+            <input class="form-input" type="time" id="tzTime">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Convert To</label>
+          <div id="toZonesList"></div>
+          <button class="add-tz-btn" id="addTzBtn" onclick="addToZone()">+ Add Time Zone</button>
+        </div>
+
+        <div class="form-row" style="margin-top:8px;">
+          <button class="btn-calculate" onclick="convertTime()">Convert</button>
+          <button class="btn-reset" onclick="resetTZ()">Reset</button>
+        </div>
+
+        <!-- Source time display -->
+        <div class="from-time-display" id="fromTimeDisplay">
+          <div class="from-label">Input Time (Source)</div>
+          <div class="from-value" id="fromTimeValue">—</div>
+        </div>
+
+        <!-- Conversion results -->
+        <div class="conv-results-card hidden" id="convResultsCard">
+          <div style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:4px;">Converted Times</div>
+          <div id="conversionResults"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- World Clock -->
+    <div class="calc-main" style="margin-top:24px;">
+      <div class="calc-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <h2 style="font-size:1.1rem;font-weight:700;color:#1e293b;margin:0;">Live World Clock</h2>
+          <span style="font-size:0.75rem;color:#94a3b8;">Updates every second</span>
+        </div>
+        <div class="world-clock-grid" id="worldClockGrid"></div>
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>Understanding Time Zones</h2>
+      <p>The world is divided into 24 primary time zones, each roughly 15 degrees of longitude wide, corresponding to one hour of time difference. However, political and geographic boundaries mean many real-world zones deviate significantly from this pattern.</p>
+
+      <div class="formula-box">
+        <strong>UTC (Coordinated Universal Time)</strong> is the primary time standard. All other time zones are expressed as UTC offsets (e.g., UTC+5:30 for India).<br><br>
+        <strong>DST (Daylight Saving Time)</strong> shifts clocks forward by 1 hour in spring and back in autumn in participating regions.
+      </div>
+
+      <h3>Common Time Zone Abbreviations</h3>
+      <ul>
+        <li><strong>UTC/GMT:</strong> Universal Coordinated Time — the baseline reference</li>
+        <li><strong>EST/EDT:</strong> Eastern Standard/Daylight Time (UTC-5 / UTC-4)</li>
+        <li><strong>CST/CDT:</strong> Central Standard/Daylight Time (UTC-6 / UTC-5)</li>
+        <li><strong>MST/MDT:</strong> Mountain Standard/Daylight Time (UTC-7 / UTC-6)</li>
+        <li><strong>PST/PDT:</strong> Pacific Standard/Daylight Time (UTC-8 / UTC-7)</li>
+        <li><strong>IST:</strong> India Standard Time (UTC+5:30, no DST)</li>
+        <li><strong>JST:</strong> Japan Standard Time (UTC+9, no DST)</li>
+        <li><strong>AEST/AEDT:</strong> Australian Eastern Standard/Daylight Time</li>
+      </ul>
+
+      <h3>Tips for International Meetings</h3>
+      <p>When scheduling across time zones, always confirm whether DST applies to both locations. Spring and autumn transitions often fall on different dates in different countries, causing temporary shifts in the offset between two zones.</p>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget">
+      <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="age.html">Age Calculator</a></li>
+        <li><a href="days-between.html">Days Between Dates</a></li>
+        <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+        <li><a href="retirement.html">Retirement Calculator</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // ---- Timezone data ----
+  const TZ_LIST = [
+    { value: 'UTC',                   label: 'UTC+0 (UTC)',                              flag: '🌍' },
+    { value: 'America/New_York',      label: 'Eastern Time — New York (UTC-5/-4)',        flag: '🇺🇸' },
+    { value: 'America/Chicago',       label: 'Central Time — Chicago (UTC-6/-5)',         flag: '🇺🇸' },
+    { value: 'America/Denver',        label: 'Mountain Time — Denver (UTC-7/-6)',         flag: '🇺🇸' },
+    { value: 'America/Los_Angeles',   label: 'Pacific Time — Los Angeles (UTC-8/-7)',     flag: '🇺🇸' },
+    { value: 'America/Phoenix',       label: 'Arizona — Phoenix (UTC-7, no DST)',         flag: '🇺🇸' },
+    { value: 'America/Anchorage',     label: 'Alaska Time — Anchorage (UTC-9/-8)',        flag: '🇺🇸' },
+    { value: 'Pacific/Honolulu',      label: 'Hawaii Time — Honolulu (UTC-10)',           flag: '🇺🇸' },
+    { value: 'America/Toronto',       label: 'Eastern Time — Toronto (UTC-5/-4)',         flag: '🇨🇦' },
+    { value: 'America/Vancouver',     label: 'Pacific Time — Vancouver (UTC-8/-7)',       flag: '🇨🇦' },
+    { value: 'America/Mexico_City',   label: 'Central Time — Mexico City (UTC-6/-5)',     flag: '🇲🇽' },
+    { value: 'America/Sao_Paulo',     label: 'Brasília Time — São Paulo (UTC-3/-2)',      flag: '🇧🇷' },
+    { value: 'America/Argentina/Buenos_Aires', label: 'Argentina Time — Buenos Aires (UTC-3)', flag: '🇦🇷' },
+    { value: 'Europe/London',         label: 'GMT/BST — London (UTC+0/+1)',              flag: '🇬🇧' },
+    { value: 'Europe/Paris',          label: 'Central European — Paris (UTC+1/+2)',       flag: '🇫🇷' },
+    { value: 'Europe/Berlin',         label: 'Central European — Berlin (UTC+1/+2)',      flag: '🇩🇪' },
+    { value: 'Europe/Moscow',         label: 'Moscow Time — Moscow (UTC+3)',             flag: '🇷🇺' },
+    { value: 'Africa/Cairo',          label: 'Eastern European — Cairo (UTC+2)',          flag: '🇪🇬' },
+    { value: 'Africa/Lagos',          label: 'West Africa — Lagos (UTC+1)',              flag: '🇳🇬' },
+    { value: 'Africa/Johannesburg',   label: 'South Africa — Johannesburg (UTC+2)',       flag: '🇿🇦' },
+    { value: 'Asia/Dubai',            label: 'Gulf Time — Dubai (UTC+4)',                flag: '🇦🇪' },
+    { value: 'Asia/Karachi',          label: 'Pakistan Time — Karachi (UTC+5)',          flag: '🇵🇰' },
+    { value: 'Asia/Kolkata',          label: 'India Time — Mumbai/Kolkata (UTC+5:30)',   flag: '🇮🇳' },
+    { value: 'Asia/Dhaka',            label: 'Bangladesh Time — Dhaka (UTC+6)',          flag: '🇧🇩' },
+    { value: 'Asia/Bangkok',          label: 'Indochina Time — Bangkok (UTC+7)',         flag: '🇹🇭' },
+    { value: 'Asia/Singapore',        label: 'Singapore Time — Singapore (UTC+8)',       flag: '🇸🇬' },
+    { value: 'Asia/Tokyo',            label: 'Japan Time — Tokyo (UTC+9)',              flag: '🇯🇵' },
+    { value: 'Asia/Seoul',            label: 'Korea Time — Seoul (UTC+9)',              flag: '🇰🇷' },
+    { value: 'Australia/Sydney',      label: 'AEST/AEDT — Sydney (UTC+10/+11)',         flag: '🇦🇺' },
+    { value: 'Pacific/Auckland',      label: 'New Zealand — Auckland (UTC+12/+13)',     flag: '🇳🇿' }
+  ];
+
+  const DEFAULT_TO_TZ = ['UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo'];
+
+  // World clock cities
+  const WORLD_CLOCK_CITIES = [
+    { tz: 'America/New_York',    city: 'New York',    flag: '🇺🇸' },
+    { tz: 'Europe/London',       city: 'London',      flag: '🇬🇧' },
+    { tz: 'Europe/Paris',        city: 'Paris',       flag: '🇫🇷' },
+    { tz: 'Europe/Moscow',       city: 'Moscow',      flag: '🇷🇺' },
+    { tz: 'Asia/Dubai',          city: 'Dubai',       flag: '🇦🇪' },
+    { tz: 'Asia/Singapore',      city: 'Singapore',   flag: '🇸🇬' },
+    { tz: 'Asia/Tokyo',          city: 'Tokyo',       flag: '🇯🇵' },
+    { tz: 'Australia/Sydney',    city: 'Sydney',      flag: '🇦🇺' }
+  ];
+
+  // Populate "from" select
+  function buildSelect(id, selectedVal) {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '';
+    TZ_LIST.forEach(tz => {
+      const opt = document.createElement('option');
+      opt.value = tz.value;
+      opt.textContent = tz.flag + '  ' + tz.label;
+      if (tz.value === selectedVal) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function buildToSelect(defaultVal) {
+    const sel = document.createElement('select');
+    sel.className = 'form-select';
+    TZ_LIST.forEach(tz => {
+      const opt = document.createElement('option');
+      opt.value = tz.value;
+      opt.textContent = tz.flag + '  ' + tz.label;
+      if (tz.value === defaultVal) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    return sel;
+  }
+
+  let toZoneCount = 0;
+
+  function addToZone(defaultVal) {
+    if (toZoneCount >= 8) return;
+    const row = document.createElement('div');
+    row.className = 'tz-to-row';
+    row.dataset.id = toZoneCount;
+
+    const sel = buildToSelect(defaultVal || TZ_LIST[0].value);
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'tz-remove-btn';
+    removeBtn.innerHTML = '×';
+    removeBtn.title = 'Remove';
+    removeBtn.onclick = function() {
+      row.remove();
+      toZoneCount = Math.max(0, toZoneCount - 1);
+      document.getElementById('addTzBtn').style.display = toZoneCount >= 8 ? 'none' : 'inline-flex';
+    };
+
+    row.appendChild(sel);
+    row.appendChild(removeBtn);
+    document.getElementById('toZonesList').appendChild(row);
+    toZoneCount++;
+    document.getElementById('addTzBtn').style.display = toZoneCount >= 8 ? 'none' : 'inline-flex';
+  }
+
+  // Set default date/time
+  const now = new Date();
+  document.getElementById('tzDate').value = now.toISOString().split('T')[0];
+  document.getElementById('tzTime').value = now.toTimeString().slice(0,5);
+
+  // Detect user's timezone
+  const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const userTzMatch = TZ_LIST.find(t => t.value === userTz) ? userTz : 'America/New_York';
+  buildSelect('fromTz', userTzMatch);
+
+  // Add default destination zones
+  DEFAULT_TO_TZ.forEach(tz => addToZone(tz));
+
+  function getUtcOffset(tz, date) {
+    try {
+      const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+      const tzDate = new Date(date.toLocaleString('en-US', { timeZone: tz }));
+      const diff = (tzDate - utcDate) / 60000; // minutes
+      const sign = diff >= 0 ? '+' : '-';
+      const absDiff = Math.abs(diff);
+      const hrs = Math.floor(absDiff / 60);
+      const mins = absDiff % 60;
+      return `UTC${sign}${hrs}${mins > 0 ? ':' + String(mins).padStart(2,'0') : ''}`;
+    } catch(e) { return 'UTC?'; }
+  }
+
+  function convertTime() {
+    const fromTz = document.getElementById('fromTz').value;
+    const dateVal = document.getElementById('tzDate').value;
+    const timeVal = document.getElementById('tzTime').value;
+
+    if (!dateVal || !timeVal) { alert('Please select a date and time.'); return; }
+
+    // Create a Date object representing the local wall-clock time in fromTz
+    // We use a trick: parse as if local, then use Intl to render in other TZs
+    const inputDt = new Date(`${dateVal}T${timeVal}:00`);
+
+    // Show source time
+    const fromTzObj = TZ_LIST.find(t => t.value === fromTz);
+    const fromFormatted = new Intl.DateTimeFormat('en-US', {
+      timeZone: fromTz, dateStyle: 'full', timeStyle: 'short'
+    }).format(inputDt);
+    document.getElementById('fromTimeValue').textContent = (fromTzObj ? fromTzObj.flag + '  ' : '') + fromFormatted;
+    document.getElementById('fromTimeDisplay').classList.add('visible');
+
+    // Collect destination zones
+    const rows = document.getElementById('toZonesList').querySelectorAll('.tz-to-row');
+    if (rows.length === 0) { alert('Please add at least one destination time zone.'); return; }
+
+    let resultsHTML = '';
+    const inputDate = new Date(dateVal + 'T00:00:00');
+
+    rows.forEach(row => {
+      const sel = row.querySelector('select');
+      if (!sel) return;
+      const toTz = sel.value;
+      const tzObj = TZ_LIST.find(t => t.value === toTz);
+      const flag = tzObj ? tzObj.flag : '🌍';
+      const shortName = tzObj ? tzObj.label.split('—')[0].trim() : toTz;
+
+      // Format converted time
+      const convertedTime = new Intl.DateTimeFormat('en-US', {
+        timeZone: toTz,
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }).format(inputDt);
+
+      const convertedDate = new Intl.DateTimeFormat('en-US', {
+        timeZone: toTz,
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      }).format(inputDt);
+
+      // Determine if it's same/next/prev day
+      const toDateStr = new Intl.DateTimeFormat('en-CA', { timeZone: toTz }).format(inputDt); // YYYY-MM-DD
+      const fromDateStr = new Intl.DateTimeFormat('en-CA', { timeZone: fromTz }).format(inputDt);
+      let dayBadge = '';
+      if (toDateStr === fromDateStr) {
+        dayBadge = '<span class="conv-day-badge badge-same">Same Day</span>';
+      } else if (toDateStr > fromDateStr) {
+        dayBadge = '<span class="conv-day-badge badge-next">Next Day</span>';
+      } else {
+        dayBadge = '<span class="conv-day-badge badge-prev">Prev Day</span>';
+      }
+
+      const offset = getUtcOffset(toTz, inputDt);
+
+      resultsHTML += `<div class="conv-result-row">
+        <div class="conv-flag">${flag}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="conv-tz-name">${shortName}</div>
+          <div class="conv-time">${convertedTime}</div>
+          <div class="conv-offset">${convertedDate} · ${offset}</div>
+        </div>
+        ${dayBadge}
+      </div>`;
+    });
+
+    document.getElementById('conversionResults').innerHTML = resultsHTML;
+    document.getElementById('convResultsCard').classList.remove('hidden');
+  }
+
+  function resetTZ() {
+    document.getElementById('toZonesList').innerHTML = '';
+    toZoneCount = 0;
+    DEFAULT_TO_TZ.forEach(tz => addToZone(tz));
+    const n = new Date();
+    document.getElementById('tzDate').value = n.toISOString().split('T')[0];
+    document.getElementById('tzTime').value = n.toTimeString().slice(0,5);
+    document.getElementById('fromTz').value = userTzMatch;
+    document.getElementById('convResultsCard').classList.add('hidden');
+    document.getElementById('fromTimeDisplay').classList.remove('visible');
+  }
+
+  // ---- World Clock ----
+  function buildWorldClock() {
+    const grid = document.getElementById('worldClockGrid');
+    grid.innerHTML = '';
+    WORLD_CLOCK_CITIES.forEach(city => {
+      const card = document.createElement('div');
+      card.className = 'world-clock-card';
+      card.id = 'wc-' + city.tz.replace(/\//g, '-');
+      grid.appendChild(card);
+    });
+    updateWorldClock();
+  }
+
+  function updateWorldClock() {
+    const now = new Date();
+    WORLD_CLOCK_CITIES.forEach(city => {
+      const cardId = 'wc-' + city.tz.replace(/\//g, '-');
+      const card = document.getElementById(cardId);
+      if (!card) return;
+
+      const timeStr = new Intl.DateTimeFormat('en-US', {
+        timeZone: city.tz,
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      }).format(now);
+
+      const dateStr = new Intl.DateTimeFormat('en-US', {
+        timeZone: city.tz,
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      }).format(now);
+
+      card.innerHTML = `
+        <div class="wc-city"><span class="wc-flag">${city.flag}</span> ${city.city}</div>
+        <div class="wc-time">${timeStr}</div>
+        <div class="wc-date">${dateStr}</div>
+      `;
+    });
+  }
+
+  buildWorldClock();
+  setInterval(updateWorldClock, 1000);
+</script>
+</body>
+</html>

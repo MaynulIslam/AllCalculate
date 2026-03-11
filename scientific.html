@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online scientific calculator with trigonometric functions, logarithms, exponents, and more. Works on all devices.">
+  <title>Scientific Calculator Online | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .sci-calc {
+      background: #1e293b;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .sci-display {
+      background: #0f172a;
+      padding: 20px 24px 16px;
+      text-align: right;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .sci-display-history {
+      font-size: 0.82rem;
+      color: #64748b;
+      min-height: 22px;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: 'Courier New', monospace;
+    }
+    .sci-display-expr {
+      font-size: 1rem;
+      color: #94a3b8;
+      min-height: 26px;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: 'Courier New', monospace;
+      direction: rtl;
+      text-align: right;
+    }
+    .sci-display-main {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: 'Courier New', monospace;
+    }
+    .sci-buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: #334155;
+      padding: 1px;
+    }
+    .sci-btn {
+      background: #1e293b;
+      border: none;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0;
+      height: 56px;
+      cursor: pointer;
+      transition: background 0.1s, transform 0.05s;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .sci-btn:hover { background: #334155; }
+    .sci-btn:active { background: #475569; transform: scale(0.97); }
+    .sci-btn.fn { background: #1e3a5f; color: #93c5fd; font-size: 0.85rem; }
+    .sci-btn.fn:hover { background: #1e4080; }
+    .sci-btn.op { background: #1c2f45; color: #fbbf24; font-size: 1.2rem; }
+    .sci-btn.op:hover { background: #243a55; }
+    .sci-btn.eq { background: #f97316; color: #fff; font-size: 1.3rem; }
+    .sci-btn.eq:hover { background: #ea6c0a; }
+    .sci-btn.clear { background: #3b1c1c; color: #fca5a5; }
+    .sci-btn.clear:hover { background: #4c2020; }
+    .sci-btn.num { background: #263548; color: #f1f5f9; font-size: 1.05rem; }
+    .sci-btn.num:hover { background: #2f4060; }
+    .sci-btn.zero { grid-column: span 2; }
+    .sci-btn.deg-toggle { background: #0f2c1a; color: #4ade80; font-size: 0.8rem; }
+    .sci-btn.deg-toggle:hover { background: #1a3d25; }
+
+    .calc-history {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .calc-history h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid #f1f5f9;
+      gap: 10px;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item:hover { background: #f0f9ff; color: #1e293b; }
+    .history-item .h-expr { flex: 1; font-family: 'Courier New', monospace; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .history-item .h-result { font-weight: 700; color: #f97316; white-space: nowrap; }
+
+    .keyboard-ref {
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+    .keyboard-ref table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .keyboard-ref td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .keyboard-ref td:first-child {
+      font-family: 'Courier New', monospace;
+      background: #f8fafc;
+      border-radius: 4px;
+      font-weight: 700;
+      color: #1e293b;
+      width: 90px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <a href="index.html#math">Math &amp; Everyday</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Scientific Calculator</span>
+    </div>
+    <h1>Scientific Calculator</h1>
+    <p>A full-featured scientific calculator with trig, logarithms, roots, and more.</p>
+  </div>
+
+  <div style="max-width:900px;margin:-30px auto 60px;padding:0 20px">
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:start">
+      <div>
+        <div class="calc-main">
+          <div class="calc-body" style="padding:0">
+            <div class="sci-calc" id="sciCalc">
+              <!-- Display -->
+              <div class="sci-display">
+                <div class="sci-display-history" id="sciHistory">&nbsp;</div>
+                <div class="sci-display-expr" id="sciExpr">&nbsp;</div>
+                <div class="sci-display-main" id="sciDisplay">0</div>
+              </div>
+              <!-- Buttons -->
+              <div class="sci-buttons" id="sciButtons"></div>
+            </div>
+
+            <!-- History -->
+            <div class="calc-history" style="margin:16px 16px 0;padding-bottom:0">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <h4 style="margin:0">Calculation History</h4>
+                <button onclick="clearHistory()" style="font-size:0.78rem;color:#94a3b8;background:none;border:none;cursor:pointer;padding:2px 6px">Clear</button>
+              </div>
+              <div id="historyList" style="min-height:40px;color:#94a3b8;font-size:0.85rem;padding-bottom:4px">No history yet. Start calculating!</div>
+            </div>
+            <div style="height:16px"></div>
+          </div>
+        </div>
+
+        <!-- AD SLOT: Between Sections 336x280 -->
+        <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+        <div class="info-section" style="margin-top:28px">
+          <h2>About This Scientific Calculator</h2>
+          <p>This free online scientific calculator supports all standard scientific and mathematical operations including trigonometric functions, logarithms, exponents, factorials, and more. It works on desktop, tablet, and mobile.</p>
+
+          <h3>Keyboard Shortcuts</h3>
+          <div class="keyboard-ref">
+            <table>
+              <tr><td>0–9, ., +, -, *, /</td><td>Enter numbers and operators</td></tr>
+              <tr><td>Enter / =</td><td>Calculate result</td></tr>
+              <tr><td>Escape</td><td>Clear all (AC)</td></tr>
+              <tr><td>Backspace</td><td>Delete last character</td></tr>
+              <tr><td>( and )</td><td>Parentheses</td></tr>
+              <tr><td>%</td><td>Percentage / Modulo</td></tr>
+              <tr><td>^</td><td>Power (x to the y)</td></tr>
+            </table>
+          </div>
+
+          <h3>How to Use Scientific Functions</h3>
+          <ul>
+            <li><strong>Trigonometry (sin, cos, tan):</strong> Enter the angle, then press the function. Angle mode shown in display (DEG/RAD).</li>
+            <li><strong>Inverse trig (sin⁻¹, cos⁻¹, tan⁻¹):</strong> Enter the value (between -1 and 1 for sin/cos), then press.</li>
+            <li><strong>Logarithms:</strong> <code>log</code> = base-10 logarithm, <code>ln</code> = natural logarithm</li>
+            <li><strong>Powers:</strong> Use <code>x²</code> for squaring, <code>x³</code> for cubing, <code>xʸ</code> for arbitrary power (press after first number, enter exponent, then =)</li>
+            <li><strong>Roots:</strong> <code>√</code> = square root of the current entry</li>
+            <li><strong>Factorial (n!):</strong> Enter a non-negative integer, then press n!</li>
+            <li><strong>Constants:</strong> π ≈ 3.14159265..., e ≈ 2.71828182...</li>
+          </ul>
+
+          <h3>Common Scientific Calculations</h3>
+          <div class="formula-box">
+            <strong>Area of a circle:</strong> π × r² → Enter r, press x², press ×, press π, press =<br>
+            <strong>Pythagorean theorem:</strong> √(a² + b²) → Enter a², +, b², then √<br>
+            <strong>Compound interest:</strong> P × (1 + r)^n → Use xʸ for the power<br>
+            <strong>Decibels:</strong> 10 × log(P₁/P₂) → Divide, then log, then ×10<br>
+            <strong>pH calculation:</strong> −log[H⁺] → Enter concentration, press log, press +/−
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-sidebar">
+        <div class="sidebar-widget">
+          <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+        </div>
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-title" style="margin-bottom:12px">Angle Mode</div>
+          <div style="display:flex;gap:8px">
+            <button id="btnDeg" onclick="setAngleMode('deg')" style="flex:1;padding:10px;border:2px solid #f97316;background:#fff7ed;color:#f97316;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem">DEG</button>
+            <button id="btnRad" onclick="setAngleMode('rad')" style="flex:1;padding:10px;border:2px solid #e2e8f0;background:#fff;color:#64748b;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem">RAD</button>
+          </div>
+          <p style="font-size:0.8rem;color:#94a3b8;margin-top:8px">Currently: <strong id="angleModeLabel" style="color:#f97316">Degrees</strong></p>
+        </div>
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-title">Related Calculators</div>
+          <ul class="related-calc-list">
+            <li><a href="percentage.html">📊 Percentage Calculator</a></li>
+            <li><a href="gpa.html">🎓 GPA Calculator</a></li>
+            <li><a href="unit-converter.html">🔄 Unit Converter</a></li>
+            <li><a href="mortgage.html">🏠 Mortgage Calculator</a></li>
+            <li><a href="square-footage.html">📐 Square Footage</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-widget" style="background:#1e293b;border-radius:12px;padding:16px;color:#94a3b8">
+          <div style="font-size:0.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Math Constants</div>
+          <div style="font-family:'Courier New',monospace;font-size:0.85rem;line-height:1.8">
+            <div><span style="color:#93c5fd">π</span> = 3.14159265358979</div>
+            <div><span style="color:#93c5fd">e</span> = 2.71828182845905</div>
+            <div><span style="color:#93c5fd">φ</span> = 1.61803398874989</div>
+            <div><span style="color:#93c5fd">√2</span> = 1.41421356237310</div>
+            <div><span style="color:#93c5fd">√3</span> = 1.73205080756888</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // ─── State ───────────────────────────────────────────────────────────
+    let display = '0';
+    let expression = '';
+    let lastResult = null;
+    let justCalculated = false;
+    let angleMode = 'deg'; // 'deg' or 'rad'
+    let history = [];
+    let pendingOp = null; // for xʸ
+
+    // ─── Button Definitions ──────────────────────────────────────────────
+    const buttons = [
+      {label:'sin',   cls:'fn',    action:'sin'},
+      {label:'cos',   cls:'fn',    action:'cos'},
+      {label:'tan',   cls:'fn',    action:'tan'},
+      {label:'log',   cls:'fn',    action:'log'},
+      {label:'ln',    cls:'fn',    action:'ln'},
+      {label:'sin⁻¹', cls:'fn',    action:'asin'},
+      {label:'cos⁻¹', cls:'fn',    action:'acos'},
+      {label:'tan⁻¹', cls:'fn',    action:'atan'},
+      {label:'π',     cls:'fn',    action:'pi'},
+      {label:'e',     cls:'fn',    action:'euler'},
+      {label:'x²',    cls:'fn',    action:'sq'},
+      {label:'x³',    cls:'fn',    action:'cube'},
+      {label:'√',     cls:'fn',    action:'sqrt'},
+      {label:'(',     cls:'fn',    action:'('},
+      {label:')',     cls:'fn',    action:')'},
+      {label:'n!',    cls:'fn',    action:'fact'},
+      {label:'1/x',   cls:'fn',    action:'inv'},
+      {label:'%',     cls:'fn op', action:'%'},
+      {label:'DEL',   cls:'clear', action:'del'},
+      {label:'AC',    cls:'clear', action:'ac'},
+      {label:'7',     cls:'num',   action:'7'},
+      {label:'8',     cls:'num',   action:'8'},
+      {label:'9',     cls:'num',   action:'9'},
+      {label:'÷',     cls:'op',    action:'/'},
+      {label:'×',     cls:'op',    action:'*'},
+      {label:'4',     cls:'num',   action:'4'},
+      {label:'5',     cls:'num',   action:'5'},
+      {label:'6',     cls:'num',   action:'6'},
+      {label:'+',     cls:'op',    action:'+'},
+      {label:'−',     cls:'op',    action:'-'},
+      {label:'1',     cls:'num',   action:'1'},
+      {label:'2',     cls:'num',   action:'2'},
+      {label:'3',     cls:'num',   action:'3'},
+      {label:'xʸ',    cls:'fn',    action:'pow'},
+      {label:'+/−',   cls:'fn',    action:'neg'},
+      {label:'0',     cls:'num zero', action:'0'},
+      {label:'.',     cls:'num',   action:'.'},
+      {label:'=',     cls:'eq',    action:'='},
+    ];
+
+    // ─── Build Buttons ───────────────────────────────────────────────────
+    const container = document.getElementById('sciButtons');
+    buttons.forEach(b => {
+      const btn = document.createElement('button');
+      btn.className = 'sci-btn ' + b.cls;
+      btn.textContent = b.label;
+      btn.setAttribute('data-action', b.action);
+      btn.addEventListener('click', () => handleAction(b.action));
+      container.appendChild(btn);
+    });
+
+    // ─── Angle Mode ──────────────────────────────────────────────────────
+    function setAngleMode(mode) {
+      angleMode = mode;
+      document.getElementById('btnDeg').style.borderColor = mode === 'deg' ? '#f97316' : '#e2e8f0';
+      document.getElementById('btnDeg').style.background  = mode === 'deg' ? '#fff7ed' : '#fff';
+      document.getElementById('btnDeg').style.color       = mode === 'deg' ? '#f97316' : '#64748b';
+      document.getElementById('btnRad').style.borderColor = mode === 'rad' ? '#f97316' : '#e2e8f0';
+      document.getElementById('btnRad').style.background  = mode === 'rad' ? '#fff7ed' : '#fff';
+      document.getElementById('btnRad').style.color       = mode === 'rad' ? '#f97316' : '#64748b';
+      document.getElementById('angleModeLabel').textContent = mode === 'deg' ? 'Degrees' : 'Radians';
+    }
+
+    function toRad(x) { return angleMode === 'deg' ? x * Math.PI / 180 : x; }
+    function fromRad(x) { return angleMode === 'deg' ? x * 180 / Math.PI : x; }
+
+    // ─── Display Update ──────────────────────────────────────────────────
+    function updateDisplay() {
+      document.getElementById('sciDisplay').textContent = display;
+      document.getElementById('sciExpr').textContent = expression || '\u00a0';
+    }
+
+    function setDisplay(val) {
+      // Format nicely
+      if (typeof val === 'number') {
+        if (!isFinite(val)) { display = isNaN(val) ? 'Error' : (val > 0 ? 'Infinity' : '-Infinity'); return; }
+        // Use toPrecision to avoid floating point mess, then parse back
+        let str = parseFloat(val.toPrecision(12)).toString();
+        display = str;
+      } else {
+        display = String(val);
+      }
+    }
+
+    // ─── Factorial ───────────────────────────────────────────────────────
+    function factorial(n) {
+      n = Math.round(n);
+      if (n < 0) return NaN;
+      if (n > 170) return Infinity;
+      if (n === 0 || n === 1) return 1;
+      let r = 1;
+      for (let i = 2; i <= n; i++) r *= i;
+      return r;
+    }
+
+    // ─── Main Action Handler ─────────────────────────────────────────────
+    function handleAction(action) {
+      const curVal = parseFloat(display);
+
+      if (action === 'ac') {
+        display = '0'; expression = ''; pendingOp = null; justCalculated = false;
+        document.getElementById('sciHistory').innerHTML = '&nbsp;';
+        updateDisplay(); return;
+      }
+
+      if (action === 'del') {
+        if (justCalculated) { display = '0'; justCalculated = false; updateDisplay(); return; }
+        if (display.length > 1 && display !== 'Error') display = display.slice(0, -1);
+        else display = '0';
+        updateDisplay(); return;
+      }
+
+      // If error, AC first
+      if (display === 'Error' || display === 'Infinity' || display === '-Infinity') {
+        if (!['ac','del'].includes(action)) { display = '0'; expression = ''; }
+      }
+
+      // Digits and decimal
+      if ('0123456789'.includes(action)) {
+        if (justCalculated) { display = action; expression = ''; justCalculated = false; }
+        else display = (display === '0') ? action : display + action;
+        updateDisplay(); return;
+      }
+
+      if (action === '.') {
+        if (justCalculated) { display = '0.'; justCalculated = false; }
+        else if (!display.includes('.')) display += '.';
+        updateDisplay(); return;
+      }
+
+      // Negate
+      if (action === 'neg') {
+        if (display !== '0') display = display.startsWith('-') ? display.slice(1) : '-' + display;
+        updateDisplay(); return;
+      }
+
+      // Constants
+      if (action === 'pi') {
+        display = String(parseFloat(Math.PI.toPrecision(12)));
+        justCalculated = false; updateDisplay(); return;
+      }
+      if (action === 'euler') {
+        display = String(parseFloat(Math.E.toPrecision(12)));
+        justCalculated = false; updateDisplay(); return;
+      }
+
+      // Unary math functions
+      const unaryFns = {
+        sq:   v => v * v,
+        cube: v => v * v * v,
+        sqrt: v => Math.sqrt(v),
+        sin:  v => Math.sin(toRad(v)),
+        cos:  v => Math.cos(toRad(v)),
+        tan:  v => Math.tan(toRad(v)),
+        asin: v => fromRad(Math.asin(v)),
+        acos: v => fromRad(Math.acos(v)),
+        atan: v => fromRad(Math.atan(v)),
+        log:  v => Math.log10(v),
+        ln:   v => Math.log(v),
+        fact: v => factorial(v),
+        inv:  v => 1 / v,
+        '%':  v => v / 100,
+      };
+
+      if (unaryFns[action]) {
+        const result = unaryFns[action](curVal);
+        const exprStr = `${actionLabel(action)}(${display})`;
+        setDisplay(result);
+        expression = exprStr + ' =';
+        addHistory(exprStr, display);
+        justCalculated = true;
+        updateDisplay(); return;
+      }
+
+      // Power (xʸ)
+      if (action === 'pow') {
+        pendingOp = { op: 'pow', val: curVal };
+        expression = display + ' ^ ';
+        display = '0';
+        justCalculated = false;
+        updateDisplay(); return;
+      }
+
+      // Binary operators
+      if (['+', '-', '*', '/'].includes(action)) {
+        if (pendingOp) {
+          // Chain: evaluate pending first
+          const res = evalBinary(pendingOp.op, pendingOp.val, curVal);
+          setDisplay(res);
+          pendingOp = null;
+        }
+        expression = display + ' ' + opLabel(action) + ' ';
+        pendingOp = { op: action, val: parseFloat(display) };
+        justCalculated = false;
+        updateDisplay(); return;
+      }
+
+      // Parentheses — append to expression
+      if (action === '(' || action === ')') {
+        expression += action;
+        updateDisplay(); return;
+      }
+
+      // Equals
+      if (action === '=') {
+        if (pendingOp) {
+          const a = pendingOp.val;
+          const b = curVal;
+          const op = pendingOp.op;
+          const res = evalBinary(op, a, b);
+          const exprStr = `${a} ${opLabel(op)} ${b}`;
+          addHistory(exprStr, formatResult(res));
+          document.getElementById('sciHistory').textContent = exprStr + ' =';
+          expression = exprStr + ' =';
+          setDisplay(res);
+          pendingOp = null;
+          justCalculated = true;
+          updateDisplay();
+        }
+        return;
+      }
+    }
+
+    function evalBinary(op, a, b) {
+      switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return b === 0 ? (a >= 0 ? Infinity : -Infinity) : a / b;
+        case 'pow': return Math.pow(a, b);
+      }
+      return b;
+    }
+
+    function opLabel(op) {
+      return { '+':'+', '-':'−', '*':'×', '/':'÷', 'pow':'^' }[op] || op;
+    }
+
+    function actionLabel(action) {
+      return { sq:'sq', cube:'cube', sqrt:'√', sin:'sin', cos:'cos', tan:'tan',
+               asin:'sin⁻¹', acos:'cos⁻¹', atan:'tan⁻¹', log:'log', ln:'ln',
+               fact:'n!', inv:'1/', '%':'%' }[action] || action;
+    }
+
+    function formatResult(val) {
+      if (!isFinite(val)) return isNaN(val) ? 'Error' : String(val);
+      return String(parseFloat(val.toPrecision(12)));
+    }
+
+    // ─── History ─────────────────────────────────────────────────────────
+    function addHistory(expr, result) {
+      history.unshift({ expr, result });
+      if (history.length > 8) history.pop();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('historyList');
+      if (!history.length) { list.innerHTML = '<span style="color:#94a3b8;font-size:0.85rem">No history yet.</span>'; return; }
+      list.innerHTML = history.map(h =>
+        `<div class="history-item" onclick="recallHistory('${h.result}')">
+          <span class="h-expr">${h.expr} =</span>
+          <span class="h-result">${h.result}</span>
+        </div>`
+      ).join('');
+    }
+
+    function recallHistory(val) {
+      display = val;
+      justCalculated = true;
+      updateDisplay();
+    }
+
+    function clearHistory() {
+      history = [];
+      renderHistory();
+    }
+
+    // ─── Keyboard Input ──────────────────────────────────────────────────
+    document.addEventListener('keydown', function(e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const map = {
+        '0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9',
+        '.':'.', '+':'+', '-':'-', '*':'*', '/':'/',
+        'Enter':'=', '=':'=', 'Escape':'ac', 'Backspace':'del',
+        '(':  '(', ')':')', '%':'%', '^':'pow'
+      };
+      if (map[e.key]) { e.preventDefault(); handleAction(map[e.key]); }
+    });
+
+    // ─── Init ────────────────────────────────────────────────────────────
+    updateDisplay();
+    renderHistory();
+  </script>
+</body>
+</html>

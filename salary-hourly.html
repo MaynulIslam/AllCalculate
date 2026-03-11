@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Convert your annual salary to hourly rate, and see weekly, biweekly, and monthly pay. Free salary calculator.">
+  <meta name="keywords" content="salary to hourly calculator, annual salary converter, hourly rate, weekly pay, biweekly pay, monthly salary">
+  <title>Salary to Hourly Calculator - Convert Annual Pay | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .pay-breakdown-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .pay-breakdown-item {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 16px 18px;
+      border: 1px solid #334155;
+    }
+    .pay-breakdown-item.full-width {
+      grid-column: 1 / -1;
+    }
+    .pay-breakdown-period {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+    .pay-breakdown-amount {
+      font-size: 22px;
+      font-weight: 700;
+      color: #f97316;
+    }
+    .pay-breakdown-amount.primary {
+      font-size: 28px;
+      color: #f97316;
+    }
+    .pay-breakdown-sub {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 3px;
+    }
+    @media (max-width: 480px) {
+      .pay-breakdown-grid { grid-template-columns: 1fr; }
+      .pay-breakdown-item.full-width { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper">
+    <div class="ad-slot ad-leaderboard">Advertisement · 728×90</div>
+  </div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html#finance">Finance</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Salary to Hourly Converter</span>
+    </div>
+    <h1>Salary to Hourly Converter</h1>
+    <p>Convert any salary to hourly rate — and see all pay period breakdowns instantly.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+
+          <div class="form-group">
+            <label class="form-label" for="salaryAmount">Salary Amount</label>
+            <div class="input-group">
+              <span class="input-prefix">$</span>
+              <input class="form-input has-prefix" type="number" id="salaryAmount" placeholder="65,000" min="0" step="1000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payPeriod">Pay Period</label>
+            <select class="form-select" id="payPeriod">
+              <option value="annual" selected>Annual (per year)</option>
+              <option value="monthly">Monthly (per month)</option>
+              <option value="biweekly">Biweekly (every 2 weeks)</option>
+              <option value="weekly">Weekly (per week)</option>
+              <option value="daily">Daily (per day)</option>
+              <option value="hourly">Hourly (per hour)</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="hoursPerWeek">Hours Per Week</label>
+              <input class="form-input" type="number" id="hoursPerWeek" value="40" min="1" max="168" step="0.5">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="daysPerWeek">Work Days Per Week</label>
+              <input class="form-input" type="number" id="daysPerWeek" value="5" min="1" max="7" step="1">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:18px;">
+            <label class="form-label" for="vacationDays">Paid Vacation Days Per Year</label>
+            <input class="form-input" type="number" id="vacationDays" value="10" min="0" max="365" step="1">
+          </div>
+
+          <button class="btn-calculate" onclick="calculateSalary()">Calculate Pay</button>
+          <button class="btn-reset" onclick="resetSalary()" style="margin-top:10px;">Reset</button>
+
+          <div id="salaryResults" class="hidden" style="margin-top:28px;">
+            <div class="results-box">
+              <div class="results-title">Pay Breakdown</div>
+              <div class="result-primary">
+                <div class="result-primary-label">Hourly Rate</div>
+                <div class="result-primary-value" id="hourlyRate">$0.00</div>
+              </div>
+              <div class="result-grid">
+                <div class="result-item">
+                  <div class="result-item-label">Per Day</div>
+                  <div class="result-item-value" id="dailyPay">$0.00</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Per Week</div>
+                  <div class="result-item-value" id="weeklyPay">$0.00</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Biweekly</div>
+                  <div class="result-item-value" id="biweeklyPay">$0.00</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Per Month</div>
+                  <div class="result-item-value" id="monthlyPay">$0.00</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pay-breakdown-grid">
+              <div class="pay-breakdown-item full-width">
+                <div class="pay-breakdown-period">Annual Salary</div>
+                <div class="pay-breakdown-amount primary" id="annualPay">$0</div>
+                <div class="pay-breakdown-sub" id="annualNote"></div>
+              </div>
+              <div class="pay-breakdown-item">
+                <div class="pay-breakdown-period">Effective Work Hours / Year</div>
+                <div class="pay-breakdown-amount" id="totalHoursYear">0 hrs</div>
+                <div class="pay-breakdown-sub">After vacation days</div>
+              </div>
+              <div class="pay-breakdown-item">
+                <div class="pay-breakdown-period">Work Days / Year</div>
+                <div class="pay-breakdown-amount" id="totalDaysYear">0 days</div>
+                <div class="pay-breakdown-sub">After vacation days</div>
+              </div>
+              <div class="pay-breakdown-item">
+                <div class="pay-breakdown-period">Weeks Per Year</div>
+                <div class="pay-breakdown-amount" id="weeksPerYear">52</div>
+                <div class="pay-breakdown-sub">Calendar weeks</div>
+              </div>
+              <div class="pay-breakdown-item">
+                <div class="pay-breakdown-period">Pay Periods / Year</div>
+                <div class="pay-breakdown-amount" id="payPeriods">26</div>
+                <div class="pay-breakdown-sub">Biweekly basis</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px">
+        <div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div>
+      </div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>How Salary-to-Hourly Conversion Works</h2>
+        <p>Converting a salary to an hourly rate depends on how many hours you actually work each year. The standard assumption is 40 hours/week for 52 weeks = 2,080 hours per year, but this changes based on your vacation days and actual work schedule.</p>
+
+        <h3>The Conversion Formula</h3>
+        <div class="formula-box">
+          Effective Annual Hours = (Work Weeks × Hours Per Week)
+          Work Weeks = 52 − (Vacation Days ÷ Days Per Week)
+
+          Hourly Rate = Annual Salary ÷ Effective Annual Hours
+
+          Daily Rate  = Hourly Rate × Hours Per Day
+          Weekly Rate = Hourly Rate × Hours Per Week
+          Monthly Rate = Annual Salary ÷ 12
+          Biweekly Rate = Annual Salary ÷ 26
+        </div>
+
+        <h3>Understanding Pay Periods</h3>
+        <ul>
+          <li><strong>Annual:</strong> Your full-year compensation (salary + bonuses if applicable).</li>
+          <li><strong>Monthly:</strong> Annual salary divided by 12. Note: some months have more working days than others.</li>
+          <li><strong>Biweekly (every 2 weeks):</strong> Annual salary divided by 26. This is the most common pay period in the US. You receive 26 paychecks per year, meaning 2 months per year you receive 3 paychecks.</li>
+          <li><strong>Weekly:</strong> Annual salary divided by 52.</li>
+          <li><strong>Daily:</strong> Your hourly rate times the hours you work per day.</li>
+          <li><strong>Hourly:</strong> The base unit — what you earn for each hour worked.</li>
+        </ul>
+
+        <h3>The Importance of Benefits in Total Compensation</h3>
+        <p>Your hourly rate is only part of your total compensation. Benefits can add 20–40% to your cost to employer. When comparing a salaried position to a contract/hourly role, factor in:</p>
+        <ul>
+          <li><strong>Health insurance:</strong> Employer-sponsored health coverage can be worth $5,000–$20,000/year.</li>
+          <li><strong>Retirement contributions:</strong> A 401(k) match of 4–6% of salary is significant.</li>
+          <li><strong>Paid time off:</strong> If you have 10 paid vacation days, you're effectively earning that time as compensation.</li>
+          <li><strong>Social Security &amp; Medicare:</strong> Employers contribute 7.65% of your wages.</li>
+          <li><strong>Other perks:</strong> Dental, vision, life insurance, commuter benefits, stock options.</li>
+        </ul>
+
+        <h3>Overtime Considerations</h3>
+        <p>In the US, non-exempt employees are entitled to overtime pay (1.5× the regular rate) for hours worked beyond 40 per week under the Fair Labor Standards Act (FLSA). Salaried exempt employees are not eligible for overtime regardless of hours worked. If you regularly work more than 40 hours, factor this into your effective hourly rate comparison.</p>
+
+        <h3>Contractor vs. Employee Rate</h3>
+        <p>As a contractor or freelancer, your quoted hourly rate should be higher than an equivalent salaried employee's hourly rate because you cover your own self-employment taxes (15.3%), benefits, paid time off, and business expenses. A common rule of thumb: multiply a salaried employee's hourly equivalent by 1.5–2× to arrive at a fair contractor rate.</p>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <!-- AD SLOT: Sidebar 300x250 -->
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest Calculator</a></li>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function () {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    function fmt(n, decimals) {
+      var d = (decimals === undefined) ? 2 : decimals;
+      return '$' + n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+    }
+
+    function calculateSalary() {
+      var salaryInput = parseFloat(document.getElementById('salaryAmount').value);
+      var payPeriod = document.getElementById('payPeriod').value;
+      var hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value) || 40;
+      var daysPerWeek = parseFloat(document.getElementById('daysPerWeek').value) || 5;
+      var vacationDays = parseFloat(document.getElementById('vacationDays').value) || 0;
+
+      if (!salaryInput || salaryInput <= 0) { alert('Please enter a valid salary amount.'); return; }
+      if (hoursPerWeek <= 0 || hoursPerWeek > 168) { alert('Please enter valid hours per week (1–168).'); return; }
+      if (daysPerWeek <= 0 || daysPerWeek > 7) { alert('Please enter valid days per week (1–7).'); return; }
+
+      var hoursPerDay = hoursPerWeek / daysPerWeek;
+
+      // Convert input salary to annual
+      var annualSalary;
+      switch (payPeriod) {
+        case 'annual':    annualSalary = salaryInput; break;
+        case 'monthly':   annualSalary = salaryInput * 12; break;
+        case 'biweekly':  annualSalary = salaryInput * 26; break;
+        case 'weekly':    annualSalary = salaryInput * 52; break;
+        case 'daily':     annualSalary = salaryInput * daysPerWeek * 52; break;
+        case 'hourly':    annualSalary = salaryInput * hoursPerWeek * 52; break;
+        default:          annualSalary = salaryInput;
+      }
+
+      // Calculate effective work weeks accounting for vacation
+      var vacationWeeks = vacationDays / daysPerWeek;
+      var workWeeks = 52 - vacationWeeks;
+      var totalWorkDays = workWeeks * daysPerWeek;
+      var totalWorkHours = workWeeks * hoursPerWeek;
+
+      // Hourly rate based on actual worked hours
+      var hourlyRate = totalWorkHours > 0 ? annualSalary / totalWorkHours : 0;
+      var dailyRate = hourlyRate * hoursPerDay;
+      var weeklyRate = hourlyRate * hoursPerWeek;
+      var biweeklyRate = annualSalary / 26;
+      var monthlyRate = annualSalary / 12;
+
+      document.getElementById('hourlyRate').textContent = fmt(hourlyRate);
+      document.getElementById('dailyPay').textContent = fmt(dailyRate);
+      document.getElementById('weeklyPay').textContent = fmt(weeklyRate);
+      document.getElementById('biweeklyPay').textContent = fmt(biweeklyRate);
+      document.getElementById('monthlyPay').textContent = fmt(monthlyRate);
+      document.getElementById('annualPay').textContent = fmt(annualSalary, 0);
+
+      var periodLabel = { annual: 'per year', monthly: 'per month', biweekly: 'every 2 weeks', weekly: 'per week', daily: 'per day', hourly: 'per hour' };
+      document.getElementById('annualNote').textContent =
+        'Based on ' + fmt(salaryInput, 2) + ' ' + periodLabel[payPeriod];
+
+      document.getElementById('totalHoursYear').textContent = Math.round(totalWorkHours).toLocaleString() + ' hrs';
+      document.getElementById('totalDaysYear').textContent = Math.round(totalWorkDays).toLocaleString() + ' days';
+      document.getElementById('weeksPerYear').textContent = workWeeks.toFixed(1);
+      document.getElementById('payPeriods').textContent = '26';
+
+      document.getElementById('salaryResults').classList.remove('hidden');
+    }
+
+    function resetSalary() {
+      document.getElementById('salaryAmount').value = '';
+      document.getElementById('payPeriod').value = 'annual';
+      document.getElementById('hoursPerWeek').value = '40';
+      document.getElementById('daysPerWeek').value = '5';
+      document.getElementById('vacationDays').value = '10';
+      document.getElementById('salaryResults').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

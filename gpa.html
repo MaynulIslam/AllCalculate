@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your GPA by entering course names, grades, and credit hours. Supports both letter grades and grade points.">
+  <title>GPA Calculator — College &amp; High School | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .course-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      transition: border-color 0.15s;
+    }
+    .course-row:hover { border-color: #cbd5e1; }
+    .course-row .course-name { flex: 2; min-width: 0; }
+    .course-row .course-grade { flex: 1; min-width: 90px; }
+    .course-row .course-credits { width: 75px; text-align: center; }
+    .course-row .remove-btn {
+      padding: 9px 13px;
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+      line-height: 1;
+      transition: background 0.15s;
+    }
+    .course-row .remove-btn:hover { background: #fecaca; }
+    .grade-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .gpa-meter {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 8px 0 4px;
+    }
+    .gpa-meter-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.5s ease, background 0.5s ease;
+    }
+    .course-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 12px;
+    }
+    .course-table th {
+      background: #f1f5f9;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #475569;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .course-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+    .course-table tr:last-child td { border-bottom: none; }
+    .course-table tr:hover td { background: #f8fafc; }
+    .prev-gpa-section {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+    .prev-gpa-section h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 12px;
+    }
+    .add-course-btn {
+      width: 100%;
+      padding: 12px;
+      background: #f0f9ff;
+      border: 2px dashed #7dd3fc;
+      color: #0369a1;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 4px;
+    }
+    .add-course-btn:hover { background: #e0f2fe; border-color: #38bdf8; }
+    .col-header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 6px;
+      padding: 0 14px;
+    }
+    .col-header span {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <a href="index.html#math">Math &amp; Everyday</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">GPA Calculator</span>
+    </div>
+    <h1>GPA Calculator</h1>
+    <p>Calculate your cumulative GPA by adding your courses, grades, and credit hours.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+          <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Semester Courses</h3>
+
+          <!-- Column headers -->
+          <div class="col-header">
+            <span style="flex:2">Course Name</span>
+            <span style="flex:1;min-width:90px">Grade</span>
+            <span style="width:75px">Credits</span>
+            <span style="width:38px"></span>
+          </div>
+
+          <!-- Course rows container -->
+          <div id="courseRows"></div>
+
+          <button class="add-course-btn" onclick="addCourse()">+ Add Course</button>
+
+          <!-- Previous GPA (cumulative) -->
+          <div class="prev-gpa-section">
+            <h4>Previous GPA (Optional — for Cumulative GPA)</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Previous GPA</label>
+                <input id="prevGPA" class="form-input" type="number" min="0" max="4" step="0.01" placeholder="e.g. 3.20" oninput="calculate()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Previous Total Credits</label>
+                <input id="prevCredits" class="form-input" type="number" min="0" step="0.5" placeholder="e.g. 60" oninput="calculate()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Target credits -->
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Credits Required to Graduate</label>
+            <input id="targetCredits" class="form-input" type="number" min="1" value="120" oninput="calculate()">
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:20px">
+            <button class="btn-calculate" onclick="calculate()" style="flex:1">Calculate GPA</button>
+            <button class="btn-reset" onclick="resetCalc()">Reset</button>
+          </div>
+
+          <!-- Results -->
+          <div id="resultsSection" class="hidden" style="margin-top:24px">
+            <div class="results-box">
+              <div class="results-title">GPA Results</div>
+              <div class="result-primary">
+                <div class="result-primary-label">Semester GPA</div>
+                <div class="result-primary-value" id="semGPA">0.00</div>
+              </div>
+              <!-- GPA Meter -->
+              <div style="padding:0 0 8px">
+                <div class="gpa-meter"><div class="gpa-meter-fill" id="gpaMeterFill" style="width:0%"></div></div>
+                <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#94a3b8">
+                  <span>0.0</span><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span>
+                </div>
+              </div>
+              <div style="text-align:center;margin-bottom:16px">
+                <span id="gpaLetterBadge" class="grade-badge" style="background:#dcfce7;color:#16a34a;font-size:0.95rem"></span>
+              </div>
+              <div class="result-grid">
+                <div class="result-item"><div class="result-item-label">Credits Attempted</div><div class="result-item-value" id="creditsAttempted">-</div></div>
+                <div class="result-item"><div class="result-item-label">Quality Points</div><div class="result-item-value" id="qualityPoints">-</div></div>
+                <div class="result-item"><div class="result-item-label">Cumulative GPA</div><div class="result-item-value" id="cumGPA">-</div></div>
+                <div class="result-item"><div class="result-item-label">Credits Remaining</div><div class="result-item-value" id="creditsRemaining">-</div></div>
+              </div>
+            </div>
+
+            <!-- Course breakdown table -->
+            <div style="margin-top:20px">
+              <h3 style="font-size:0.95rem;font-weight:700;color:#1e293b;margin-bottom:8px">Course Breakdown</h3>
+              <div style="overflow-x:auto;border-radius:10px;border:1px solid #e2e8f0">
+                <table class="course-table" id="courseBreakdown">
+                  <thead>
+                    <tr>
+                      <th>Course</th>
+                      <th>Grade</th>
+                      <th>Credits</th>
+                      <th>Grade Points</th>
+                      <th>Quality Points</th>
+                    </tr>
+                  </thead>
+                  <tbody id="courseTableBody"></tbody>
+                  <tfoot id="courseTableFoot"></tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>GPA Scale Explained</h2>
+        <p>GPA (Grade Point Average) is a standard way to measure academic achievement. Most US colleges use a 4.0 scale.</p>
+
+        <h3>Standard Grade Point Scale</h3>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
+            <thead>
+              <tr style="background:#f1f5f9">
+                <th style="padding:10px 14px;text-align:left;border-bottom:2px solid #e2e8f0">Letter Grade</th>
+                <th style="padding:10px 14px;text-align:left;border-bottom:2px solid #e2e8f0">Grade Points</th>
+                <th style="padding:10px 14px;text-align:left;border-bottom:2px solid #e2e8f0">Percentage</th>
+                <th style="padding:10px 14px;text-align:left;border-bottom:2px solid #e2e8f0">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">A+ / A</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">4.0</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">93–100%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Excellent</td></tr>
+              <tr style="background:#fafafa"><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">A−</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">3.7</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">90–92%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Excellent</td></tr>
+              <tr><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">B+</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">3.3</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">87–89%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Good</td></tr>
+              <tr style="background:#fafafa"><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">B</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">3.0</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">83–86%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Good</td></tr>
+              <tr><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">B−</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">2.7</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">80–82%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Good</td></tr>
+              <tr style="background:#fafafa"><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">C+</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">2.3</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">77–79%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Average</td></tr>
+              <tr><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">C</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">2.0</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">73–76%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Average</td></tr>
+              <tr style="background:#fafafa"><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">C−</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">1.7</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">70–72%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Average</td></tr>
+              <tr><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">D+</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">1.3</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">67–69%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Below Average</td></tr>
+              <tr style="background:#fafafa"><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">D</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">1.0</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">63–66%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Below Average</td></tr>
+              <tr><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">D−</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">0.7</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">60–62%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Below Average</td></tr>
+              <tr style="background:#fafafa"><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">F</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">0.0</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Below 60%</td><td style="padding:8px 14px;border-bottom:1px solid #f1f5f9">Failing</td></tr>
+              <tr><td style="padding:8px 14px">W</td><td style="padding:8px 14px">—</td><td style="padding:8px 14px">—</td><td style="padding:8px 14px">Withdrawal (excluded)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Semester GPA vs. Cumulative GPA</h3>
+        <p><strong>Semester GPA</strong> is calculated only from courses in a single term. <strong>Cumulative GPA</strong> accounts for all courses taken across all semesters. To calculate cumulative GPA, use the "Previous GPA" fields above to include past semesters.</p>
+
+        <h3>GPA Formula</h3>
+        <div class="formula-box">
+          <strong>GPA = Total Quality Points ÷ Total Credit Hours Attempted</strong><br><br>
+          Quality Points for a course = Grade Points × Credit Hours<br>
+          Example: A (4.0) in a 3-credit course = 12 quality points
+        </div>
+
+        <h3>How GPA Affects Scholarships and Admissions</h3>
+        <ul>
+          <li><strong>Dean's List:</strong> Typically requires a 3.5+ GPA per semester</li>
+          <li><strong>Magna Cum Laude:</strong> Usually 3.7–3.89 cumulative GPA</li>
+          <li><strong>Summa Cum Laude:</strong> Typically 3.9–4.0 cumulative GPA</li>
+          <li><strong>Academic Probation:</strong> Often triggered by a GPA below 2.0</li>
+          <li><strong>Graduate School:</strong> Most programs require a 3.0+ undergraduate GPA</li>
+          <li><strong>Merit Scholarships:</strong> Many require maintaining a 3.0–3.5 GPA</li>
+        </ul>
+
+        <h3>Tips for Improving Your GPA</h3>
+        <ul>
+          <li>Retake courses in which you earned a D or F — many schools allow grade replacement</li>
+          <li>Focus on high-credit courses — improving a 4-credit course grade has more impact than a 1-credit course</li>
+          <li>Take advantage of pass/fail options for challenging electives</li>
+          <li>Visit office hours and form study groups early in the semester</li>
+          <li>Don't overload your schedule — a lighter load with better grades can yield a higher GPA</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">GPA Reference</div>
+        <div style="font-size:0.85rem">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;color:#64748b"><span>4.0</span><span style="font-weight:700;color:#16a34a">A (Excellent)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;color:#64748b"><span>3.7</span><span style="font-weight:700;color:#16a34a">A− (Excellent)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;color:#64748b"><span>3.3</span><span style="font-weight:700;color:#2563eb">B+ (Good)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;color:#64748b"><span>3.0</span><span style="font-weight:700;color:#2563eb">B (Good)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;color:#64748b"><span>2.7</span><span style="font-weight:700;color:#2563eb">B− (Good)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;color:#64748b"><span>2.0</span><span style="font-weight:700;color:#d97706">C (Average)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f5f9;color:#64748b"><span>1.0</span><span style="font-weight:700;color:#dc2626">D (Below Avg)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;color:#64748b"><span>0.0</span><span style="font-weight:700;color:#dc2626">F (Failing)</span></div>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="percentage.html">📊 Percentage Calculator</a></li>
+          <li><a href="scientific.html">🔬 Scientific Calculator</a></li>
+          <li><a href="retirement.html">💼 Retirement Calculator</a></li>
+          <li><a href="tax.html">🧾 Tax Calculator</a></li>
+          <li><a href="salary-hourly.html">💰 Salary to Hourly</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Grade scale
+    const gradeScale = {
+      'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+      'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+      'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+      'D+': 1.3, 'D': 1.0, 'D-': 0.7,
+      'F':  0.0, 'W': null
+    };
+
+    const gradeOptions = Object.keys(gradeScale);
+
+    let courseCount = 0;
+
+    function buildGradeOptions(selectedGrade) {
+      return gradeOptions.map(g =>
+        `<option value="${g}" ${g === selectedGrade ? 'selected' : ''}>${g}</option>`
+      ).join('');
+    }
+
+    function addCourse(name = '', grade = 'A', credits = 3) {
+      courseCount++;
+      const id = courseCount;
+      const row = document.createElement('div');
+      row.className = 'course-row';
+      row.id = `course-${id}`;
+      row.innerHTML = `
+        <input class="form-input course-name" placeholder="Course Name" value="${name}" oninput="calculate()">
+        <select class="form-select course-grade" oninput="calculate()">${buildGradeOptions(grade)}</select>
+        <input class="form-input course-credits" type="number" value="${credits}" min="0.5" max="6" step="0.5" oninput="calculate()">
+        <button class="remove-btn" onclick="removeCourse(${id})" title="Remove course">×</button>
+      `;
+      document.getElementById('courseRows').appendChild(row);
+      calculate();
+    }
+
+    function removeCourse(id) {
+      const row = document.getElementById(`course-${id}`);
+      if (row) row.remove();
+      calculate();
+    }
+
+    function resetCalc() {
+      document.getElementById('courseRows').innerHTML = '';
+      courseCount = 0;
+      document.getElementById('prevGPA').value = '';
+      document.getElementById('prevCredits').value = '';
+      document.getElementById('targetCredits').value = '120';
+      document.getElementById('resultsSection').classList.add('hidden');
+      // Re-add initial courses
+      addCourse('English 101', 'A', 3);
+      addCourse('Math 201', 'B+', 4);
+      addCourse('History 150', 'A-', 3);
+      addCourse('Physics 110', 'B', 4);
+    }
+
+    function getGPALetterAndColor(gpa) {
+      if (gpa >= 3.85) return { letter: 'A / A+', bg: '#dcfce7', color: '#16a34a' };
+      if (gpa >= 3.65) return { letter: 'A−', bg: '#dcfce7', color: '#16a34a' };
+      if (gpa >= 3.15) return { letter: 'B+', bg: '#dbeafe', color: '#1d4ed8' };
+      if (gpa >= 2.85) return { letter: 'B', bg: '#dbeafe', color: '#1d4ed8' };
+      if (gpa >= 2.65) return { letter: 'B−', bg: '#dbeafe', color: '#1d4ed8' };
+      if (gpa >= 2.15) return { letter: 'C+', bg: '#fef9c3', color: '#854d0e' };
+      if (gpa >= 1.85) return { letter: 'C', bg: '#fef9c3', color: '#854d0e' };
+      if (gpa >= 1.65) return { letter: 'C−', bg: '#fef9c3', color: '#854d0e' };
+      if (gpa >= 1.15) return { letter: 'D+', bg: '#fee2e2', color: '#dc2626' };
+      if (gpa >= 0.85) return { letter: 'D', bg: '#fee2e2', color: '#dc2626' };
+      if (gpa > 0)     return { letter: 'D−', bg: '#fee2e2', color: '#dc2626' };
+      return { letter: 'F', bg: '#fee2e2', color: '#dc2626' };
+    }
+
+    function getMeterColor(gpa) {
+      if (gpa >= 3.5) return '#16a34a';
+      if (gpa >= 3.0) return '#2563eb';
+      if (gpa >= 2.0) return '#d97706';
+      return '#dc2626';
+    }
+
+    function calculate() {
+      const rows = document.querySelectorAll('.course-row');
+      let totalQP = 0, totalCredits = 0;
+      const tableRows = [];
+
+      rows.forEach(row => {
+        const gradeEl = row.querySelector('.course-grade');
+        const creditsEl = row.querySelector('.course-credits');
+        const nameEl = row.querySelector('.course-name');
+        if (!gradeEl || !creditsEl) return;
+
+        const grade = gradeEl.value;
+        const credits = parseFloat(creditsEl.value) || 0;
+        const name = nameEl ? nameEl.value || `Course` : 'Course';
+        const points = gradeScale[grade];
+
+        if (points === null) {
+          // W grade — excluded
+          tableRows.push({ name, grade, credits, points: '—', qp: '—', excluded: true });
+          return;
+        }
+
+        const qp = points * credits;
+        totalCredits += credits;
+        totalQP += qp;
+        tableRows.push({ name, grade, credits, points, qp });
+      });
+
+      if (totalCredits === 0) {
+        document.getElementById('resultsSection').classList.add('hidden');
+        return;
+      }
+
+      const semGPA = totalQP / totalCredits;
+
+      // Cumulative
+      const prevGPA = parseFloat(document.getElementById('prevGPA').value);
+      const prevCredits = parseFloat(document.getElementById('prevCredits').value);
+      let cumGPAVal = null;
+      if (!isNaN(prevGPA) && !isNaN(prevCredits) && prevCredits > 0) {
+        const totalAllCredits = totalCredits + prevCredits;
+        const totalAllQP = totalQP + (prevGPA * prevCredits);
+        cumGPAVal = totalAllQP / totalAllCredits;
+      }
+
+      // Credits remaining
+      const targetCredits = parseFloat(document.getElementById('targetCredits').value) || 120;
+      const allCredits = cumGPAVal !== null ? (totalCredits + (parseFloat(document.getElementById('prevCredits').value) || 0)) : totalCredits;
+      const credRem = Math.max(0, targetCredits - allCredits);
+
+      // Show results
+      document.getElementById('resultsSection').classList.remove('hidden');
+      document.getElementById('semGPA').textContent = semGPA.toFixed(2);
+
+      const meter = Math.min((semGPA / 4.0) * 100, 100);
+      document.getElementById('gpaMeterFill').style.width = meter + '%';
+      document.getElementById('gpaMeterFill').style.background = getMeterColor(semGPA);
+
+      const badge = getGPALetterAndColor(semGPA);
+      const badgeEl = document.getElementById('gpaLetterBadge');
+      badgeEl.textContent = badge.letter;
+      badgeEl.style.background = badge.bg;
+      badgeEl.style.color = badge.color;
+
+      document.getElementById('creditsAttempted').textContent = totalCredits.toFixed(1);
+      document.getElementById('qualityPoints').textContent = totalQP.toFixed(2);
+      document.getElementById('cumGPA').textContent = cumGPAVal !== null ? cumGPAVal.toFixed(2) : 'N/A';
+      document.getElementById('creditsRemaining').textContent = credRem.toFixed(1);
+
+      // Build course table
+      const tbody = document.getElementById('courseTableBody');
+      const tfoot = document.getElementById('courseTableFoot');
+      tbody.innerHTML = tableRows.map(r => {
+        const gradeColor = r.excluded ? '#94a3b8' : (r.points >= 3.5 ? '#16a34a' : r.points >= 2.5 ? '#2563eb' : r.points >= 1.5 ? '#d97706' : '#dc2626');
+        return `<tr>
+          <td>${r.name || '<em style="color:#94a3b8">Unnamed</em>'}</td>
+          <td><span style="font-weight:700;color:${gradeColor}">${r.grade}</span>${r.excluded ? ' <small style="color:#94a3b8">(excl.)</small>' : ''}</td>
+          <td>${r.credits}</td>
+          <td>${r.points === '—' ? '—' : r.points.toFixed(1)}</td>
+          <td>${r.qp === '—' ? '—' : r.qp.toFixed(2)}</td>
+        </tr>`;
+      }).join('');
+
+      tfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700">
+        <td colspan="2" style="padding:10px 12px;border-top:2px solid #e2e8f0">Total / GPA</td>
+        <td style="padding:10px 12px;border-top:2px solid #e2e8f0">${totalCredits.toFixed(1)}</td>
+        <td style="padding:10px 12px;border-top:2px solid #e2e8f0"></td>
+        <td style="padding:10px 12px;border-top:2px solid #e2e8f0;color:#f97316">${totalQP.toFixed(2)} <small style="color:#94a3b8;font-weight:400">(GPA: ${semGPA.toFixed(2)})</small></td>
+      </tr>`;
+    }
+
+    // Initialize with 4 sample courses
+    addCourse('English 101', 'A', 3);
+    addCourse('Math 201', 'B+', 4);
+    addCourse('History 150', 'A-', 3);
+    addCourse('Physics 110', 'B', 4);
+  </script>
+</body>
+</html>

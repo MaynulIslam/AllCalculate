@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your daily calorie needs using the Mifflin-St Jeor equation. Find your BMR, TDEE, and calories for weight loss or gain.">
+  <title>Daily Calorie Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#finance">💰 Finance</a></li>
+      <li><a href="index.html#health">❤️ Health</a></li>
+      <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      <li><a href="index.html#math">📐 Math</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- AD SLOT: Top Leaderboard 728x90 -->
+<div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+    <a href="index.html#health">Health</a><span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Calorie Calculator</span>
+  </div>
+  <h1>Calorie Calculator</h1>
+  <p>Calculate your daily calorie needs for weight maintenance, loss, or gain.</p>
+</div>
+
+<div class="calc-layout">
+  <div>
+    <div class="calc-main">
+      <div class="calc-body">
+
+        <!-- Unit Toggle -->
+        <div class="form-group">
+          <label class="form-label">Unit System</label>
+          <div class="toggle-group">
+            <button class="toggle-btn active" id="unitImperial" onclick="setUnit('imperial')">Imperial (lbs/ft)</button>
+            <button class="toggle-btn" id="unitMetric" onclick="setUnit('metric')">Metric (kg/cm)</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="cAge">Age</label>
+            <input class="form-input" type="number" id="cAge" placeholder="25" min="10" max="120">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cSex">Sex</label>
+            <select class="form-select" id="cSex">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Imperial Height -->
+        <div class="form-group" id="heightImperial">
+          <label class="form-label">Height</label>
+          <div class="form-row">
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="cFt" placeholder="5" min="1" max="8">
+              <span class="input-suffix">ft</span>
+            </div>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="cIn" placeholder="9" min="0" max="11">
+              <span class="input-suffix">in</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric Height -->
+        <div class="form-group hidden" id="heightMetric">
+          <label class="form-label" for="cCm">Height</label>
+          <div class="input-group">
+            <input class="form-input has-suffix" type="number" id="cCm" placeholder="175" min="50" max="280">
+            <span class="input-suffix">cm</span>
+          </div>
+        </div>
+
+        <!-- Imperial Weight -->
+        <div class="form-group" id="weightImperial">
+          <label class="form-label" for="cLbs">Weight</label>
+          <div class="input-group">
+            <input class="form-input has-suffix" type="number" id="cLbs" placeholder="160" min="50" max="800">
+            <span class="input-suffix">lbs</span>
+          </div>
+        </div>
+
+        <!-- Metric Weight -->
+        <div class="form-group hidden" id="weightMetric">
+          <label class="form-label" for="cKg">Weight</label>
+          <div class="input-group">
+            <input class="form-input has-suffix" type="number" id="cKg" placeholder="72" min="20" max="400">
+            <span class="input-suffix">kg</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="activity">Activity Level</label>
+          <select class="form-select" id="activity">
+            <option value="1.2">Sedentary (little or no exercise)</option>
+            <option value="1.375">Lightly Active (1–3 days/week)</option>
+            <option value="1.55" selected>Moderately Active (3–5 days/week)</option>
+            <option value="1.725">Very Active (6–7 days/week)</option>
+            <option value="1.9">Super Active (hard exercise, physical job)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cGoal">Goal</label>
+          <select class="form-select" id="cGoal">
+            <option value="maintain">Maintain Weight</option>
+            <option value="loss_mild">Mild Weight Loss (0.5 lb/week)</option>
+            <option value="loss_moderate" selected>Weight Loss (1 lb/week)</option>
+            <option value="loss_extreme">Extreme Weight Loss (2 lbs/week)</option>
+            <option value="gain_mild">Mild Weight Gain (0.5 lb/week)</option>
+            <option value="gain_moderate">Weight Gain (1 lb/week)</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <button class="btn-calculate" onclick="calcCalories()">Calculate</button>
+          <button class="btn-reset" onclick="resetCalories()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div id="calorieResults" class="hidden">
+          <div class="divider"></div>
+          <div class="results-box">
+            <div class="results-title">Your Daily Calorie Goal</div>
+            <div class="result-primary">
+              <div class="result-primary-label" id="goalLabel">Weight Loss (1 lb/week)</div>
+              <div class="result-primary-value" id="goalCalories">—</div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="result-item-label">BMR (Basal Metabolic Rate)</div>
+                <div class="result-item-value" id="resBMR">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">TDEE (Maintenance Calories)</div>
+                <div class="result-item-value" id="resTDEE">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Protein Goal</div>
+                <div class="result-item-value" id="resProtein">—</div>
+              </div>
+              <div class="result-item">
+                <div class="result-item-label">Daily Water Intake</div>
+                <div class="result-item-value" id="resWater">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calorie breakdown table -->
+          <div style="margin-top:24px;">
+            <h3 style="font-size:1.1rem;font-weight:700;color:#1e293b;margin-bottom:16px;">Calorie Goal Breakdown</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+              <thead>
+                <tr style="background:#f1f5f9;">
+                  <th style="padding:10px 14px;text-align:left;font-weight:600;color:#475569;border-radius:8px 0 0 8px;">Goal</th>
+                  <th style="padding:10px 14px;text-align:center;font-weight:600;color:#475569;">Change/Week</th>
+                  <th style="padding:10px 14px;text-align:right;font-weight:600;color:#475569;border-radius:0 8px 8px 0;">Daily Calories</th>
+                </tr>
+              </thead>
+              <tbody id="calorieTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: Between Sections 336x280 -->
+    <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+    <div class="info-section" style="margin-top:28px">
+      <h2>How to Calculate Daily Calories</h2>
+      <p>Your daily calorie needs are calculated using the <strong>Mifflin-St Jeor equation</strong>, the most accurate formula for estimating Basal Metabolic Rate (BMR) for most people.</p>
+
+      <div class="formula-box">
+        <strong>Mifflin-St Jeor Equation:</strong><br>
+        Male BMR = (10 × weight_kg) + (6.25 × height_cm) − (5 × age) + 5<br>
+        Female BMR = (10 × weight_kg) + (6.25 × height_cm) − (5 × age) − 161<br><br>
+        <strong>TDEE = BMR × Activity Multiplier</strong>
+      </div>
+
+      <h3>What is BMR?</h3>
+      <p>Basal Metabolic Rate (BMR) is the number of calories your body burns at complete rest — just to maintain vital functions like breathing, circulation, and cell production.</p>
+
+      <h3>What is TDEE?</h3>
+      <p>Total Daily Energy Expenditure (TDEE) is your maintenance calorie level — the number of calories you need to eat to keep your current weight, accounting for your physical activity.</p>
+
+      <h3>Calorie Deficits &amp; Surpluses</h3>
+      <p>One pound of body fat equals approximately 3,500 calories. To lose 1 lb per week, you need a daily deficit of 500 calories. Deficits below 1,200 calories/day (women) or 1,500 (men) are generally not recommended without medical supervision.</p>
+    </div>
+  </div>
+
+  <div class="calc-sidebar">
+    <div class="sidebar-widget">
+      <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="sidebar-widget-title">Related Calculators</div>
+      <ul class="related-calc-list">
+        <li><a href="bmi.html">BMI Calculator</a></li>
+        <li><a href="body-fat.html">Body Fat Calculator</a></li>
+        <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+        <li><a href="age.html">Age Calculator</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo-text">All<span>Calculate</span></span>
+        <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>💰 Finance</h4>
+        <ul>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Health &amp; Date</h4>
+        <ul>
+          <li><a href="bmi.html">BMI Calculator</a></li>
+          <li><a href="calorie.html">Calorie Calculator</a></li>
+          <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+          <li><a href="body-fat.html">Body Fat Calculator</a></li>
+          <li><a href="age.html">Age Calculator</a></li>
+          <li><a href="days-between.html">Days Between Dates</a></li>
+          <li><a href="timezone.html">Time Zone Converter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>📐 Math &amp; More</h4>
+        <ul>
+          <li><a href="percentage.html">Percentage Calculator</a></li>
+          <li><a href="scientific.html">Scientific Calculator</a></li>
+          <li><a href="gpa.html">GPA Calculator</a></li>
+          <li><a href="unit-converter.html">Unit Converter</a></li>
+          <li><a href="square-footage.html">Square Footage</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  let currentUnit = 'imperial';
+
+  function setUnit(unit) {
+    currentUnit = unit;
+    document.getElementById('unitImperial').classList.toggle('active', unit === 'imperial');
+    document.getElementById('unitMetric').classList.toggle('active', unit === 'metric');
+    document.getElementById('heightImperial').classList.toggle('hidden', unit !== 'imperial');
+    document.getElementById('weightImperial').classList.toggle('hidden', unit !== 'imperial');
+    document.getElementById('heightMetric').classList.toggle('hidden', unit !== 'metric');
+    document.getElementById('weightMetric').classList.toggle('hidden', unit !== 'metric');
+  }
+
+  function calcCalories() {
+    const age = parseFloat(document.getElementById('cAge').value);
+    const sex = document.getElementById('cSex').value;
+    const activity = parseFloat(document.getElementById('activity').value);
+    const goal = document.getElementById('cGoal').value;
+
+    let weight_kg, height_cm;
+
+    if (currentUnit === 'imperial') {
+      const ft = parseFloat(document.getElementById('cFt').value) || 0;
+      const inc = parseFloat(document.getElementById('cIn').value) || 0;
+      const lbs = parseFloat(document.getElementById('cLbs').value);
+      if (!lbs || !ft || isNaN(age)) { alert('Please fill in all required fields.'); return; }
+      height_cm = (ft * 12 + inc) * 2.54;
+      weight_kg = lbs * 0.453592;
+    } else {
+      const cm = parseFloat(document.getElementById('cCm').value);
+      const kg = parseFloat(document.getElementById('cKg').value);
+      if (!cm || !kg || isNaN(age)) { alert('Please fill in all required fields.'); return; }
+      height_cm = cm;
+      weight_kg = kg;
+    }
+
+    if (age < 10 || age > 120) { alert('Please enter a valid age (10–120).'); return; }
+
+    // Mifflin-St Jeor
+    let bmr;
+    if (sex === 'male') {
+      bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age + 5;
+    } else {
+      bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age - 161;
+    }
+
+    const tdee = bmr * activity;
+
+    const goals = {
+      maintain:       { label: 'Maintain Weight',              delta: 0 },
+      loss_mild:      { label: 'Mild Weight Loss (0.5 lb/wk)', delta: -250 },
+      loss_moderate:  { label: 'Weight Loss (1 lb/wk)',        delta: -500 },
+      loss_extreme:   { label: 'Extreme Weight Loss (2 lb/wk)',delta: -1000 },
+      gain_mild:      { label: 'Mild Weight Gain (0.5 lb/wk)', delta: 250 },
+      gain_moderate:  { label: 'Weight Gain (1 lb/wk)',        delta: 500 }
+    };
+
+    const selectedGoal = goals[goal];
+    const goalCals = Math.round(tdee + selectedGoal.delta);
+    const protein_g = Math.round(weight_kg * 0.8);
+    const water_l = (weight_kg * 35 / 1000).toFixed(1);
+
+    document.getElementById('goalLabel').textContent = selectedGoal.label;
+    document.getElementById('goalCalories').textContent = goalCals.toLocaleString() + ' kcal/day';
+    document.getElementById('resBMR').textContent = Math.round(bmr).toLocaleString() + ' kcal';
+    document.getElementById('resTDEE').textContent = Math.round(tdee).toLocaleString() + ' kcal';
+    document.getElementById('resProtein').textContent = protein_g + ' g/day';
+    document.getElementById('resWater').textContent = water_l + ' L/day';
+
+    // Build table
+    const tableRows = [
+      { key: 'loss_extreme', color: '#dc2626' },
+      { key: 'loss_moderate', color: '#f97316' },
+      { key: 'loss_mild', color: '#eab308' },
+      { key: 'maintain', color: '#22c55e' },
+      { key: 'gain_mild', color: '#3b82f6' },
+      { key: 'gain_moderate', color: '#8b5cf6' }
+    ];
+
+    const weeklyChanges = {
+      loss_extreme: '−2 lbs/week',
+      loss_moderate: '−1 lb/week',
+      loss_mild: '−0.5 lb/week',
+      maintain: '0 lbs/week',
+      gain_mild: '+0.5 lb/week',
+      gain_moderate: '+1 lb/week'
+    };
+
+    let tableHTML = '';
+    tableRows.forEach(row => {
+      const g = goals[row.key];
+      const cals = Math.round(tdee + g.delta);
+      const isSelected = row.key === goal;
+      tableHTML += `<tr style="background:${isSelected ? '#fef3c7' : 'transparent'};border-bottom:1px solid #f1f5f9;">
+        <td style="padding:10px 14px;font-weight:${isSelected ? '700' : '400'};color:#1e293b;">${g.label}</td>
+        <td style="padding:10px 14px;text-align:center;color:${row.color};font-weight:600;">${weeklyChanges[row.key]}</td>
+        <td style="padding:10px 14px;text-align:right;font-weight:${isSelected ? '700' : '500'};color:#1e293b;">${cals.toLocaleString()} kcal</td>
+      </tr>`;
+    });
+    document.getElementById('calorieTable').innerHTML = tableHTML;
+    document.getElementById('calorieResults').classList.remove('hidden');
+  }
+
+  function resetCalories() {
+    ['cAge','cFt','cIn','cLbs','cCm','cKg'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('cSex').value = 'male';
+    document.getElementById('activity').value = '1.55';
+    document.getElementById('cGoal').value = 'loss_moderate';
+    document.getElementById('calorieResults').classList.add('hidden');
+  }
+</script>
+</body>
+</html>

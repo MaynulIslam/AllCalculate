@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculate your monthly EMI for personal loans, car loans, and more. See total interest paid and full loan breakdown.">
+  <meta name="keywords" content="EMI calculator, loan calculator, monthly payment, personal loan, car loan, equated monthly installment">
+  <title>Loan &amp; EMI Calculator - Monthly Payment Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .emi-split-bar {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 40px;
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .emi-split-principal {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: width 0.4s ease;
+      min-width: 60px;
+      white-space: nowrap;
+      padding: 0 8px;
+    }
+    .emi-split-interest {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: width 0.4s ease;
+      min-width: 60px;
+      white-space: nowrap;
+      padding: 0 8px;
+    }
+    .emi-split-legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    .emi-split-legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper">
+    <div class="ad-slot ad-leaderboard">Advertisement · 728×90</div>
+  </div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html#finance">Finance</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Loan / EMI Calculator</span>
+    </div>
+    <h1>Loan / EMI Calculator</h1>
+    <p>Calculate your Equated Monthly Installment for any loan in seconds.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+
+          <div class="form-group">
+            <label class="form-label" for="loanAmount">Loan Amount</label>
+            <div class="input-group">
+              <span class="input-prefix">$</span>
+              <input class="form-input has-prefix" type="number" id="loanAmount" placeholder="25,000" min="0" step="100">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="emiRate">Annual Interest Rate</label>
+            <div class="input-group">
+              <input class="form-input has-suffix" type="number" id="emiRate" placeholder="8.5" min="0" max="100" step="0.1">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Loan Tenure</label>
+            <div class="form-row">
+              <div>
+                <input class="form-input" type="number" id="tenureYears" placeholder="Years (0–30)" min="0" max="30" step="1">
+              </div>
+              <div>
+                <input class="form-input" type="number" id="tenureMonths" placeholder="Months (0–11)" min="0" max="11" step="1">
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:6px;font-size:12px;color:#94a3b8;">
+              <span>Years (0–30)</span>
+              <span>Months (0–11)</span>
+            </div>
+          </div>
+
+          <button class="btn-calculate" onclick="calculateEMI()">Calculate EMI</button>
+          <button class="btn-reset" onclick="resetEMI()" style="margin-top:10px;">Reset</button>
+
+          <div id="emiResults" class="hidden" style="margin-top:28px;">
+            <div class="results-box">
+              <div class="results-title">EMI Breakdown</div>
+              <div class="result-primary">
+                <div class="result-primary-label">Monthly EMI</div>
+                <div class="result-primary-value" id="monthlyEMI">$0.00</div>
+              </div>
+              <div class="result-grid">
+                <div class="result-item">
+                  <div class="result-item-label">Loan Amount</div>
+                  <div class="result-item-value" id="emiPrincipal">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Total Interest</div>
+                  <div class="result-item-value" id="emiTotalInterest">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Total Amount Payable</div>
+                  <div class="result-item-value" id="emiTotalPayable">$0</div>
+                </div>
+                <div class="result-item">
+                  <div class="result-item-label">Interest %</div>
+                  <div class="result-item-value" id="emiInterestPct">0%</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:24px;background:#1e293b;border-radius:12px;padding:20px;">
+              <div style="font-size:14px;font-weight:600;color:#94a3b8;margin-bottom:12px;letter-spacing:0.05em;text-transform:uppercase;">Principal vs. Interest Split</div>
+              <div class="emi-split-bar">
+                <div class="emi-split-principal" id="splitPrincipal">Principal</div>
+                <div class="emi-split-interest" id="splitInterest">Interest</div>
+              </div>
+              <div class="emi-split-legend">
+                <span><span class="legend-dot" style="background:#3b82f6;"></span>Principal (<span id="splitPrincipalPct">0%</span>)</span>
+                <span><span class="legend-dot" style="background:#f97316;"></span>Interest (<span id="splitInterestPct">0%</span>)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px">
+        <div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div>
+      </div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>How EMI Works</h2>
+        <p>An <strong>Equated Monthly Installment (EMI)</strong> is a fixed payment amount made by a borrower to a lender on a specified date each calendar month. EMIs are used to pay off both the interest and the principal each month so that over a specified period, the loan is paid off in full.</p>
+
+        <h3>The EMI Formula</h3>
+        <div class="formula-box">
+          EMI = P × r × (1 + r)^n / [(1 + r)^n − 1]
+          <br><br>
+          Where:
+          P = Principal loan amount
+          r = Monthly interest rate (annual rate ÷ 12 ÷ 100)
+          n = Total number of monthly installments (years × 12 + months)
+        </div>
+
+        <h3>Understanding Your EMI</h3>
+        <ul>
+          <li><strong>Higher loan amount</strong> = higher EMI. Borrow only what you need.</li>
+          <li><strong>Higher interest rate</strong> = higher EMI and more total interest paid. Shop around for the best rate.</li>
+          <li><strong>Longer tenure</strong> = lower monthly EMI but much more total interest paid over the life of the loan.</li>
+          <li><strong>Shorter tenure</strong> = higher monthly EMI but significantly less total interest, saving you money long-term.</li>
+        </ul>
+
+        <h3>Tips on Prepayment</h3>
+        <p>Most lenders allow you to make prepayments — paying extra on your principal. Even small extra payments can dramatically reduce your total interest:</p>
+        <ul>
+          <li>A single extra EMI payment per year can reduce a 5-year loan by several months.</li>
+          <li>Check with your lender for prepayment penalties before making extra payments.</li>
+          <li>Prepaying during the early months of a loan saves the most, since early payments have the highest interest component.</li>
+          <li>Use windfalls (tax refunds, bonuses) to make lump-sum principal payments.</li>
+        </ul>
+
+        <h3>Types of Loans This Calculator Applies To</h3>
+        <ul>
+          <li>Personal loans</li>
+          <li>Car / auto loans</li>
+          <li>Student loans</li>
+          <li>Business loans</li>
+          <li>Appliance or consumer durable loans</li>
+        </ul>
+        <p>For home mortgages, use our dedicated <a href="mortgage.html">Mortgage Calculator</a> which includes amortization schedules and LTV calculations.</p>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <!-- AD SLOT: Sidebar 300x250 -->
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="compound-interest.html">Compound Interest Calculator</a></li>
+          <li><a href="retirement.html">Retirement Calculator</a></li>
+          <li><a href="tax.html">Tax Calculator</a></li>
+          <li><a href="salary-hourly.html">Salary to Hourly Converter</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function () {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    function fmt(n) {
+      return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function fmtInt(n) {
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+
+    function calculateEMI() {
+      var P = parseFloat(document.getElementById('loanAmount').value);
+      var annualRate = parseFloat(document.getElementById('emiRate').value);
+      var years = parseInt(document.getElementById('tenureYears').value) || 0;
+      var months = parseInt(document.getElementById('tenureMonths').value) || 0;
+
+      if (!P || P <= 0) { alert('Please enter a valid loan amount.'); return; }
+      if (!annualRate || annualRate <= 0) { alert('Please enter a valid interest rate.'); return; }
+      var n = years * 12 + months;
+      if (n <= 0) { alert('Please enter a valid loan tenure (at least 1 month).'); return; }
+
+      var r = annualRate / 12 / 100;
+
+      // EMI = P * r * (1+r)^n / ((1+r)^n - 1)
+      var emi;
+      if (r === 0) {
+        emi = P / n;
+      } else {
+        var factor = Math.pow(1 + r, n);
+        emi = P * r * factor / (factor - 1);
+      }
+
+      var totalPayable = emi * n;
+      var totalInterest = totalPayable - P;
+      var interestPct = (totalInterest / P) * 100;
+
+      // Principal vs interest percentage of total
+      var principalPct = (P / totalPayable) * 100;
+      var intPct = (totalInterest / totalPayable) * 100;
+
+      document.getElementById('monthlyEMI').textContent = fmt(emi);
+      document.getElementById('emiPrincipal').textContent = fmtInt(P);
+      document.getElementById('emiTotalInterest').textContent = fmtInt(totalInterest);
+      document.getElementById('emiTotalPayable').textContent = fmtInt(totalPayable);
+      document.getElementById('emiInterestPct').textContent = interestPct.toFixed(1) + '%';
+
+      // Update split bar
+      document.getElementById('splitPrincipal').style.width = principalPct.toFixed(1) + '%';
+      document.getElementById('splitInterest').style.width = intPct.toFixed(1) + '%';
+      document.getElementById('splitPrincipalPct').textContent = principalPct.toFixed(1) + '%';
+      document.getElementById('splitInterestPct').textContent = intPct.toFixed(1) + '%';
+
+      // Update bar labels
+      document.getElementById('splitPrincipal').textContent = principalPct > 15 ? 'Principal ' + principalPct.toFixed(0) + '%' : '';
+      document.getElementById('splitInterest').textContent = intPct > 15 ? 'Interest ' + intPct.toFixed(0) + '%' : '';
+
+      document.getElementById('emiResults').classList.remove('hidden');
+    }
+
+    function resetEMI() {
+      document.getElementById('loanAmount').value = '';
+      document.getElementById('emiRate').value = '';
+      document.getElementById('tenureYears').value = '';
+      document.getElementById('tenureMonths').value = '';
+      document.getElementById('emiResults').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
