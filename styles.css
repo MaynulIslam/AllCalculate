@@ -101,7 +101,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 72px;
 }
 
 .nav-logo {
@@ -142,6 +142,41 @@ img {
 .nav-links a:hover {
   color: var(--white);
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Nav Center (homepage tagline + stats) */
+.nav-center {
+  flex: 1;
+  text-align: center;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+.nav-center-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-center-stats {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.nav-center-stat {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
+
+.nav-center-stat strong {
+  color: var(--orange);
+  font-weight: 700;
 }
 
 .nav-toggle {
@@ -1357,6 +1392,10 @@ img {
    Responsive — 768px
    ============================================================ */
 @media (max-width: 768px) {
+  .nav-center {
+    display: none;
+  }
+
   .hero h1 {
     font-size: 2rem;
   }
