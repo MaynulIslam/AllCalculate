@@ -424,6 +424,9 @@
         <li><a href="index.html#finance">💰 Finance</a></li>
         <li><a href="index.html#health">❤️ Health</a></li>
       </ul>
+      <div class="nav-auth" id="navAuth">
+        <button class="nav-signin-btn" id="navSignInBtn">Sign In</button>
+      </div>
       <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
@@ -737,6 +740,61 @@
         savedCount = 0;
       }
       updateTierBadge();
+      updateNavAuth(user);
+    });
+
+    // ── Navbar auth UI ──
+    function updateNavAuth(user) {
+      const navAuth = document.getElementById('navAuth');
+      if (!navAuth) return;
+      if (user) {
+        const displayName = user.displayName || '';
+        const email       = user.email || '';
+        const name        = displayName || email.split('@')[0] || 'User';
+        const initials    = displayName
+          ? displayName.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2)
+          : (email[0] || 'U').toUpperCase();
+        const lim      = TIER_LIMITS[userTier];
+        const limStr   = lim === Infinity ? '∞' : lim;
+        const tierName = userTier[0].toUpperCase() + userTier.slice(1);
+
+        navAuth.innerHTML = `
+          <div class="nav-user-chip" id="navUserChip">
+            <div class="nav-user-avatar">${initials}</div>
+            <span class="nav-user-name">${esc(name)}</span>
+            <span class="nav-user-caret">▾</span>
+            <div class="nav-user-dropdown">
+              <div class="nav-dropdown-info">
+                <div class="nav-dropdown-name">${esc(displayName || name)}</div>
+                <div class="nav-dropdown-email">${esc(email)}</div>
+                <div class="nav-dropdown-tier" id="navDropdownTier">
+                  ${tierName} Plan · ${savedCount}/${limStr} saves
+                </div>
+              </div>
+              <div class="nav-dropdown-item nav-dropdown-signout" id="navSignOutBtn">
+                ↪ Sign Out
+              </div>
+            </div>
+          </div>`;
+
+        document.getElementById('navUserChip').addEventListener('click', e => {
+          e.stopPropagation();
+          document.getElementById('navUserChip').classList.toggle('open');
+        });
+        document.getElementById('navSignOutBtn').addEventListener('click', async e => {
+          e.stopPropagation();
+          await signOut(auth);
+        });
+      } else {
+        navAuth.innerHTML = `<button class="nav-signin-btn" id="navSignInBtn">Sign In</button>`;
+        document.getElementById('navSignInBtn').addEventListener('click', showAuthModal);
+      }
+    }
+
+    // Close nav dropdown when clicking outside
+    document.addEventListener('click', () => {
+      const chip = document.getElementById('navUserChip');
+      if (chip) chip.classList.remove('open');
     });
 
     async function loadUserProfile() {
@@ -759,8 +817,12 @@
       if (!currentUser) { badge.textContent = ''; note.style.display = 'none'; return; }
       const lim    = TIER_LIMITS[userTier];
       const limStr = lim === Infinity ? '∞' : lim;
-      badge.textContent = `${userTier[0].toUpperCase() + userTier.slice(1)} · ${savedCount}/${limStr}`;
+      const tierName = userTier[0].toUpperCase() + userTier.slice(1);
+      badge.textContent = `${tierName} · ${savedCount}/${limStr}`;
       note.style.display = (userTier === 'free' && savedCount >= 3) ? 'block' : 'none';
+      // Also refresh navbar tier info if dropdown exists
+      const navTier = document.getElementById('navDropdownTier');
+      if (navTier) navTier.textContent = `${tierName} Plan · ${savedCount}/${limStr} saves`;
     }
 
     // ════════════════════════════════════════

@@ -199,6 +199,134 @@ img {
   transition: var(--transition);
 }
 
+/* ── Nav Auth ── */
+.nav-auth {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nav-signin-btn {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 20px;
+  padding: 7px 20px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-signin-btn:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.38);
+}
+
+.nav-user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 4px 12px 4px 4px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+}
+.nav-user-chip:hover { background: rgba(255,255,255,0.16); }
+
+.nav-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #4cc2ff;
+  color: #000;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-user-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-user-caret {
+  color: rgba(255,255,255,0.45);
+  font-size: 0.65rem;
+  margin-left: 1px;
+}
+
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #1e1e1e;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.08);
+  min-width: 210px;
+  overflow: hidden;
+  display: none;
+  z-index: 9999;
+}
+.nav-user-chip.open .nav-user-dropdown { display: block; }
+
+.nav-dropdown-info {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.nav-dropdown-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff;
+}
+.nav-dropdown-email {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.38);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav-dropdown-tier {
+  font-size: 0.68rem;
+  color: #4cc2ff;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: 0.83rem;
+  color: rgba(255,255,255,0.75);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.nav-dropdown-item:hover { background: rgba(255,255,255,0.06); }
+.nav-dropdown-signout { color: #ff6b6b; }
+.nav-dropdown-signout:hover { background: rgba(255,80,80,0.07) !important; }
+
+@media (max-width: 768px) {
+  .nav-user-name,
+  .nav-user-caret { display: none; }
+  .nav-user-chip { padding: 4px; }
+}
+
 /* ============================================================
    Ad Slots
    ============================================================ */
