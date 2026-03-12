@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git pull)",
+      "Bash(ls C:ProjectsAllCalculate*.html)",
+      "Bash(ls *.html)",
+      "Bash(done)",
+      "Bash(grep -v '//')",
+      "Bash(git add percentage.html)",
+      "Bash(git commit:*)",
+      "Bash(grep -l 'class=\"\"page-header\"\"' *.html)",
+      "Bash(grep -c 'class=\"\"page-header\"\"' *.html)",
+      "Bash(python transform_pages.py)",
+      "Bash(git checkout -- age.html bmi.html body-fat.html calorie.html compound-interest.html days-between.html gpa.html loan-emi.html mortgage.html percentage.html pregnancy.html retirement.html salary-hourly.html scientific.html simple-calculator.html square-footage.html tax.html timezone.html tip.html unit-converter.html)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where python)",
+      "Bash(python -m http.server --help)",
+      "WebSearch",
+      "WebFetch(domain:taxfoundation.org)",
+      "WebFetch(domain:www.taxtips.ca)",
+      "WebFetch(domain:www.ftb.ca.gov)",
+      "WebFetch(domain:www.tax.ny.gov)",
+      "WebFetch(domain:sweeneymichel.com)",
+      "WebFetch(domain:www.efile.com)",
+      "WebFetch(domain:nationaltaxreports.com)",
+      "WebFetch(domain:www.canada.ca)",
+      "WebFetch(domain:www.paycom.com)",
+      "WebFetch(domain:www.nerdwallet.com)",
+      "WebFetch(domain:remotelaws.com)",
+      "WebFetch(domain:www.revenue.state.mn.us)",
+      "WebFetch(domain:www.smith-howard.com)",
+      "WebFetch(domain:www.marylandtaxes.gov)",
+      "WebFetch(domain:www.nj.gov)",
+      "WebFetch(domain:www.visaverge.com)",
+      "WebFetch(domain:www.wealthsimple.com)",
+      "WebFetch(domain:taxsummaries.pwc.com)",
+      "WebFetch(domain:skfinancial.com)",
+      "WebFetch(domain:bradyware.com)",
+      "WebFetch(domain:www.irisglobal.com)",
+      "Bash(python remove_tax.py)"
+    ]
+  }
+}

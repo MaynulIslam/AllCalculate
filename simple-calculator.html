@@ -15,13 +15,11 @@
       background: #1c1c1c;
       border-radius: 16px;
       overflow: hidden;
-      max-width: 340px;
-      margin: 0 auto;
+      width: 340px;
+      min-width: 340px;
       box-shadow: 0 24px 60px rgba(0,0,0,0.35);
       user-select: none;
     }
-
-    /* ── Display ── */
     .win-display {
       padding: 16px 20px 8px;
       min-height: 110px;
@@ -45,10 +43,8 @@
       line-height: 1.1;
       transition: font-size 0.1s;
     }
-    .win-result.shrink   { font-size: 2rem; }
-    .win-result.xshrink  { font-size: 1.5rem; }
-
-    /* ── Memory bar ── */
+    .win-result.shrink  { font-size: 2rem; }
+    .win-result.xshrink { font-size: 1.5rem; }
     .win-memory-bar {
       display: flex;
       gap: 2px;
@@ -67,13 +63,8 @@
       cursor: pointer;
       transition: background 0.15s, color 0.15s;
     }
-    .win-mem-btn:hover:not(:disabled) {
-      background: rgba(255,255,255,0.08);
-      color: white;
-    }
+    .win-mem-btn:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: white; }
     .win-mem-btn:disabled { opacity: 0.3; cursor: default; }
-
-    /* ── Button grid ── */
     .win-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -94,24 +85,331 @@
       justify-content: center;
     }
     .win-btn:active { transform: scale(0.94); }
-
-    /* Button colour themes */
-    .win-btn.num  { background: #333333; color: #ffffff; }
-    .win-btn.num:hover  { background: #404040; }
-
-    .win-btn.op   { background: #2b2b2b; color: #ffffff; }
-    .win-btn.op:hover   { background: #393939; }
-
-    .win-btn.fn   { background: #262626; color: rgba(255,255,255,0.85); font-size: 0.9rem; }
-    .win-btn.fn:hover   { background: #323232; }
-
-    .win-btn.eq   { background: #4cc2ff; color: #000000; font-size: 1.3rem; font-weight: 600; }
-    .win-btn.eq:hover   { background: #76cfff; }
-
+    .win-btn.num   { background: #333333; color: #ffffff; }
+    .win-btn.num:hover { background: #404040; }
+    .win-btn.op    { background: #2b2b2b; color: #ffffff; }
+    .win-btn.op:hover  { background: #393939; }
+    .win-btn.fn    { background: #262626; color: rgba(255,255,255,0.85); font-size: 0.9rem; }
+    .win-btn.fn:hover  { background: #323232; }
+    .win-btn.eq    { background: #4cc2ff; color: #000000; font-size: 1.3rem; font-weight: 600; }
+    .win-btn.eq:hover  { background: #76cfff; }
     .win-btn.clear { background: #262626; color: rgba(255,255,255,0.85); }
     .win-btn.clear:hover { background: #3a1a1a; color: #ff6b6b; }
+    .win-btn.zero  { grid-column: span 2; aspect-ratio: auto; padding: 18px 28px; justify-content: flex-start; }
 
-    .win-btn.zero { grid-column: span 2; aspect-ratio: auto; padding: 18px 28px; justify-content: flex-start; }
+    /* ── Workspace layout ── */
+    .calc-workspace {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── History Panel ── */
+    .history-panel {
+      width: 280px;
+      min-width: 280px;
+      background: #1c1c1c;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      display: flex;
+      flex-direction: column;
+      color: #fff;
+    }
+    .hist-user-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 14px;
+      background: #252525;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      gap: 8px;
+    }
+    .hist-user-info {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.78rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .hist-auth-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.65);
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .hist-auth-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .hist-section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px 5px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: rgba(255,255,255,0.3);
+    }
+    .hist-tier-badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #4cc2ff;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .hist-session-log {
+      min-height: 100px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 2px 14px 8px;
+    }
+    .hist-session-log::-webkit-scrollbar { width: 3px; }
+    .hist-session-log::-webkit-scrollbar-track { background: transparent; }
+    .hist-session-log::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+    .hist-empty {
+      color: rgba(255,255,255,0.25);
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 18px 8px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .hist-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      gap: 8px;
+    }
+    .hist-entry:last-child { border-bottom: none; }
+    .hist-expr {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.75rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hist-result {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+    .hist-actions { padding: 8px 14px 12px; }
+    .hist-save-btn {
+      width: 100%;
+      background: #4cc2ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .hist-save-btn:hover:not(:disabled) { background: #76cfff; }
+    .hist-save-btn:disabled { opacity: 0.35; cursor: default; background: #4cc2ff; }
+    .hist-saved-wrap { border-top: 1px solid rgba(255,255,255,0.07); }
+    .hist-saved-list {
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 4px 14px 14px;
+    }
+    .hist-saved-list::-webkit-scrollbar { width: 3px; }
+    .hist-saved-list::-webkit-scrollbar-track { background: transparent; }
+    .hist-saved-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+    .hist-saved-item {
+      margin-bottom: 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .hist-saved-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .hist-saved-header:hover { background: rgba(255,255,255,0.05); }
+    .hist-saved-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+    }
+    .hist-saved-preview {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.3);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 185px;
+    }
+    .hist-saved-arrow {
+      color: rgba(255,255,255,0.25);
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .hist-saved-item.open .hist-saved-arrow { transform: rotate(90deg); }
+    .hist-saved-body {
+      display: none;
+      padding: 4px 10px 8px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .hist-saved-item.open .hist-saved-body { display: block; }
+
+    /* ── Auth Modal ── */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      padding: 16px;
+    }
+    .auth-modal {
+      background: #1e1e1e;
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      width: 100%;
+      max-width: 370px;
+      position: relative;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .auth-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .auth-close:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .auth-title { font-size: 1.4rem; font-weight: 700; margin: 0 0 4px; }
+    .auth-subtitle { color: rgba(255,255,255,0.4); font-size: 0.83rem; margin: 0 0 20px; }
+    .auth-tabs {
+      display: flex;
+      background: #262626;
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 18px;
+    }
+    .auth-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.45);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .auth-tab.active { background: #363636; color: #fff; }
+    .auth-form { display: flex; flex-direction: column; gap: 10px; }
+    .auth-input {
+      background: #262626;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .auth-input:focus { border-color: #4cc2ff; }
+    .auth-input::placeholder { color: rgba(255,255,255,0.28); }
+    .auth-error { color: #ff6b6b; font-size: 0.76rem; min-height: 14px; }
+    .auth-submit {
+      background: #4cc2ff;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 2px;
+      transition: background 0.15s;
+    }
+    .auth-submit:hover { background: #76cfff; }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+      color: rgba(255,255,255,0.18);
+      font-size: 0.75rem;
+    }
+    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    .auth-google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: #fff;
+      color: #333;
+      border: none;
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .auth-google-btn:hover { background: #f0f0f0; }
+
+    /* ── Upgrade notice ── */
+    .hist-upgrade-note {
+      padding: 8px 14px 12px;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .hist-upgrade-note a {
+      color: #4cc2ff;
+      text-decoration: none;
+    }
+    .hist-upgrade-note a:hover { text-decoration: underline; }
+
+    @media (max-width: 720px) {
+      .win-calc { width: 100%; min-width: unset; max-width: 340px; }
+      .history-panel { width: 100%; min-width: unset; max-width: 340px; }
+    }
   </style>
 </head>
 <body>
@@ -149,61 +447,95 @@
           </nav>
         </div>
 
-        <div class="calc-body" style="display:flex;justify-content:center;padding:28px 20px 36px">
+        <div class="calc-body" style="padding:24px 20px 36px">
+          <div class="calc-workspace">
 
-          <div class="win-calc" id="winCalc">
+            <!-- ── LEFT: Calculator ── -->
+            <div class="win-calc" id="winCalc">
+              <div class="win-display">
+                <div class="win-expression" id="winExpr">&nbsp;</div>
+                <div class="win-result" id="winResult">0</div>
+              </div>
+              <div class="win-memory-bar">
+                <button class="win-mem-btn" id="btnMC"    title="Memory Clear">MC</button>
+                <button class="win-mem-btn" id="btnMR"    title="Memory Recall">MR</button>
+                <button class="win-mem-btn" id="btnMPlus" title="Memory Add">M+</button>
+                <button class="win-mem-btn" id="btnMMinus"title="Memory Subtract">M−</button>
+                <button class="win-mem-btn" id="btnMS"    title="Memory Store">MS</button>
+              </div>
+              <div class="win-grid">
+                <button class="win-btn fn"    id="btnPct"  >%</button>
+                <button class="win-btn fn"    id="btnCE"   >CE</button>
+                <button class="win-btn clear" id="btnC"    >C</button>
+                <button class="win-btn fn"    id="btnDel"  >⌫</button>
 
-            <!-- Display -->
-            <div class="win-display">
-              <div class="win-expression" id="winExpr">&nbsp;</div>
-              <div class="win-result" id="winResult">0</div>
-            </div>
+                <button class="win-btn fn"    id="btnRecip">¹/x</button>
+                <button class="win-btn fn"    id="btnSq"   >x²</button>
+                <button class="win-btn fn"    id="btnSqrt" >√</button>
+                <button class="win-btn op"    id="btnDiv"  >÷</button>
 
-            <!-- Memory row -->
-            <div class="win-memory-bar">
-              <button class="win-mem-btn" id="btnMC"  onclick="memClear()"  disabled title="Memory Clear">MC</button>
-              <button class="win-mem-btn" id="btnMR"  onclick="memRecall()" disabled title="Memory Recall">MR</button>
-              <button class="win-mem-btn"             onclick="memAdd()"             title="Memory Add">M+</button>
-              <button class="win-mem-btn"             onclick="memSub()"             title="Memory Subtract">M−</button>
-              <button class="win-mem-btn"             onclick="memStore()"           title="Memory Store">MS</button>
-            </div>
+                <button class="win-btn num"   id="btn7"    >7</button>
+                <button class="win-btn num"   id="btn8"    >8</button>
+                <button class="win-btn num"   id="btn9"    >9</button>
+                <button class="win-btn op"    id="btnMul"  >×</button>
 
-            <!-- Button grid -->
-            <div class="win-grid">
-              <!-- Row 1 -->
-              <button class="win-btn fn"    onclick="calcFn('%')"  >%</button>
-              <button class="win-btn fn"    onclick="calcFn('CE')" >CE</button>
-              <button class="win-btn clear" onclick="calcFn('C')"  >C</button>
-              <button class="win-btn fn"    onclick="calcFn('DEL')">⌫</button>
-              <!-- Row 2 -->
-              <button class="win-btn fn"    onclick="calcFn('1/x')">¹/x</button>
-              <button class="win-btn fn"    onclick="calcFn('x2')" >x²</button>
-              <button class="win-btn fn"    onclick="calcFn('sqrt')">√</button>
-              <button class="win-btn op"    onclick="inputOp('/')">÷</button>
-              <!-- Row 3 -->
-              <button class="win-btn num"   onclick="inputNum('7')">7</button>
-              <button class="win-btn num"   onclick="inputNum('8')">8</button>
-              <button class="win-btn num"   onclick="inputNum('9')">9</button>
-              <button class="win-btn op"    onclick="inputOp('*')">×</button>
-              <!-- Row 4 -->
-              <button class="win-btn num"   onclick="inputNum('4')">4</button>
-              <button class="win-btn num"   onclick="inputNum('5')">5</button>
-              <button class="win-btn num"   onclick="inputNum('6')">6</button>
-              <button class="win-btn op"    onclick="inputOp('-')">−</button>
-              <!-- Row 5 -->
-              <button class="win-btn num"   onclick="inputNum('1')">1</button>
-              <button class="win-btn num"   onclick="inputNum('2')">2</button>
-              <button class="win-btn num"   onclick="inputNum('3')">3</button>
-              <button class="win-btn op"    onclick="inputOp('+')">+</button>
-              <!-- Row 6 -->
-              <button class="win-btn fn"    onclick="calcFn('+/-')">+/−</button>
-              <button class="win-btn num zero" onclick="inputNum('0')">0</button>
-              <button class="win-btn num"   onclick="inputDot()">.</button>
-              <button class="win-btn eq"    onclick="calcEqual()">=</button>
-            </div>
+                <button class="win-btn num"   id="btn4"    >4</button>
+                <button class="win-btn num"   id="btn5"    >5</button>
+                <button class="win-btn num"   id="btn6"    >6</button>
+                <button class="win-btn op"    id="btnSub"  >−</button>
 
-          </div><!-- /.win-calc -->
+                <button class="win-btn num"   id="btn1"    >1</button>
+                <button class="win-btn num"   id="btn2"    >2</button>
+                <button class="win-btn num"   id="btn3"    >3</button>
+                <button class="win-btn op"    id="btnAdd"  >+</button>
 
+                <button class="win-btn fn"    id="btnSign" >+/−</button>
+                <button class="win-btn num zero" id="btn0">0</button>
+                <button class="win-btn num"   id="btnDot"  >.</button>
+                <button class="win-btn eq"    id="btnEq"   >=</button>
+              </div>
+            </div><!-- /.win-calc -->
+
+            <!-- ── RIGHT: History Panel ── -->
+            <div class="history-panel" id="historyPanel">
+
+              <!-- User bar -->
+              <div class="hist-user-bar">
+                <span class="hist-user-info" id="histUserInfo">Not signed in</span>
+                <button class="hist-auth-btn" id="histAuthBtn">Sign In</button>
+              </div>
+
+              <!-- Current session -->
+              <div class="hist-section-title">
+                <span>Current Session</span>
+              </div>
+              <div class="hist-session-log" id="histSessionLog">
+                <div class="hist-empty">Start calculating to log your history here.</div>
+              </div>
+
+              <!-- Save button -->
+              <div class="hist-actions">
+                <button class="hist-save-btn" id="histSaveBtn" disabled>💾 Save Session</button>
+              </div>
+
+              <!-- Saved sessions -->
+              <div class="hist-saved-wrap">
+                <div class="hist-section-title">
+                  <span>Saved Sessions</span>
+                  <span class="hist-tier-badge" id="histTierBadge"></span>
+                </div>
+                <div class="hist-saved-list" id="histSavedList">
+                  <div class="hist-empty">Sign in to view saved sessions.</div>
+                </div>
+              </div>
+
+              <div class="hist-upgrade-note" id="histUpgradeNote" style="display:none">
+                On the free plan — <a href="#">upgrade</a> for more saves.
+              </div>
+
+            </div><!-- /.history-panel -->
+
+          </div><!-- /.calc-workspace -->
         </div>
       </div><!-- /.calc-main -->
 
@@ -215,15 +547,12 @@
       <div class="info-section" style="margin-top:28px">
         <h2>How to Use</h2>
         <p>Click the buttons or use your <strong>keyboard</strong> — numbers, operators, Enter for equals, Backspace to delete, and Escape to clear.</p>
-
         <h3>Keyboard Shortcuts</h3>
         <table style="width:100%;border-collapse:collapse;font-size:0.9rem;margin-top:8px">
-          <thead>
-            <tr style="background:#f1f5f9">
-              <th style="padding:10px 14px;text-align:left;border-radius:8px 0 0 0">Key</th>
-              <th style="padding:10px 14px;text-align:left;border-radius:0 8px 0 0">Action</th>
-            </tr>
-          </thead>
+          <thead><tr style="background:#f1f5f9">
+            <th style="padding:10px 14px;text-align:left;border-radius:8px 0 0 0">Key</th>
+            <th style="padding:10px 14px;text-align:left;border-radius:0 8px 0 0">Action</th>
+          </tr></thead>
           <tbody>
             <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:9px 14px;color:#475569">0 – 9</td><td style="padding:9px 14px">Enter digits</td></tr>
             <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:9px 14px;color:#475569">+ − * /</td><td style="padding:9px 14px">Arithmetic operators</td></tr>
@@ -234,16 +563,16 @@
             <tr><td style="padding:9px 14px;color:#475569">.</td><td style="padding:9px 14px">Decimal point</td></tr>
           </tbody>
         </table>
-
         <h3>Memory Functions</h3>
         <p><strong>MS</strong> stores the displayed number. <strong>MR</strong> recalls it. <strong>M+</strong> and <strong>M−</strong> add or subtract the current value from memory. <strong>MC</strong> clears memory.</p>
+        <h3>Save Your Calculations</h3>
+        <p>Sign in (free) to save your calculation sessions. Free accounts get <strong>5 saved sessions</strong>. Upgrade for more storage.</p>
       </div>
     </div>
 
     <!-- Sidebar -->
     <div class="calc-sidebar">
       <div class="sidebar-widget">
-        <!-- AD SLOT: Sidebar 300x250 -->
         <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
       </div>
       <div class="sidebar-widget">
@@ -314,21 +643,359 @@
     </div>
   </footer>
 
-  <script>
-    // ── Nav toggle ──
-    document.getElementById('navToggle').addEventListener('click', function () {
+  <!-- ── Auth Modal ── -->
+  <div class="auth-overlay" id="authOverlay" style="display:none">
+    <div class="auth-modal">
+      <button class="auth-close" id="authClose">✕</button>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-subtitle">Sign in to save your calculation history</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="signin">Sign In</button>
+        <button class="auth-tab" data-tab="signup">Sign Up</button>
+      </div>
+
+      <!-- Sign In -->
+      <form class="auth-form" id="signinForm">
+        <input type="email"    class="auth-input" id="siEmail" placeholder="Email address" autocomplete="email">
+        <input type="password" class="auth-input" id="siPass"  placeholder="Password" autocomplete="current-password">
+        <div class="auth-error" id="siError"></div>
+        <button type="submit" class="auth-submit" id="siSubmit">Sign In</button>
+      </form>
+
+      <!-- Sign Up -->
+      <form class="auth-form" id="signupForm" style="display:none">
+        <input type="email"    class="auth-input" id="suEmail" placeholder="Email address" autocomplete="email">
+        <input type="password" class="auth-input" id="suPass"  placeholder="Password (min 6 chars)" autocomplete="new-password">
+        <div class="auth-error" id="suError"></div>
+        <button type="submit" class="auth-submit" id="suSubmit">Create Free Account</button>
+      </form>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <button class="auth-google-btn" id="authGoogleBtn">
+        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.658 14.013 17.64 11.705 17.64 9.2z" fill="#4285F4"/>
+          <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+          <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+          <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.96L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Firebase SDK ── -->
+  <script type="module">
+    import { initializeApp }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+             signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getFirestore, collection, addDoc, getDocs, query,
+             orderBy, limit as fsLimit, doc, getDoc, setDoc, serverTimestamp }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    // ── Firebase init ──
+    const firebaseConfig = {
+      apiKey:            "AIzaSyBILVYQEfrPCxFmRpZJAQAvW-GF-OBHR2Y",
+      authDomain:        "allcalculate-e8d15.firebaseapp.com",
+      projectId:         "allcalculate-e8d15",
+      storageBucket:     "allcalculate-e8d15.firebasestorage.app",
+      messagingSenderId: "483222561073",
+      appId:             "1:483222561073:web:26a43bd7213c45cf3ed010"
+    };
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // ── Tier limits ──
+    const TIER_LIMITS = { free: 5, basic: 500, executive: 1500, premium: Infinity };
+
+    let currentUser  = null;
+    let userTier     = 'free';
+    let savedCount   = 0;
+    let currentSession = [];   // { expr, result }[]
+
+    // ════════════════════════════════════════
+    //  AUTH STATE
+    // ════════════════════════════════════════
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        document.getElementById('histUserInfo').textContent =
+          user.displayName || user.email || 'User';
+        document.getElementById('histAuthBtn').textContent = 'Sign Out';
+        await loadUserProfile();
+        await loadSavedSessions();
+      } else {
+        document.getElementById('histUserInfo').textContent = 'Not signed in';
+        document.getElementById('histAuthBtn').textContent  = 'Sign In';
+        document.getElementById('histSavedList').innerHTML  =
+          '<div class="hist-empty">Sign in to view saved sessions.</div>';
+        userTier   = 'free';
+        savedCount = 0;
+      }
+      updateTierBadge();
+    });
+
+    async function loadUserProfile() {
+      try {
+        const ref  = doc(db, 'users', currentUser.uid, 'profile', 'data');
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          userTier   = snap.data().tier       || 'free';
+          savedCount = snap.data().savedCount || 0;
+        } else {
+          await setDoc(ref, { tier: 'free', savedCount: 0, createdAt: serverTimestamp() });
+          userTier = 'free'; savedCount = 0;
+        }
+      } catch (e) { console.error('Profile error:', e); }
+    }
+
+    function updateTierBadge() {
+      const badge = document.getElementById('histTierBadge');
+      const note  = document.getElementById('histUpgradeNote');
+      if (!currentUser) { badge.textContent = ''; note.style.display = 'none'; return; }
+      const lim    = TIER_LIMITS[userTier];
+      const limStr = lim === Infinity ? '∞' : lim;
+      badge.textContent = `${userTier[0].toUpperCase() + userTier.slice(1)} · ${savedCount}/${limStr}`;
+      note.style.display = (userTier === 'free' && savedCount >= 3) ? 'block' : 'none';
+    }
+
+    // ════════════════════════════════════════
+    //  SAVED SESSIONS
+    // ════════════════════════════════════════
+    async function loadSavedSessions() {
+      const list = document.getElementById('histSavedList');
+      list.innerHTML = '<div class="hist-empty">Loading…</div>';
+      try {
+        const q    = query(collection(db, 'users', currentUser.uid, 'sessions'),
+                           orderBy('createdAt', 'desc'), fsLimit(20));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+          list.innerHTML = '<div class="hist-empty">No saved sessions yet.</div>';
+          return;
+        }
+        list.innerHTML = '';
+        snap.forEach(d => list.appendChild(buildSavedItem(d.id, d.data())));
+      } catch (e) {
+        list.innerHTML = '<div class="hist-empty">Error loading sessions.</div>';
+        console.error(e);
+      }
+    }
+
+    function buildSavedItem(id, data) {
+      const calcs   = data.calculations || [];
+      const preview = calcs.slice(0, 3).map(c => c.result).join(', ');
+      const div = document.createElement('div');
+      div.className = 'hist-saved-item';
+      div.innerHTML = `
+        <div class="hist-saved-header">
+          <div style="overflow:hidden">
+            <div class="hist-saved-label">${esc(data.label || 'Session')}</div>
+            <div class="hist-saved-preview">= ${preview}${calcs.length > 3 ? ` +${calcs.length - 3} more` : ''}</div>
+          </div>
+          <span class="hist-saved-arrow">›</span>
+        </div>
+        <div class="hist-saved-body">
+          ${calcs.map(c =>
+            `<div class="hist-entry">
+               <span class="hist-expr">${esc(c.expr)}</span>
+               <span class="hist-result">${esc(c.result)}</span>
+             </div>`
+          ).join('')}
+        </div>`;
+      div.querySelector('.hist-saved-header')
+         .addEventListener('click', () => div.classList.toggle('open'));
+      return div;
+    }
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ════════════════════════════════════════
+    //  SAVE SESSION
+    // ════════════════════════════════════════
+    document.getElementById('histSaveBtn').addEventListener('click', async () => {
+      if (currentSession.length === 0) return;
+      if (!currentUser) { showAuthModal(); return; }
+
+      const lim = TIER_LIMITS[userTier];
+      if (savedCount >= lim) {
+        alert(`You've reached the ${userTier} plan limit of ${lim === Infinity ? 'unlimited' : lim} saved sessions.\nUpgrade your plan to save more!`);
+        return;
+      }
+
+      const btn = document.getElementById('histSaveBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      try {
+        const label = `Session ${new Date().toLocaleString('en-US', {
+          month:'short', day:'numeric', year:'numeric',
+          hour:'numeric', minute:'2-digit'
+        })}`;
+        await addDoc(collection(db, 'users', currentUser.uid, 'sessions'), {
+          label,
+          calculations: currentSession.slice(),
+          createdAt: serverTimestamp()
+        });
+        savedCount++;
+        await setDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'),
+                     { savedCount }, { merge: true });
+        updateTierBadge();
+        await loadSavedSessions();
+
+        currentSession = [];
+        updateSessionLog();
+        btn.textContent = '✓ Saved!';
+        setTimeout(() => { btn.textContent = '💾 Save Session'; }, 2000);
+      } catch (e) {
+        console.error('Save error:', e);
+        btn.disabled = false;
+        btn.textContent = '💾 Save Session';
+      }
+    });
+
+    // ════════════════════════════════════════
+    //  SESSION LOG
+    // ════════════════════════════════════════
+    function updateSessionLog() {
+      const log = document.getElementById('histSessionLog');
+      const btn = document.getElementById('histSaveBtn');
+      if (currentSession.length === 0) {
+        log.innerHTML = '<div class="hist-empty">Start calculating to log your history here.</div>';
+        btn.disabled = true;
+        return;
+      }
+      log.innerHTML = currentSession.map(c =>
+        `<div class="hist-entry">
+           <span class="hist-expr">${esc(c.expr)}</span>
+           <span class="hist-result">${esc(c.result)}</span>
+         </div>`
+      ).join('');
+      log.scrollTop = log.scrollHeight;
+      btn.disabled = false;
+    }
+
+    function addToSession(expr, result) {
+      currentSession.push({ expr, result });
+      updateSessionLog();
+    }
+
+    // ════════════════════════════════════════
+    //  AUTH MODAL
+    // ════════════════════════════════════════
+    function showAuthModal() {
+      document.getElementById('authOverlay').style.display = 'flex';
+    }
+    function hideAuthModal() {
+      document.getElementById('authOverlay').style.display = 'none';
+      document.getElementById('siError').textContent = '';
+      document.getElementById('suError').textContent = '';
+    }
+
+    document.getElementById('histAuthBtn').addEventListener('click', async () => {
+      if (currentUser) { await signOut(auth); } else { showAuthModal(); }
+    });
+    document.getElementById('authClose').addEventListener('click', hideAuthModal);
+    document.getElementById('authOverlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget) hideAuthModal();
+    });
+
+    // Tabs
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const w = tab.dataset.tab;
+        document.getElementById('signinForm').style.display = w === 'signin' ? 'flex' : 'none';
+        document.getElementById('signupForm').style.display = w === 'signup' ? 'flex' : 'none';
+      });
+    });
+
+    // Sign In
+    document.getElementById('signinForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errEl = document.getElementById('siError');
+      const btn   = document.getElementById('siSubmit');
+      errEl.textContent = '';
+      btn.textContent   = 'Signing in…';
+      btn.disabled      = true;
+      try {
+        await signInWithEmailAndPassword(auth,
+          document.getElementById('siEmail').value,
+          document.getElementById('siPass').value);
+        hideAuthModal();
+      } catch (err) {
+        errEl.textContent = friendlyErr(err.code);
+      } finally {
+        btn.textContent = 'Sign In';
+        btn.disabled    = false;
+      }
+    });
+
+    // Sign Up
+    document.getElementById('signupForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errEl = document.getElementById('suError');
+      const btn   = document.getElementById('suSubmit');
+      errEl.textContent = '';
+      btn.textContent   = 'Creating account…';
+      btn.disabled      = true;
+      try {
+        await createUserWithEmailAndPassword(auth,
+          document.getElementById('suEmail').value,
+          document.getElementById('suPass').value);
+        hideAuthModal();
+      } catch (err) {
+        errEl.textContent = friendlyErr(err.code);
+      } finally {
+        btn.textContent = 'Create Free Account';
+        btn.disabled    = false;
+      }
+    });
+
+    // Google
+    document.getElementById('authGoogleBtn').addEventListener('click', async () => {
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+        hideAuthModal();
+      } catch (err) {
+        if (err.code !== 'auth/popup-closed-by-user') console.error(err);
+      }
+    });
+
+    function friendlyErr(code) {
+      return ({
+        'auth/user-not-found':       'No account found with this email.',
+        'auth/wrong-password':       'Incorrect password.',
+        'auth/invalid-credential':   'Invalid email or password.',
+        'auth/invalid-email':        'Please enter a valid email.',
+        'auth/email-already-in-use': 'An account with this email already exists.',
+        'auth/weak-password':        'Password must be at least 6 characters.',
+        'auth/too-many-requests':    'Too many attempts. Please try again later.',
+      })[code] || 'Something went wrong. Please try again.';
+    }
+
+    // ════════════════════════════════════════
+    //  NAV TOGGLE
+    // ════════════════════════════════════════
+    document.getElementById('navToggle').addEventListener('click', () => {
       document.getElementById('navLinks').classList.toggle('open');
     });
 
-    // ══════════════════════════════════════════════
-    //  Calculator State
-    // ══════════════════════════════════════════════
-    let displayVal        = '0';   // number shown on the big display
-    let storedVal         = null;  // left-hand operand
-    let pendingOp         = null;  // pending operator: +, -, *, /
-    let waitingForOperand = false; // true after pressing an operator — next digit clears
-                                   // display but KEEPS storedVal / pendingOp intact
-    let afterEquals       = false; // true after pressing = — next digit resets everything
+    // ════════════════════════════════════════
+    //  CALCULATOR STATE
+    // ════════════════════════════════════════
+    let displayVal        = '0';
+    let storedVal         = null;
+    let pendingOp         = null;
+    let waitingForOperand = false;
+    let afterEquals       = false;
     let memory            = 0;
     let memHasValue       = false;
 
@@ -337,32 +1004,20 @@
     const elMC     = document.getElementById('btnMC');
     const elMR     = document.getElementById('btnMR');
 
-    // ── Render ──
     function render() {
       elResult.textContent = displayVal;
-      const len = displayVal.replace('-', '').replace('.', '').length;
+      const len = displayVal.replace('-','').replace('.','').length;
       elResult.classList.toggle('shrink',  len > 12);
       elResult.classList.toggle('xshrink', len > 16);
     }
+    function setExpr(txt) { elExpr.textContent = txt || '\u00a0'; }
 
-    function setExpr(txt) {
-      elExpr.textContent = txt || '\u00a0';
-    }
-
-    // ── Number input ──
     function inputNum(n) {
       if (afterEquals) {
-        // Fresh start after = : clear everything
-        displayVal        = n;
-        storedVal         = null;
-        pendingOp         = null;
-        afterEquals       = false;
-        waitingForOperand = false;
+        displayVal = n; storedVal = null; pendingOp = null;
+        afterEquals = false; waitingForOperand = false;
       } else if (waitingForOperand) {
-        // After an operator: start typing the second number
-        // storedVal / pendingOp are intentionally preserved
-        displayVal        = n;
-        waitingForOperand = false;
+        displayVal = n; waitingForOperand = false;
       } else if (displayVal === '0') {
         displayVal = n;
       } else {
@@ -374,150 +1029,128 @@
 
     function inputDot() {
       if (afterEquals || waitingForOperand) {
-        displayVal        = '0.';
-        afterEquals       = false;
-        waitingForOperand = false;
-        render();
-        return;
+        displayVal = '0.'; afterEquals = false; waitingForOperand = false; render(); return;
       }
-      if (!displayVal.includes('.')) {
-        displayVal += '.';
-        render();
-      }
+      if (!displayVal.includes('.')) { displayVal += '.'; render(); }
     }
 
-    // ── Operator ──
     function inputOp(op) {
       const cur = parseFloat(displayVal);
-
       if (storedVal !== null && pendingOp !== null && !waitingForOperand) {
-        // Chain operation: evaluate what's pending first
-        const result = compute(storedVal, pendingOp, cur);
-        storedVal  = result;
-        displayVal = formatResult(result);
+        const res = compute(storedVal, pendingOp, cur);
+        storedVal = res; displayVal = fmtRes(res);
       } else if (!waitingForOperand) {
-        // First operator press — store current display value
         storedVal = cur;
       }
-      // If waitingForOperand is already true (operator pressed twice),
-      // just update the operator without re-storing the value
-
-      pendingOp         = op;
-      afterEquals       = false;
-      waitingForOperand = true;
-      setExpr(formatResult(storedVal) + ' ' + opSymbol(op));
-      render();
+      pendingOp = op; afterEquals = false; waitingForOperand = true;
+      setExpr(fmtRes(storedVal) + ' ' + opSym(op)); render();
     }
 
-    // ── Equals ──
     function calcEqual() {
       if (storedVal === null || pendingOp === null) return;
-      const cur = parseFloat(displayVal);
-      setExpr(formatResult(storedVal) + ' ' + opSymbol(pendingOp) + ' ' + formatResult(cur) + ' =');
-      const result = compute(storedVal, pendingOp, cur);
-      displayVal        = formatResult(result);
-      storedVal         = null;
-      pendingOp         = null;
-      afterEquals       = true;
-      waitingForOperand = false;
+      const cur    = parseFloat(displayVal);
+      const expr   = fmtRes(storedVal) + ' ' + opSym(pendingOp) + ' ' + fmtRes(cur);
+      setExpr(expr + ' =');
+      const res    = compute(storedVal, pendingOp, cur);
+      const resStr = fmtRes(res);
+      displayVal = resStr; storedVal = null; pendingOp = null;
+      afterEquals = true; waitingForOperand = false;
       render();
+      addToSession(expr + ' =', resStr);
     }
 
-    // ── Special functions ──
     function calcFn(fn) {
       const val = parseFloat(displayVal);
       switch (fn) {
         case 'C':
-          displayVal        = '0';
-          storedVal         = null;
-          pendingOp         = null;
-          afterEquals       = false;
-          waitingForOperand = false;
-          setExpr('');
-          break;
+          displayVal='0'; storedVal=null; pendingOp=null;
+          afterEquals=false; waitingForOperand=false; setExpr(''); break;
         case 'CE':
-          displayVal        = '0';
-          afterEquals       = false;
-          waitingForOperand = false;
-          break;
+          displayVal='0'; afterEquals=false; waitingForOperand=false; break;
         case 'DEL':
-          if (afterEquals || waitingForOperand) { displayVal = '0'; afterEquals = false; waitingForOperand = false; break; }
-          displayVal = displayVal.length > 1 ? displayVal.slice(0, -1) : '0';
-          break;
+          if (afterEquals || waitingForOperand) { displayVal='0'; afterEquals=false; waitingForOperand=false; break; }
+          displayVal = displayVal.length > 1 ? displayVal.slice(0,-1) : '0'; break;
         case '+/-':
-          if (displayVal !== '0') {
-            displayVal = displayVal.startsWith('-') ? displayVal.slice(1) : '-' + displayVal;
-          }
-          break;
+          if (displayVal !== '0') displayVal = displayVal.startsWith('-') ? displayVal.slice(1) : '-'+displayVal; break;
         case '%':
-          // Windows-style: 200 + 10% → 10% of 200 = 20, then 200+20=220
-          displayVal = formatResult(storedVal !== null ? storedVal * val / 100 : val / 100);
-          waitingForOperand = false;
-          break;
+          displayVal = fmtRes(storedVal !== null ? storedVal * val / 100 : val / 100);
+          waitingForOperand = false; break;
         case '1/x':
-          if (val === 0) { displayVal = 'Cannot divide by zero'; afterEquals = true; render(); return; }
-          displayVal = formatResult(1 / val);
-          break;
+          if (val===0) { displayVal='Cannot divide by zero'; afterEquals=true; render(); return; }
+          displayVal = fmtRes(1/val); break;
         case 'x2':
-          displayVal = formatResult(val * val);
-          break;
+          displayVal = fmtRes(val*val); break;
         case 'sqrt':
-          if (val < 0) { displayVal = 'Invalid input'; afterEquals = true; render(); return; }
-          displayVal = formatResult(Math.sqrt(val));
-          break;
+          if (val<0) { displayVal='Invalid input'; afterEquals=true; render(); return; }
+          displayVal = fmtRes(Math.sqrt(val)); break;
       }
       render();
     }
 
-    // ── Memory ──
-    function memStore()  { memory = parseFloat(displayVal); memHasValue = true; updateMemBtns(); }
-    function memRecall() { if (!memHasValue) return; displayVal = formatResult(memory); afterEquals = true; render(); }
-    function memAdd()    { memory += parseFloat(displayVal); memHasValue = true; updateMemBtns(); }
-    function memSub()    { memory -= parseFloat(displayVal); memHasValue = true; updateMemBtns(); }
-    function memClear()  { memory = 0; memHasValue = false; updateMemBtns(); }
-    function updateMemBtns() {
-      elMC.disabled = !memHasValue;
-      elMR.disabled = !memHasValue;
-    }
+    function memStore()  { memory=parseFloat(displayVal); memHasValue=true; updateMemBtns(); }
+    function memRecall() { if (!memHasValue) return; displayVal=fmtRes(memory); afterEquals=true; render(); }
+    function memAdd()    { memory+=parseFloat(displayVal); memHasValue=true; updateMemBtns(); }
+    function memSub()    { memory-=parseFloat(displayVal); memHasValue=true; updateMemBtns(); }
+    function memClear()  { memory=0; memHasValue=false; updateMemBtns(); }
+    function updateMemBtns() { elMC.disabled=!memHasValue; elMR.disabled=!memHasValue; }
 
-    // ── Helpers ──
-    function compute(a, op, b) {
-      switch (op) {
-        case '+': return a + b;
-        case '-': return a - b;
-        case '*': return a * b;
-        case '/': return b === 0 ? NaN : a / b;
-      }
+    function compute(a,op,b) {
+      switch(op){ case '+':return a+b; case '-':return a-b; case '*':return a*b; case '/':return b===0?NaN:a/b; }
     }
-
-    function opSymbol(op) {
-      return { '+': '+', '-': '−', '*': '×', '/': '÷' }[op] || op;
-    }
-
-    function formatResult(n) {
+    function opSym(op){ return{'+':'+','-':'−','*':'×','/':'÷'}[op]||op; }
+    function fmtRes(n){
       if (isNaN(n))     return 'Cannot divide by zero';
       if (!isFinite(n)) return 'Overflow';
-      // toPrecision(14) removes floating-point noise (e.g. 0.1+0.2 = 0.3)
       return parseFloat(n.toPrecision(14)).toString();
     }
 
-    // ── Keyboard support ──
-    document.addEventListener('keydown', function (e) {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    // ── Button wiring ──
+    document.getElementById('btn0').addEventListener('click', ()=>inputNum('0'));
+    document.getElementById('btn1').addEventListener('click', ()=>inputNum('1'));
+    document.getElementById('btn2').addEventListener('click', ()=>inputNum('2'));
+    document.getElementById('btn3').addEventListener('click', ()=>inputNum('3'));
+    document.getElementById('btn4').addEventListener('click', ()=>inputNum('4'));
+    document.getElementById('btn5').addEventListener('click', ()=>inputNum('5'));
+    document.getElementById('btn6').addEventListener('click', ()=>inputNum('6'));
+    document.getElementById('btn7').addEventListener('click', ()=>inputNum('7'));
+    document.getElementById('btn8').addEventListener('click', ()=>inputNum('8'));
+    document.getElementById('btn9').addEventListener('click', ()=>inputNum('9'));
+    document.getElementById('btnDot').addEventListener('click',   inputDot);
+    document.getElementById('btnEq').addEventListener('click',    calcEqual);
+    document.getElementById('btnAdd').addEventListener('click',   ()=>inputOp('+'));
+    document.getElementById('btnSub').addEventListener('click',   ()=>inputOp('-'));
+    document.getElementById('btnMul').addEventListener('click',   ()=>inputOp('*'));
+    document.getElementById('btnDiv').addEventListener('click',   ()=>inputOp('/'));
+    document.getElementById('btnPct').addEventListener('click',   ()=>calcFn('%'));
+    document.getElementById('btnCE').addEventListener('click',    ()=>calcFn('CE'));
+    document.getElementById('btnC').addEventListener('click',     ()=>calcFn('C'));
+    document.getElementById('btnDel').addEventListener('click',   ()=>calcFn('DEL'));
+    document.getElementById('btnSign').addEventListener('click',  ()=>calcFn('+/-'));
+    document.getElementById('btnRecip').addEventListener('click', ()=>calcFn('1/x'));
+    document.getElementById('btnSq').addEventListener('click',    ()=>calcFn('x2'));
+    document.getElementById('btnSqrt').addEventListener('click',  ()=>calcFn('sqrt'));
+    document.getElementById('btnMC').addEventListener('click',    memClear);
+    document.getElementById('btnMR').addEventListener('click',    memRecall);
+    document.getElementById('btnMPlus').addEventListener('click', memAdd);
+    document.getElementById('btnMMinus').addEventListener('click',memSub);
+    document.getElementById('btnMS').addEventListener('click',    memStore);
+
+    // ── Keyboard ──
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
       const k = e.key;
-      if (k >= '0' && k <= '9')            inputNum(k);
-      else if (k === '.')                  inputDot();
-      else if (k === '+')                  inputOp('+');
-      else if (k === '-')                  inputOp('-');
-      else if (k === '*')                  inputOp('*');
-      else if (k === '/')                  { e.preventDefault(); inputOp('/'); }
-      else if (k === 'Enter' || k === '=') calcEqual();
-      else if (k === 'Backspace')          calcFn('DEL');
-      else if (k === 'Escape')             calcFn('C');
-      else if (k === 'Delete')             calcFn('CE');
+      if (k>='0'&&k<='9')           inputNum(k);
+      else if (k==='.')             inputDot();
+      else if (k==='+')             inputOp('+');
+      else if (k==='-')             inputOp('-');
+      else if (k==='*')             inputOp('*');
+      else if (k==='/'){e.preventDefault();inputOp('/');}
+      else if (k==='Enter'||k==='=')calcEqual();
+      else if (k==='Backspace')     calcFn('DEL');
+      else if (k==='Escape')        calcFn('C');
+      else if (k==='Delete')        calcFn('CE');
     });
 
-    // Initial render
     render();
   </script>
 
