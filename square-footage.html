@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free square footage calculator — calculate room area for flooring, painting, tiling, and renovation projects. Supports multiple shapes.">
+  <title>Square Footage Calculator | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <a href="index.html#math">Math &amp; Everyday</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Square Footage Calculator</span>
+    </div>
+    <h1>Square Footage Calculator</h1>
+    <p>Calculate room area for flooring, painting, tiling, and renovation projects.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+
+          <!-- Shape Tabs -->
+          <div class="tabs" style="margin-bottom:24px">
+            <button class="tab-btn active" onclick="switchShape('rectangle', this)">▭ Rectangle</button>
+            <button class="tab-btn" onclick="switchShape('circle', this)">◯ Circle</button>
+            <button class="tab-btn" onclick="switchShape('triangle', this)">△ Triangle</button>
+            <button class="tab-btn" onclick="switchShape('lshape', this)">⌐ L-Shape</button>
+          </div>
+
+          <!-- Unit selector -->
+          <div class="form-group" style="margin-bottom:20px">
+            <label class="form-label">Measurement Unit</label>
+            <select id="unitSel" class="form-select" onchange="recalc()">
+              <option value="ft">Feet (ft)</option>
+              <option value="in">Inches (in)</option>
+              <option value="yd">Yards (yd)</option>
+              <option value="m">Meters (m)</option>
+              <option value="cm">Centimeters (cm)</option>
+            </select>
+          </div>
+
+          <!-- Rectangle -->
+          <div id="shape-rectangle">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Length</label>
+                <input id="rectL" class="form-input" type="number" placeholder="e.g. 15" min="0" oninput="recalc()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Width</label>
+                <input id="rectW" class="form-input" type="number" placeholder="e.g. 12" min="0" oninput="recalc()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Circle -->
+          <div id="shape-circle" class="hidden">
+            <div class="form-group">
+              <label class="form-label">Radius</label>
+              <input id="circR" class="form-input" type="number" placeholder="e.g. 7" min="0" oninput="recalc()">
+            </div>
+            <p style="font-size:0.85rem;color:#64748b;margin-top:-8px">Formula: Area = π × r²</p>
+          </div>
+
+          <!-- Triangle -->
+          <div id="shape-triangle" class="hidden">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Base</label>
+                <input id="triB" class="form-input" type="number" placeholder="e.g. 10" min="0" oninput="recalc()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Height</label>
+                <input id="triH" class="form-input" type="number" placeholder="e.g. 8" min="0" oninput="recalc()">
+              </div>
+            </div>
+            <p style="font-size:0.85rem;color:#64748b;margin-top:-8px">Formula: Area = ½ × base × height</p>
+          </div>
+
+          <!-- L-Shape -->
+          <div id="shape-lshape" class="hidden">
+            <p style="font-size:0.875rem;color:#475569;margin-bottom:16px;padding:12px;background:#f1f5f9;border-radius:8px">
+              📐 Enter the two rectangles that make up your L-shaped room. The total area will be their sum.
+            </p>
+            <div style="margin-bottom:16px">
+              <div style="font-weight:600;font-size:0.9rem;color:#0f2b4c;margin-bottom:12px">Rectangle A</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Length A</label>
+                  <input id="lsLA" class="form-input" type="number" placeholder="e.g. 20" min="0" oninput="recalc()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Width A</label>
+                  <input id="lsWA" class="form-input" type="number" placeholder="e.g. 12" min="0" oninput="recalc()">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:0.9rem;color:#0f2b4c;margin-bottom:12px">Rectangle B</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Length B</label>
+                  <input id="lsLB" class="form-input" type="number" placeholder="e.g. 10" min="0" oninput="recalc()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Width B</label>
+                  <input id="lsWB" class="form-input" type="number" placeholder="e.g. 8" min="0" oninput="recalc()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Cost Estimator -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin-top:20px">
+            <div style="font-weight:700;font-size:0.9rem;color:#0f2b4c;margin-bottom:14px">💰 Project Cost Estimator (Optional)</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Material Cost <span class="hint">per sq ft</span></label>
+                <div class="input-group">
+                  <span class="input-prefix">$</span>
+                  <input id="costPerSqft" class="form-input has-prefix" type="number" placeholder="e.g. 3.50" min="0" step="0.01" oninput="recalc()">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Waste Factor <span class="hint">for cuts/errors</span></label>
+                <div class="input-group">
+                  <input id="wastePct" class="form-input has-suffix" type="number" placeholder="10" min="0" max="50" oninput="recalc()">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result -->
+          <div id="resultBox" class="hidden" style="margin-top:20px">
+            <div class="results-box">
+              <div class="results-title">Results</div>
+              <div class="result-primary">
+                <div class="result-primary-label">Total Area</div>
+                <div class="result-primary-value" id="resSqft"></div>
+              </div>
+              <div class="result-grid" id="resGrid"></div>
+            </div>
+          </div>
+
+          <!-- Multi-Room Adder -->
+          <div style="margin-top:28px">
+            <div style="font-weight:700;font-size:1rem;color:#0f2b4c;margin-bottom:16px">🏠 Multi-Room Total</div>
+            <p style="font-size:0.875rem;color:#64748b;margin-bottom:16px">Add multiple rooms and get a grand total. Useful for whole-house flooring projects.</p>
+            <div id="roomList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px"></div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Room Name</label>
+                <input id="newRoomName" class="form-input" type="text" placeholder="e.g. Living Room">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Area (sq ft)</label>
+                <input id="newRoomArea" class="form-input" type="number" placeholder="e.g. 200" min="0">
+              </div>
+            </div>
+            <button class="btn-calculate" style="margin-top:0" onclick="addRoom()">+ Add Room</button>
+            <div id="roomTotal" class="hidden" style="margin-top:16px;background:linear-gradient(135deg,#0f2b4c,#1a3c6e);border-radius:12px;padding:20px;color:#fff">
+              <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-bottom:8px">Grand Total</div>
+              <div id="roomTotalValue" style="font-size:2rem;font-weight:800;color:#f97316"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>How to Calculate Square Footage</h2>
+        <p>Square footage (sq ft) is the most common unit for measuring area in the US. It's used for rooms, houses, yards, and any other two-dimensional space.</p>
+
+        <h3>Formulas by Shape</h3>
+        <div class="formula-box">
+          Rectangle / Square: Area = Length × Width<br>
+          Circle:             Area = π × radius²<br>
+          Triangle:           Area = ½ × base × height<br>
+          L-Shape:            Area = Rectangle A + Rectangle B
+        </div>
+
+        <h3>Converting Between Units</h3>
+        <p>Results are always shown in square feet plus the equivalent in other common units:</p>
+        <ul>
+          <li>1 sq ft = 144 sq in</li>
+          <li>1 sq yd = 9 sq ft</li>
+          <li>1 sq m = 10.7639 sq ft</li>
+          <li>1 acre = 43,560 sq ft</li>
+        </ul>
+
+        <h3>Waste Factor (Why It Matters)</h3>
+        <p>When ordering flooring, tile, or carpet, always add extra for cuts, waste, and future repairs. Industry standard recommendations:</p>
+        <ul>
+          <li><strong>Hardwood / Laminate (straight lay):</strong> Add 10%</li>
+          <li><strong>Hardwood (diagonal lay):</strong> Add 15%</li>
+          <li><strong>Tile (straight pattern):</strong> Add 10%</li>
+          <li><strong>Tile (diagonal pattern):</strong> Add 15%</li>
+          <li><strong>Carpet:</strong> Add 10%</li>
+          <li><strong>Paint:</strong> One gallon covers ~400 sq ft per coat</li>
+        </ul>
+
+        <h3>Tips for Measuring a Room</h3>
+        <ul>
+          <li>Measure the longest length and widest width of the room</li>
+          <li>For irregular rooms, divide them into rectangles and add the areas</li>
+          <li>Don't subtract closets — most flooring is sold by total sq ft</li>
+          <li>Measure twice, order once!</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="unit-converter.html">📏 Unit Converter</a></li>
+          <li><a href="percentage.html">% Percentage Calculator</a></li>
+          <li><a href="mortgage.html">🏠 Mortgage Calculator</a></li>
+          <li><a href="scientific.html">🔬 Scientific Calculator</a></li>
+          <li><a href="gpa.html">🎓 GPA Calculator</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-widget" style="background:#f0fdf4;border:1px solid #bbf7d0">
+        <div class="sidebar-widget-title" style="color:#16a34a">Paint Coverage Guide</div>
+        <div style="font-size:0.82rem;color:#166534;line-height:1.9">
+          1 gallon ≈ 400 sq ft<br>
+          (1 coat, smooth surface)<br><br>
+          <strong>Multiply by coats needed:</strong><br>
+          New drywall → 2 coats<br>
+          Repaint same color → 1 coat<br>
+          Dark → light color → 2–3 coats<br><br>
+          <em>Add 10% for trim &amp; waste</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    let currentShape = 'rectangle';
+    let rooms = [];
+
+    // Conversion factors → square feet
+    const unitToSqFt = { ft: 1, in: 1/144, yd: 9, m: 10.7639, cm: 0.00107639 };
+    const unitLabel  = { ft: 'sq ft', in: 'sq in', yd: 'sq yd', m: 'm²', cm: 'cm²' };
+
+    function switchShape(shape, btn) {
+      currentShape = shape;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['rectangle','circle','triangle','lshape'].forEach(s => {
+        document.getElementById('shape-' + s).classList.toggle('hidden', s !== shape);
+      });
+      document.getElementById('resultBox').classList.add('hidden');
+    }
+
+    function getInputVal(id) {
+      return parseFloat(document.getElementById(id).value);
+    }
+
+    function getUnit() {
+      return document.getElementById('unitSel').value;
+    }
+
+    function recalc() {
+      const unit = getUnit();
+      const factor = unitToSqFt[unit]; // sq ft per sq [unit]
+      let areaNative = null; // area in input units squared
+
+      if (currentShape === 'rectangle') {
+        const l = getInputVal('rectL'), w = getInputVal('rectW');
+        if (!isNaN(l) && !isNaN(w) && l > 0 && w > 0) areaNative = l * w;
+      } else if (currentShape === 'circle') {
+        const r = getInputVal('circR');
+        if (!isNaN(r) && r > 0) areaNative = Math.PI * r * r;
+      } else if (currentShape === 'triangle') {
+        const b = getInputVal('triB'), h = getInputVal('triH');
+        if (!isNaN(b) && !isNaN(h) && b > 0 && h > 0) areaNative = 0.5 * b * h;
+      } else if (currentShape === 'lshape') {
+        const la = getInputVal('lsLA'), wa = getInputVal('lsWA');
+        const lb = getInputVal('lsLB'), wb = getInputVal('lsWB');
+        const aA = (!isNaN(la) && !isNaN(wa)) ? la * wa : 0;
+        const aB = (!isNaN(lb) && !isNaN(wb)) ? lb * wb : 0;
+        if (aA > 0 || aB > 0) areaNative = aA + aB;
+      }
+
+      const box = document.getElementById('resultBox');
+      if (areaNative === null) { box.classList.add('hidden'); return; }
+
+      const areaSqFt = areaNative * factor;
+      box.classList.remove('hidden');
+
+      const costPerSqft = parseFloat(document.getElementById('costPerSqft').value) || 0;
+      const wastePct    = parseFloat(document.getElementById('wastePct').value) || 0;
+      const areaWithWaste = areaSqFt * (1 + wastePct / 100);
+      const totalCost   = costPerSqft > 0 ? areaWithWaste * costPerSqft : null;
+
+      document.getElementById('resSqft').innerHTML =
+        `${fmt(areaSqFt)} <span style="font-size:1.2rem;font-weight:600">sq ft</span>`;
+
+      let gridHTML = `
+        <div class="result-item"><div class="result-item-label">Square Yards</div><div class="result-item-value">${fmt(areaSqFt / 9)} yd²</div></div>
+        <div class="result-item"><div class="result-item-label">Square Meters</div><div class="result-item-value">${fmt(areaSqFt / 10.7639)} m²</div></div>
+        <div class="result-item"><div class="result-item-label">Square Inches</div><div class="result-item-value">${fmt(areaSqFt * 144)} in²</div></div>
+        <div class="result-item"><div class="result-item-label">Acres</div><div class="result-item-value">${fmt(areaSqFt / 43560)}</div></div>
+      `;
+      if (wastePct > 0) {
+        gridHTML += `<div class="result-item"><div class="result-item-label">With ${wastePct}% Waste</div><div class="result-item-value">${fmt(areaWithWaste)} sq ft</div></div>`;
+      }
+      if (totalCost !== null) {
+        gridHTML += `<div class="result-item" style="background:rgba(249,115,22,0.15)"><div class="result-item-label">Estimated Cost</div><div class="result-item-value" style="color:#fdba74">$${fmt(totalCost)}</div></div>`;
+      }
+      document.getElementById('resGrid').innerHTML = gridHTML;
+    }
+
+    function fmt(n) {
+      if (!isFinite(n)) return '—';
+      if (n < 0.0001 && n > 0) return n.toExponential(4);
+      return parseFloat(n.toFixed(4)).toLocaleString('en-US', { maximumFractionDigits: 4 });
+    }
+
+    // Multi-room
+    function addRoom() {
+      const name = document.getElementById('newRoomName').value.trim() || ('Room ' + (rooms.length + 1));
+      const area = parseFloat(document.getElementById('newRoomArea').value);
+      if (isNaN(area) || area <= 0) { alert('Please enter a valid area.'); return; }
+      rooms.push({ name, area });
+      document.getElementById('newRoomName').value = '';
+      document.getElementById('newRoomArea').value = '';
+      renderRooms();
+    }
+
+    function removeRoom(i) {
+      rooms.splice(i, 1);
+      renderRooms();
+    }
+
+    function renderRooms() {
+      const list = document.getElementById('roomList');
+      const totalBox = document.getElementById('roomTotal');
+      if (rooms.length === 0) { list.innerHTML = ''; totalBox.classList.add('hidden'); return; }
+      let total = 0;
+      list.innerHTML = rooms.map((r, i) => {
+        total += r.area;
+        return `<div style="display:flex;align-items:center;gap:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px">
+          <div style="flex:1;font-size:0.9rem;font-weight:600;color:#334155">${r.name}</div>
+          <div style="font-size:0.9rem;color:#1d4ed8;font-weight:700">${r.area.toLocaleString()} sq ft</div>
+          <button onclick="removeRoom(${i})" style="background:#fee2e2;border:none;color:#dc2626;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.8rem;font-weight:600">✕</button>
+        </div>`;
+      }).join('');
+      totalBox.classList.remove('hidden');
+      document.getElementById('roomTotalValue').textContent = total.toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' sq ft';
+    }
+  </script>
+</body>
+</html>

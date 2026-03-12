@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free unit converter — convert length, weight, temperature, volume, speed, area, and more. Instant, accurate results.">
+  <title>Unit Converter | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
+      <a href="index.html#math">Math &amp; Everyday</a><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Unit Converter</span>
+    </div>
+    <h1>Unit Converter</h1>
+    <p>Convert length, weight, temperature, volume, speed, area, and more — instantly.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+
+          <!-- Category Pills -->
+          <div class="unit-categories" id="categoryBtns">
+            <button class="unit-cat-btn active" onclick="setCategory('length', this)">📏 Length</button>
+            <button class="unit-cat-btn" onclick="setCategory('weight', this)">⚖️ Weight</button>
+            <button class="unit-cat-btn" onclick="setCategory('temperature', this)">🌡️ Temperature</button>
+            <button class="unit-cat-btn" onclick="setCategory('volume', this)">🧪 Volume</button>
+            <button class="unit-cat-btn" onclick="setCategory('speed', this)">🚀 Speed</button>
+            <button class="unit-cat-btn" onclick="setCategory('area', this)">📐 Area</button>
+            <button class="unit-cat-btn" onclick="setCategory('data', this)">💾 Data</button>
+            <button class="unit-cat-btn" onclick="setCategory('time', this)">⏱️ Time</button>
+          </div>
+
+          <!-- Converter UI -->
+          <div class="unit-converter-row" style="margin-bottom:20px">
+            <div style="flex:1">
+              <label class="form-label">From</label>
+              <select id="fromUnit" class="form-select" onchange="convert()"></select>
+            </div>
+            <button class="unit-swap" onclick="swapUnits()" title="Swap units">⇄</button>
+            <div style="flex:1">
+              <label class="form-label">To</label>
+              <select id="toUnit" class="form-select" onchange="convert()"></select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Value to Convert</label>
+            <input id="inputValue" class="form-input" type="number" placeholder="Enter a value..." oninput="convert()">
+          </div>
+
+          <!-- Result -->
+          <div id="resultBox" class="hidden" style="background:linear-gradient(135deg,#0f2b4c,#1a3c6e);border-radius:16px;padding:28px;margin-top:8px;color:#fff">
+            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-bottom:12px;font-weight:600">Result</div>
+            <div id="resultPrimary" style="font-size:2.2rem;font-weight:800;color:#f97316;line-height:1.1;word-break:break-all"></div>
+            <div id="resultSub" style="margin-top:10px;font-size:0.95rem;color:rgba(255,255,255,0.7)"></div>
+          </div>
+
+          <!-- Quick Reference Table -->
+          <div id="quickRefBox" style="margin-top:24px"></div>
+
+        </div>
+      </div>
+
+      <!-- AD SLOT: Between Sections 336x280 -->
+      <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>About Unit Conversion</h2>
+        <p>Unit conversion is the process of changing a measurement from one unit to another while preserving the same quantity. For example, 1 kilometer equals 1,000 meters — both describe the same distance, just expressed differently.</p>
+
+        <h3>Length Units</h3>
+        <p>The metric system uses meters as the base unit for length. The imperial/US customary system uses inches, feet, yards, and miles. Common conversions: 1 inch = 2.54 cm, 1 mile = 1.60934 km, 1 foot = 30.48 cm.</p>
+
+        <h3>Weight & Mass</h3>
+        <p>The metric system uses grams and kilograms. Imperial uses ounces and pounds. 1 pound = 453.592 grams, 1 kilogram = 2.20462 pounds.</p>
+
+        <h3>Temperature</h3>
+        <div class="formula-box">
+          Celsius to Fahrenheit: °F = (°C × 9/5) + 32<br>
+          Fahrenheit to Celsius: °C = (°F − 32) × 5/9<br>
+          Celsius to Kelvin: K = °C + 273.15<br>
+          Kelvin to Celsius: °C = K − 273.15
+        </div>
+
+        <h3>Volume</h3>
+        <p>Volume measures how much space a substance occupies. The metric unit is liters (L) and milliliters (mL). US units include fluid ounces, cups, pints, quarts, and gallons. 1 US gallon = 3.78541 liters.</p>
+
+        <h3>Speed</h3>
+        <p>Speed is distance per unit of time. Common units: km/h (kilometers per hour), mph (miles per hour), m/s (meters per second), and knots (nautical miles per hour). 1 mph = 1.60934 km/h.</p>
+      </div>
+    </div>
+
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="scientific.html">🔬 Scientific Calculator</a></li>
+          <li><a href="percentage.html">% Percentage Calculator</a></li>
+          <li><a href="square-footage.html">📐 Square Footage</a></li>
+          <li><a href="bmi.html">⚖️ BMI Calculator</a></li>
+          <li><a href="gpa.html">🎓 GPA Calculator</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-widget" style="background:#f0f9ff;border:1px solid #bae6fd">
+        <div class="sidebar-widget-title" style="color:#0369a1">Common Conversions</div>
+        <div style="font-size:0.82rem;color:#334155;line-height:1.8">
+          1 mile = 1.60934 km<br>
+          1 kg = 2.20462 lbs<br>
+          1 gallon = 3.78541 L<br>
+          1 inch = 2.54 cm<br>
+          0°C = 32°F<br>
+          100°C = 212°F<br>
+          1 mph = 1.60934 km/h<br>
+          1 oz = 28.3495 g
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // ── Unit definitions ──────────────────────────────────────────────────────
+    // Each category: array of { label, factor } where factor converts TO base unit.
+    // Temperature is handled specially.
+    const CATEGORIES = {
+      length: {
+        base: 'meter',
+        units: [
+          { label: 'Kilometer (km)',      factor: 1000 },
+          { label: 'Meter (m)',           factor: 1 },
+          { label: 'Centimeter (cm)',     factor: 0.01 },
+          { label: 'Millimeter (mm)',     factor: 0.001 },
+          { label: 'Mile (mi)',           factor: 1609.344 },
+          { label: 'Yard (yd)',           factor: 0.9144 },
+          { label: 'Foot (ft)',           factor: 0.3048 },
+          { label: 'Inch (in)',           factor: 0.0254 },
+          { label: 'Nautical Mile (nmi)', factor: 1852 },
+          { label: 'Light-year (ly)',     factor: 9.461e15 },
+        ]
+      },
+      weight: {
+        base: 'kilogram',
+        units: [
+          { label: 'Metric Ton (t)',      factor: 1000 },
+          { label: 'Kilogram (kg)',       factor: 1 },
+          { label: 'Gram (g)',            factor: 0.001 },
+          { label: 'Milligram (mg)',      factor: 1e-6 },
+          { label: 'Pound (lb)',          factor: 0.453592 },
+          { label: 'Ounce (oz)',          factor: 0.0283495 },
+          { label: 'Stone (st)',          factor: 6.35029 },
+          { label: 'US Ton (short ton)', factor: 907.185 },
+        ]
+      },
+      temperature: {
+        base: 'celsius',
+        units: [
+          { label: 'Celsius (°C)',    key: 'celsius' },
+          { label: 'Fahrenheit (°F)', key: 'fahrenheit' },
+          { label: 'Kelvin (K)',      key: 'kelvin' },
+        ]
+      },
+      volume: {
+        base: 'liter',
+        units: [
+          { label: 'Liter (L)',             factor: 1 },
+          { label: 'Milliliter (mL)',        factor: 0.001 },
+          { label: 'Cubic Meter (m³)',       factor: 1000 },
+          { label: 'US Gallon (gal)',        factor: 3.78541 },
+          { label: 'US Quart (qt)',          factor: 0.946353 },
+          { label: 'US Pint (pt)',           factor: 0.473176 },
+          { label: 'US Cup (cup)',           factor: 0.236588 },
+          { label: 'US Fluid Ounce (fl oz)',factor: 0.0295735 },
+          { label: 'Tablespoon (tbsp)',      factor: 0.0147868 },
+          { label: 'Teaspoon (tsp)',         factor: 0.00492892 },
+          { label: 'Imperial Gallon',        factor: 4.54609 },
+        ]
+      },
+      speed: {
+        base: 'm/s',
+        units: [
+          { label: 'Meter/second (m/s)',   factor: 1 },
+          { label: 'Kilometer/hour (km/h)',factor: 1/3.6 },
+          { label: 'Mile/hour (mph)',      factor: 0.44704 },
+          { label: 'Knot (kn)',            factor: 0.514444 },
+          { label: 'Foot/second (ft/s)',   factor: 0.3048 },
+          { label: 'Mach (at sea level)',  factor: 340.29 },
+        ]
+      },
+      area: {
+        base: 'sq meter',
+        units: [
+          { label: 'Square Kilometer (km²)',factor: 1e6 },
+          { label: 'Square Meter (m²)',     factor: 1 },
+          { label: 'Square Centimeter (cm²)',factor: 0.0001 },
+          { label: 'Square Mile (mi²)',     factor: 2589988.11 },
+          { label: 'Acre',                 factor: 4046.86 },
+          { label: 'Hectare (ha)',          factor: 10000 },
+          { label: 'Square Yard (yd²)',     factor: 0.836127 },
+          { label: 'Square Foot (ft²)',     factor: 0.0929030 },
+          { label: 'Square Inch (in²)',     factor: 0.00064516 },
+        ]
+      },
+      data: {
+        base: 'byte',
+        units: [
+          { label: 'Bit (b)',              factor: 0.125 },
+          { label: 'Byte (B)',             factor: 1 },
+          { label: 'Kilobyte (KB)',        factor: 1024 },
+          { label: 'Megabyte (MB)',        factor: 1048576 },
+          { label: 'Gigabyte (GB)',        factor: 1073741824 },
+          { label: 'Terabyte (TB)',        factor: 1099511627776 },
+          { label: 'Petabyte (PB)',        factor: 1.126e15 },
+          { label: 'Kibibyte (KiB)',       factor: 1024 },
+          { label: 'Mebibyte (MiB)',       factor: 1048576 },
+        ]
+      },
+      time: {
+        base: 'second',
+        units: [
+          { label: 'Millisecond (ms)',     factor: 0.001 },
+          { label: 'Second (s)',           factor: 1 },
+          { label: 'Minute (min)',         factor: 60 },
+          { label: 'Hour (hr)',            factor: 3600 },
+          { label: 'Day',                 factor: 86400 },
+          { label: 'Week',                factor: 604800 },
+          { label: 'Month (avg)',          factor: 2629746 },
+          { label: 'Year (avg)',           factor: 31556952 },
+          { label: 'Decade',              factor: 315569520 },
+          { label: 'Century',             factor: 3155695200 },
+        ]
+      }
+    };
+
+    let currentCategory = 'length';
+
+    function setCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.unit-cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      populateSelects();
+      document.getElementById('inputValue').value = '';
+      document.getElementById('resultBox').classList.add('hidden');
+      buildQuickRef();
+    }
+
+    function populateSelects() {
+      const cat = CATEGORIES[currentCategory];
+      const fromSel = document.getElementById('fromUnit');
+      const toSel   = document.getElementById('toUnit');
+      fromSel.innerHTML = '';
+      toSel.innerHTML   = '';
+      cat.units.forEach((u, i) => {
+        const o1 = new Option(u.label, i);
+        const o2 = new Option(u.label, i);
+        fromSel.add(o1);
+        toSel.add(o2);
+      });
+      // Default: first → second
+      fromSel.value = 0;
+      toSel.value   = Math.min(1, cat.units.length - 1);
+    }
+
+    function toBase(value, unitIndex) {
+      const cat = CATEGORIES[currentCategory];
+      if (currentCategory === 'temperature') {
+        const key = cat.units[unitIndex].key;
+        if (key === 'celsius')    return value;
+        if (key === 'fahrenheit') return (value - 32) * 5/9;
+        if (key === 'kelvin')     return value - 273.15;
+      }
+      return value * cat.units[unitIndex].factor;
+    }
+
+    function fromBase(base, unitIndex) {
+      const cat = CATEGORIES[currentCategory];
+      if (currentCategory === 'temperature') {
+        const key = cat.units[unitIndex].key;
+        if (key === 'celsius')    return base;
+        if (key === 'fahrenheit') return base * 9/5 + 32;
+        if (key === 'kelvin')     return base + 273.15;
+      }
+      return base / cat.units[unitIndex].factor;
+    }
+
+    function fmt(n) {
+      if (!isFinite(n)) return 'N/A';
+      if (Math.abs(n) === 0) return '0';
+      if (Math.abs(n) >= 1e15 || (Math.abs(n) < 0.0001 && n !== 0)) {
+        return n.toExponential(6);
+      }
+      // Up to 10 significant digits, trimmed
+      return parseFloat(n.toPrecision(10)).toLocaleString('en-US', { maximumFractionDigits: 10 });
+    }
+
+    function convert() {
+      const val = parseFloat(document.getElementById('inputValue').value);
+      const fromIdx = parseInt(document.getElementById('fromUnit').value);
+      const toIdx   = parseInt(document.getElementById('toUnit').value);
+      const box = document.getElementById('resultBox');
+      if (isNaN(val)) { box.classList.add('hidden'); return; }
+
+      const cat = CATEGORIES[currentCategory];
+      const baseVal = toBase(val, fromIdx);
+      const result  = fromBase(baseVal, toIdx);
+
+      const fromLabel = cat.units[fromIdx].label;
+      const toLabel   = cat.units[toIdx].label;
+
+      box.classList.remove('hidden');
+      document.getElementById('resultPrimary').textContent = fmt(result) + ' ' + toLabel.split(' ')[0];
+      document.getElementById('resultSub').innerHTML =
+        `<span style="color:rgba(255,255,255,0.9)">${fmt(val)} ${fromLabel}</span>
+         &nbsp;=&nbsp;
+         <span style="color:#fdba74">${fmt(result)} ${toLabel}</span>`;
+    }
+
+    function swapUnits() {
+      const from = document.getElementById('fromUnit');
+      const to   = document.getElementById('toUnit');
+      [from.value, to.value] = [to.value, from.value];
+      convert();
+    }
+
+    function buildQuickRef() {
+      const cat = CATEGORIES[currentCategory];
+      const box = document.getElementById('quickRefBox');
+      // Build a small reference table showing all units relative to first unit
+      const baseUnit = cat.units[0];
+      let rows = '';
+      cat.units.forEach((u, i) => {
+        if (i === 0) return;
+        let ratio;
+        if (currentCategory === 'temperature') {
+          rows += `<tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;font-size:0.875rem;color:#334155">${u.label}</td><td style="padding:8px 12px;font-size:0.875rem;color:#64748b;text-align:right">See formula</td></tr>`;
+          return;
+        }
+        ratio = baseUnit.factor / u.factor;
+        rows += `<tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;font-size:0.875rem;color:#334155">1 ${baseUnit.label}</td><td style="padding:8px 12px;font-size:0.875rem;color:#1d4ed8;text-align:right;font-weight:600">${fmt(ratio)} ${u.label.split(' ')[0]}</td></tr>`;
+      });
+      box.innerHTML = `<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden">
+        <div style="background:#0f2b4c;padding:12px 16px;font-size:0.85rem;font-weight:600;color:#fff">Quick Reference — ${cat.units[0].label} conversions</div>
+        <table style="width:100%;border-collapse:collapse">${rows}</table>
+      </div>`;
+    }
+
+    // Init
+    populateSelects();
+    buildQuickRef();
+  </script>
+</body>
+</html>
