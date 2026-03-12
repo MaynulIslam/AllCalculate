@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free 2025 Salary Tax Calculator for Canada and USA. Select your province or state, enter your salary, and instantly see federal tax, provincial/state tax, CPP/EI or FICA, net take-home pay, and breakdowns by hourly, biweekly, and monthly.">
+  <meta name="keywords" content="salary tax calculator, income tax calculator, Canada tax 2025, USA tax 2025, take home pay, net salary, provincial tax, state income tax, CPP EI, FICA">
+  <title>Salary Tax Calculator 2025 – Canada & USA | AllCalculate.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Country Tabs ───────────────────────────────── */
+    .country-tabs { display:flex; gap:10px; margin-bottom:22px; }
+    .country-tab {
+      flex:1; padding:12px 10px; border-radius:10px; border:2px solid var(--gray-200);
+      background:#fff; font-size:0.95rem; font-weight:600; cursor:pointer;
+      transition:all .2s; color:var(--gray-600); display:flex; align-items:center;
+      justify-content:center; gap:8px;
+    }
+    .country-tab.active {
+      border-color:var(--orange); background:#fff7ed; color:var(--orange);
+    }
+    .country-tab:hover:not(.active) { border-color:var(--blue-light); color:var(--blue); }
+
+    /* ── Summary Cards ──────────────────────────────── */
+    .tax-summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:24px 0 20px; }
+    .tax-summary-card {
+      border-radius:12px; padding:16px 14px; text-align:center;
+    }
+    .tax-summary-card.gross  { background:#eff6ff; border:1px solid #bfdbfe; }
+    .tax-summary-card.tax    { background:#fff7ed; border:1px solid #fed7aa; }
+    .tax-summary-card.net    { background:#f0fdf4; border:1px solid #bbf7d0; }
+    .tsc-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px; }
+    .tax-summary-card.gross  .tsc-label { color:#1d4ed8; }
+    .tax-summary-card.tax    .tsc-label { color:#c2410c; }
+    .tax-summary-card.net    .tsc-label { color:#15803d; }
+    .tsc-value { font-size:1.4rem; font-weight:800; line-height:1; }
+    .tax-summary-card.gross  .tsc-value { color:#1e3a8a; }
+    .tax-summary-card.tax    .tsc-value { color:#ea580c; }
+    .tax-summary-card.net    .tsc-value { color:#16a34a; }
+    .tsc-sub { font-size:0.72rem; color:var(--gray-500); margin-top:4px; }
+
+    /* ── Effective Rate Bar ─────────────────────────── */
+    .eff-rate-wrap { margin-bottom:22px; }
+    .eff-rate-label { display:flex; justify-content:space-between; font-size:0.8rem; color:var(--gray-600); margin-bottom:5px; font-weight:500; }
+    .eff-rate-bar { height:10px; border-radius:999px; background:#e2e8f0; overflow:hidden; }
+    .eff-rate-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#f97316,#dc2626); transition:width .5s ease; }
+
+    /* ── Breakdown Table ────────────────────────────── */
+    .breakdown-title {
+      font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em;
+      color:var(--gray-500); margin-bottom:10px;
+    }
+    .breakdown-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+    .breakdown-table th {
+      font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+      color:var(--gray-500); padding:6px 8px; text-align:left; border-bottom:1px solid var(--gray-200);
+    }
+    .breakdown-table th:not(:first-child) { text-align:right; }
+    .breakdown-table td { padding:9px 8px; font-size:0.875rem; border-bottom:1px solid var(--gray-100); }
+    .breakdown-table td:not(:first-child) { text-align:right; }
+    .breakdown-table tr:last-child td { border-bottom:none; }
+    .breakdown-table .row-total td { font-weight:700; background:#fafafa; border-top:2px solid var(--gray-200); }
+    .breakdown-table .row-net td { font-weight:700; color:#15803d; }
+    .td-name { font-weight:500; color:var(--gray-800); }
+    .td-bar-cell { width:90px; padding:9px 8px; }
+    .mini-bar { height:6px; border-radius:999px; background:#e2e8f0; }
+    .mini-bar-fill { height:100%; border-radius:999px; }
+    .bar-federal   { background:#3b82f6; }
+    .bar-prov      { background:#8b5cf6; }
+    .bar-cpp       { background:#f97316; }
+    .bar-ei        { background:#f59e0b; }
+    .bar-ss        { background:#f97316; }
+    .bar-medicare  { background:#f59e0b; }
+    .bar-net       { background:#22c55e; }
+
+    /* ── Period Table ───────────────────────────────── */
+    .period-table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+    .period-table th {
+      font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+      color:var(--gray-500); padding:7px 10px; text-align:right; border-bottom:2px solid var(--gray-200);
+    }
+    .period-table th:first-child { text-align:left; }
+    .period-table td { padding:10px 10px; border-bottom:1px solid var(--gray-100); vertical-align:middle; }
+    .period-table td:not(:first-child) { text-align:right; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-label { font-weight:600; color:var(--gray-800); }
+    .period-note  { font-size:0.72rem; color:var(--gray-500); font-weight:400; }
+    .period-gross { color:var(--gray-700); }
+    .period-tax   { color:#dc2626; }
+    .period-net   { font-weight:700; color:#15803d; }
+    .period-table tr:hover td { background:#f8fafc; }
+
+    /* ── Note Box ────────────────────────────────────── */
+    .calc-note {
+      background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px;
+      padding:10px 14px; font-size:0.8rem; color:#0369a1; margin-top:16px;
+      display:flex; gap:8px; align-items:flex-start;
+    }
+    .calc-note svg { flex-shrink:0; margin-top:1px; }
+
+    @media (max-width: 640px) {
+      .tax-summary { grid-template-columns:1fr 1fr; }
+      .tax-summary-card.net { grid-column: 1 / -1; }
+      .tsc-value { font-size:1.15rem; }
+      .td-bar-cell { display:none; }
+      .period-table td:nth-child(2) { display:none; } /* hide gross on mobile */
+      .period-table th:nth-child(2) { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#math">📐 Math</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- AD SLOT: Top Leaderboard 728x90 -->
+  <div class="ad-wrapper">
+    <div class="ad-slot ad-leaderboard">Advertisement · 728×90</div>
+  </div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+          <div class="calc-header">
+            <h1 class="calc-page-title">Salary Tax Calculator 2025</h1>
+            <nav class="calc-page-breadcrumb">
+              <a href="index.html">Home</a>
+              <span class="bc-sep">&#8250;</span>
+              <a href="index.html#finance">Finance</a>
+              <span class="bc-sep">&#8250;</span>
+              <span>Salary Tax Calculator</span>
+            </nav>
+          </div>
+
+          <!-- Country Tabs -->
+          <div class="country-tabs">
+            <button class="country-tab active" id="tabCA" onclick="selectCountry('CA')">
+              🍁 Canada
+            </button>
+            <button class="country-tab" id="tabUS" onclick="selectCountry('US')">
+              🇺🇸 United States
+            </button>
+          </div>
+
+          <!-- Province / State -->
+          <div class="form-group">
+            <label class="form-label" for="regionSelect" id="regionLabel">Province / Territory</label>
+            <select class="form-select" id="regionSelect"></select>
+          </div>
+
+          <!-- Salary -->
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="salaryInput">Annual Salary</label>
+              <div class="input-group">
+                <span class="input-prefix" id="currencyPrefix">$</span>
+                <input class="form-input has-prefix" type="number" id="salaryInput"
+                       placeholder="65,000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="hoursWeek">Hours Per Week</label>
+              <input class="form-input" type="number" id="hoursWeek" value="40" min="1" max="100">
+            </div>
+          </div>
+
+          <button class="btn-calculate" style="margin-top:22px" onclick="calculate()">
+            Calculate Take-Home Pay
+          </button>
+          <button class="btn-reset" style="margin-top:10px" onclick="resetCalc()">Reset</button>
+
+          <!-- ═══════════ RESULTS ═══════════ -->
+          <div id="resultsSection" class="hidden" style="margin-top:28px">
+
+            <!-- Summary Cards -->
+            <div class="tax-summary">
+              <div class="tax-summary-card gross">
+                <div class="tsc-label">Gross Salary</div>
+                <div class="tsc-value" id="resGross">—</div>
+                <div class="tsc-sub">per year</div>
+              </div>
+              <div class="tax-summary-card tax">
+                <div class="tsc-label">Total Tax</div>
+                <div class="tsc-value" id="resTotalTax">—</div>
+                <div class="tsc-sub" id="resEffRate">effective rate</div>
+              </div>
+              <div class="tax-summary-card net">
+                <div class="tsc-label">Net Take-Home</div>
+                <div class="tsc-value" id="resNet">—</div>
+                <div class="tsc-sub">per year</div>
+              </div>
+            </div>
+
+            <!-- Effective Rate Bar -->
+            <div class="eff-rate-wrap">
+              <div class="eff-rate-label">
+                <span>0%</span>
+                <span id="effRateLabel">Effective tax rate: —</span>
+                <span>60%</span>
+              </div>
+              <div class="eff-rate-bar">
+                <div class="eff-rate-fill" id="effRateFill" style="width:0%"></div>
+              </div>
+            </div>
+
+            <!-- Tax Breakdown Table -->
+            <div class="breakdown-title">Tax Breakdown</div>
+            <table class="breakdown-table" id="breakdownTable">
+              <thead>
+                <tr>
+                  <th>Component</th>
+                  <th>Amount</th>
+                  <th>Rate</th>
+                  <th class="td-bar-cell">of Gross</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody"></tbody>
+            </table>
+
+            <!-- Period Breakdown Table -->
+            <div class="breakdown-title">Pay Period Breakdown</div>
+            <table class="period-table">
+              <thead>
+                <tr>
+                  <th>Period</th>
+                  <th>Gross</th>
+                  <th>Total Tax</th>
+                  <th>Net Pay</th>
+                </tr>
+              </thead>
+              <tbody id="periodBody"></tbody>
+            </table>
+
+            <div class="calc-note">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span id="calcNoteText"></span>
+            </div>
+
+          </div><!-- /results -->
+        </div>
+      </div>
+
+      <!-- AD SLOT -->
+      <div class="ad-wrapper" style="margin-top:28px">
+        <div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div>
+      </div>
+
+      <div class="info-section" style="margin-top:28px">
+        <h2>How This Calculator Works</h2>
+        <p>This calculator estimates your take-home pay after federal income tax, provincial/state income tax, and mandatory payroll deductions. Rates are based on 2025 tax brackets.</p>
+
+        <h3>🍁 Canada – What's Deducted</h3>
+        <ul>
+          <li><strong>Federal income tax:</strong> Five brackets from 14.5% to 33%, with the Basic Personal Amount (BPA) of $16,129 reducing your tax via a non-refundable credit.</li>
+          <li><strong>Provincial/territorial income tax:</strong> Each province has its own brackets and BPA on top of federal tax.</li>
+          <li><strong>CPP (Canada Pension Plan):</strong> 5.95% on earnings between $3,500 and $71,300 (YMPE). An enhanced CPP2 applies at 4% on earnings $71,301–$81,200.</li>
+          <li><strong>EI (Employment Insurance):</strong> 1.64% on insurable earnings up to $65,700. Quebec residents pay a reduced rate of 1.31% due to the provincial QPIP plan.</li>
+          <li><strong>Quebec note:</strong> Quebec residents receive a 16.5% federal tax abatement, significantly reducing their federal portion.</li>
+        </ul>
+
+        <h3>🇺🇸 USA – What's Deducted</h3>
+        <ul>
+          <li><strong>Federal income tax:</strong> Seven brackets from 10% to 37%. The standard deduction for single filers is $15,000 in 2025.</li>
+          <li><strong>State income tax:</strong> Varies widely — 9 states have no income tax (AK, FL, NV, NH, SD, TN, TX, WA, WY), others range from 3% flat to nearly 14% progressive.</li>
+          <li><strong>Social Security (FICA):</strong> 6.2% on wages up to $176,100 in 2025.</li>
+          <li><strong>Medicare:</strong> 1.45% on all wages, plus an additional 0.9% on wages above $200,000.</li>
+        </ul>
+
+        <h3>Disclaimer</h3>
+        <p>This calculator provides estimates only and does not account for RRSP/401(k) contributions, tax credits beyond the basic personal amount, investment income, self-employment taxes, local/city taxes, or other personal deductions. For exact figures, consult a tax professional or use the official CRA/IRS calculators.</p>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="tax.html">US Income Tax Calculator</a></li>
+          <li><a href="retirement.html">Retirement Savings</a></li>
+          <li><a href="compound-interest.html">Compound Interest</a></li>
+          <li><a href="mortgage.html">Mortgage Calculator</a></li>
+          <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+          <li><a href="tip.html">Tip Calculator</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-tax-calculator.html">Salary Tax Calculator</a></li>
+            <li><a href="tax.html">Tax Calculator</a></li>
+            <li><a href="retirement.html">Retirement Calculator</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat.html">Body Fat Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="simple-calculator.html">Simple Calculator</a></li>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="gpa.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  // ═══════════════════════════════════════════════════════════════
+  //  TAX DATA  –  2025
+  // ═══════════════════════════════════════════════════════════════
+
+  // Helper: progressive bracket tax. brackets = [[min, max, rate], ...]
+  function bracketTax(income, brackets) {
+    var tax = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var b = brackets[i];
+      if (income <= b[0]) break;
+      tax += (Math.min(income, b[1]) - b[0]) * b[2];
+    }
+    return Math.max(0, tax);
+  }
+
+  // ── CANADA ─────────────────────────────────────────────────────
+  var CA_FED = {
+    brackets: [
+      [0,       57375,   0.145],
+      [57375,   114750,  0.205],
+      [114750,  177882,  0.26 ],
+      [177882,  253414,  0.29 ],
+      [253414,  1e9,     0.33 ]
+    ],
+    bpa: 16129,
+    bpaRate: 0.145
+  };
+
+  // CPP 2025
+  var CPP = { exempt: 3500, ympe: 71300, yampe: 81200, rate1: 0.0595, rate2: 0.04 };
+  // EI 2025
+  var EI = { maxEarnings: 65700, rateOutsideQC: 0.0164, rateQC: 0.0131 };
+
+  // Provincial brackets [min, max, rate] + BPA + lowestRate for credit
+  var CA_PROV = {
+    AB: { name:'Alberta',
+      bpa:21003, bpaRate:0.10,
+      brackets:[[0,151234,0.10],[151234,181481,0.12],[181481,241974,0.13],[241974,362961,0.14],[362961,1e9,0.15]]
+    },
+    BC: { name:'British Columbia',
+      bpa:11981, bpaRate:0.0506,
+      brackets:[[0,49279,0.0506],[49279,98560,0.077],[98560,113158,0.105],[113158,137407,0.1229],[137407,186306,0.147],[186306,259829,0.168],[259829,1e9,0.205]]
+    },
+    MB: { name:'Manitoba',
+      bpa:15780, bpaRate:0.108,
+      brackets:[[0,47564,0.108],[47564,101200,0.1275],[101200,1e9,0.174]]
+    },
+    NB: { name:'New Brunswick',
+      bpa:12458, bpaRate:0.094,
+      brackets:[[0,51306,0.094],[51306,102614,0.14],[102614,190060,0.16],[190060,1e9,0.195]]
+    },
+    NL: { name:'Newfoundland & Labrador',
+      bpa:10818, bpaRate:0.087,
+      brackets:[[0,44192,0.087],[44192,88382,0.145],[88382,157792,0.158],[157792,220910,0.178],[220910,282214,0.198],[282214,564429,0.208],[564429,1128858,0.213],[1128858,1e9,0.218]]
+    },
+    NS: { name:'Nova Scotia',
+      bpa:8481, bpaRate:0.0879,
+      brackets:[[0,30507,0.0879],[30507,61015,0.1495],[61015,95883,0.1667],[95883,154650,0.175],[154650,1e9,0.21]]
+    },
+    NT: { name:'Northwest Territories',
+      bpa:16593, bpaRate:0.059,
+      brackets:[[0,51964,0.059],[51964,103930,0.086],[103930,168967,0.122],[168967,1e9,0.1405]]
+    },
+    NU: { name:'Nunavut',
+      bpa:17925, bpaRate:0.04,
+      brackets:[[0,54707,0.04],[54707,109413,0.07],[109413,177881,0.09],[177881,1e9,0.115]]
+    },
+    ON: { name:'Ontario',
+      bpa:11865, bpaRate:0.0505,
+      brackets:[[0,52886,0.0505],[52886,105775,0.0915],[105775,150000,0.1116],[150000,220000,0.1216],[220000,1e9,0.1316]]
+    },
+    PE: { name:'Prince Edward Island',
+      bpa:12000, bpaRate:0.095,
+      brackets:[[0,33328,0.095],[33328,64656,0.1347],[64656,105000,0.166],[105000,140000,0.1762],[140000,1e9,0.19]]
+    },
+    QC: { name:'Quebec',
+      bpa:17183, bpaRate:0.14,
+      brackets:[[0,53255,0.14],[53255,106495,0.19],[106495,129590,0.24],[129590,1e9,0.2575]]
+    },
+    SK: { name:'Saskatchewan',
+      bpa:17661, bpaRate:0.105,
+      brackets:[[0,53463,0.105],[53463,152750,0.125],[152750,1e9,0.145]]
+    },
+    YT: { name:'Yukon',
+      bpa:16129, bpaRate:0.064,
+      brackets:[[0,57375,0.064],[57375,114750,0.09],[114750,177882,0.109],[177882,500000,0.128],[500000,1e9,0.15]]
+    }
+  };
+
+  // ── USA ────────────────────────────────────────────────────────
+  var US_FED = {
+    stdDeduction: 15000,
+    brackets: [
+      [0,      11925,  0.10],
+      [11925,  48475,  0.12],
+      [48475,  103350, 0.22],
+      [103350, 197300, 0.24],
+      [197300, 250525, 0.32],
+      [250525, 626350, 0.35],
+      [626350, 1e9,    0.37]
+    ]
+  };
+
+  // FICA 2025
+  var FICA = { ssRate: 0.062, ssWageBase: 176100, medicareRate: 0.0145, addlMedicareRate: 0.009, addlMedicareThreshold: 200000 };
+
+  // US States: [stdDeduction, [[min, max, rate], ...]]
+  // stdDeduction=0 for states that use gross income or have no deduction
+  var US_STATES = {
+    // ── No income tax ──────────────────────────
+    AK:{ name:'Alaska',                    noTax:true },
+    FL:{ name:'Florida',                   noTax:true },
+    NV:{ name:'Nevada',                    noTax:true },
+    NH:{ name:'New Hampshire',             noTax:true },
+    SD:{ name:'South Dakota',              noTax:true },
+    TN:{ name:'Tennessee',                 noTax:true },
+    TX:{ name:'Texas',                     noTax:true },
+    WA:{ name:'Washington',                noTax:true },
+    WY:{ name:'Wyoming',                   noTax:true },
+    // ── Flat rate states ───────────────────────
+    AZ:{ name:'Arizona',           ded:15000, brackets:[[0,1e9,0.025]]  },
+    CO:{ name:'Colorado',          ded:15000, brackets:[[0,1e9,0.044]]  },
+    GA:{ name:'Georgia',           ded:12000, brackets:[[0,1e9,0.0539]] },
+    ID:{ name:'Idaho',             ded:15000, brackets:[[0,1e9,0.053]]  },
+    IL:{ name:'Illinois',          ded:0,     brackets:[[0,1e9,0.0495]] },
+    IN:{ name:'Indiana',           ded:1000,  brackets:[[0,1e9,0.03]]   },
+    IA:{ name:'Iowa',              ded:15000, brackets:[[0,1e9,0.038]]  },
+    KY:{ name:'Kentucky',          ded:3160,  brackets:[[0,1e9,0.04]]   },
+    LA:{ name:'Louisiana',         ded:4500,  brackets:[[0,1e9,0.03]]   },
+    MI:{ name:'Michigan',          ded:5600,  brackets:[[0,1e9,0.0425]] },
+    MS:{ name:'Mississippi',       ded:2300,  brackets:[[0,10000,0],[10000,1e9,0.044]] },
+    NC:{ name:'North Carolina',    ded:10750, brackets:[[0,1e9,0.0425]] },
+    PA:{ name:'Pennsylvania',      ded:0,     brackets:[[0,1e9,0.0307]] },
+    UT:{ name:'Utah',              ded:15000, brackets:[[0,1e9,0.0455]] },
+    // ── Progressive states ─────────────────────
+    AL:{ name:'Alabama',           ded:3000,
+      brackets:[[0,500,0.02],[500,3000,0.04],[3000,1e9,0.05]] },
+    AR:{ name:'Arkansas',          ded:2340,
+      brackets:[[0,4999,0.02],[4999,24999,0.034],[24999,1e9,0.039]] },
+    CA:{ name:'California',        ded:5363,
+      brackets:[[0,10756,0.01],[10756,25499,0.02],[25499,40245,0.04],[40245,55866,0.06],
+                [55866,70606,0.08],[70606,360659,0.093],[360659,432787,0.103],
+                [432787,721314,0.113],[721314,1000000,0.123],[1000000,1e9,0.133]] },
+    CT:{ name:'Connecticut',       ded:15000,
+      brackets:[[0,10000,0.02],[10000,50000,0.045],[50000,100000,0.055],
+                [100000,200000,0.06],[200000,250000,0.065],[250000,500000,0.069],[500000,1e9,0.0699]] },
+    DE:{ name:'Delaware',          ded:3250,
+      brackets:[[0,2000,0],[2000,5000,0.022],[5000,10000,0.039],[10000,20000,0.048],
+                [20000,25000,0.052],[25000,60000,0.0555],[60000,1e9,0.066]] },
+    DC:{ name:'Washington D.C.',   ded:14600,
+      brackets:[[0,10000,0.04],[10000,40000,0.06],[40000,60000,0.065],
+                [60000,250000,0.085],[250000,500000,0.0925],[500000,1000000,0.0975],[1000000,1e9,0.1075]] },
+    HI:{ name:'Hawaii',            ded:2200,
+      brackets:[[0,9600,0.014],[9600,19200,0.032],[19200,28800,0.055],[28800,38400,0.064],
+                [38400,48000,0.068],[48000,150000,0.072],[150000,175000,0.076],
+                [175000,200000,0.079],[200000,300000,0.0825],[300000,325000,0.09],[325000,1e9,0.11]] },
+    KS:{ name:'Kansas',            ded:3500,
+      brackets:[[0,15000,0.031],[15000,30000,0.0525],[30000,1e9,0.057]] },
+    ME:{ name:'Maine',             ded:14600,
+      brackets:[[0,26050,0.058],[26050,61600,0.0675],[61600,1e9,0.0715]] },
+    MD:{ name:'Maryland',          ded:2550,
+      brackets:[[0,1000,0.02],[1000,2000,0.03],[2000,3000,0.04],[3000,100000,0.0475],
+                [100000,125000,0.05],[125000,150000,0.0525],[150000,250000,0.055],[250000,1e9,0.0575]] },
+    MA:{ name:'Massachusetts',     ded:0,
+      brackets:[[0,1083150,0.05],[1083150,1e9,0.09]] },
+    MN:{ name:'Minnesota',         ded:14575,
+      brackets:[[0,31690,0.0535],[31690,104090,0.068],[104090,198630,0.0785],[198630,1e9,0.0985]] },
+    MO:{ name:'Missouri',          ded:14600,
+      brackets:[[0,1207,0],[1207,2414,0.02],[2414,3620,0.025],[3620,4827,0.03],
+                [4827,6034,0.035],[6034,7241,0.04],[7241,8448,0.045],[8448,1e9,0.047]] },
+    MT:{ name:'Montana',           ded:14600,
+      brackets:[[0,21100,0.047],[21100,1e9,0.059]] },
+    NE:{ name:'Nebraska',          ded:7900,
+      brackets:[[0,3700,0.0246],[3700,22170,0.0351],[22170,35730,0.0501],[35730,1e9,0.052]] },
+    NJ:{ name:'New Jersey',        ded:0,
+      brackets:[[0,20000,0.014],[20000,35000,0.0175],[35000,40000,0.035],
+                [40000,75000,0.05525],[75000,500000,0.0637],[500000,1000000,0.0897],[1000000,1e9,0.1075]] },
+    NM:{ name:'New Mexico',        ded:14600,
+      brackets:[[0,5500,0.015],[5500,11000,0.032],[11000,16500,0.047],
+                [16500,33500,0.043],[33500,210000,0.049],[210000,1e9,0.059]] },
+    NY:{ name:'New York',          ded:8000,
+      brackets:[[0,17150,0.04],[17150,23600,0.045],[23600,27900,0.0525],
+                [27900,161550,0.055],[161550,323200,0.06],[323200,2155350,0.0685],
+                [2155350,5000000,0.0965],[5000000,25000000,0.103],[25000000,1e9,0.109]] },
+    ND:{ name:'North Dakota',      ded:14600,
+      brackets:[[0,44725,0],[44725,225975,0.0195],[225975,1e9,0.025]] },
+    OH:{ name:'Ohio',              ded:0,
+      brackets:[[0,26050,0],[26050,100000,0.0275],[100000,1e9,0.035]] },
+    OK:{ name:'Oklahoma',          ded:6350,
+      brackets:[[0,1000,0.0025],[1000,2500,0.0075],[2500,3750,0.0175],
+                [3750,4900,0.0275],[4900,7200,0.0375],[7200,1e9,0.0475]] },
+    OR:{ name:'Oregon',            ded:2745,
+      brackets:[[0,19050,0.0475],[19050,48600,0.0675],[48600,250000,0.0875],[250000,1e9,0.099]] },
+    RI:{ name:'Rhode Island',      ded:10550,
+      brackets:[[0,77450,0.0375],[77450,176050,0.0475],[176050,1e9,0.0599]] },
+    SC:{ name:'South Carolina',    ded:14600,
+      brackets:[[0,3200,0],[3200,16040,0.03],[16040,1e9,0.062]] },
+    VT:{ name:'Vermont',           ded:6550,
+      brackets:[[0,45400,0.0335],[45400,110050,0.066],[110050,229550,0.076],[229550,1e9,0.0875]] },
+    VA:{ name:'Virginia',          ded:8000,
+      brackets:[[0,3000,0.02],[3000,5000,0.03],[5000,17000,0.05],[17000,1e9,0.0575]] },
+    WV:{ name:'West Virginia',     ded:0,
+      brackets:[[0,10000,0.0222],[10000,25000,0.0347],[25000,40000,0.0422],
+                [40000,60000,0.0472],[60000,1e9,0.0482]] },
+    WI:{ name:'Wisconsin',         ded:12760,
+      brackets:[[0,14320,0.0354],[14320,28640,0.0465],[28640,304170,0.053],[304170,1e9,0.0765]] }
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  //  UI STATE
+  // ═══════════════════════════════════════════════════════════════
+  var currentCountry = 'CA';
+
+  var CA_REGION_ORDER = ['AB','BC','MB','NB','NL','NS','NT','NU','ON','PE','QC','SK','YT'];
+  var US_STATE_ORDER  = [
+    'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA',
+    'KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM',
+    'NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA',
+    'WV','WI','WY'
+  ];
+
+  function selectCountry(c) {
+    currentCountry = c;
+    document.getElementById('tabCA').classList.toggle('active', c === 'CA');
+    document.getElementById('tabUS').classList.toggle('active', c === 'US');
+    document.getElementById('regionLabel').textContent = c === 'CA' ? 'Province / Territory' : 'State';
+    populateRegions();
+    document.getElementById('resultsSection').classList.add('hidden');
+  }
+
+  function populateRegions() {
+    var sel = document.getElementById('regionSelect');
+    sel.innerHTML = '';
+    var list = currentCountry === 'CA' ? CA_REGION_ORDER : US_STATE_ORDER;
+    var data = currentCountry === 'CA' ? CA_PROV : US_STATES;
+    // Default selection
+    var defaults = { CA: 'ON', US: 'CA' };
+    list.forEach(function(code) {
+      var opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = data[code].name + ' (' + code + ')';
+      if (code === defaults[currentCountry]) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  CALCULATION ENGINE
+  // ═══════════════════════════════════════════════════════════════
+  function calcCanada(gross, provinceCode) {
+    var prov = CA_PROV[provinceCode];
+
+    // Federal tax
+    var fedTax = bracketTax(gross, CA_FED.brackets);
+    fedTax -= CA_FED.bpa * CA_FED.bpaRate;  // BPA non-refundable credit
+    if (provinceCode === 'QC') fedTax *= (1 - 0.165); // Quebec abatement
+    fedTax = Math.max(0, fedTax);
+
+    // Provincial tax
+    var provTax = bracketTax(gross, prov.brackets);
+    provTax -= prov.bpa * prov.bpaRate;
+    provTax = Math.max(0, provTax);
+
+    // CPP
+    var cpp1Base = Math.max(0, Math.min(gross - CPP.exempt, CPP.ympe - CPP.exempt));
+    var cpp1 = cpp1Base * CPP.rate1;
+    var cpp2Base = Math.max(0, Math.min(gross, CPP.yampe) - CPP.ympe);
+    var cpp2 = cpp2Base * CPP.rate2;
+    var cpp = cpp1 + cpp2;
+
+    // EI
+    var eiRate = provinceCode === 'QC' ? EI.rateQC : EI.rateOutsideQC;
+    var ei = Math.min(gross, EI.maxEarnings) * eiRate;
+
+    var totalTax = fedTax + provTax + cpp + ei;
+    return {
+      gross: gross,
+      fedTax: fedTax,
+      provTax: provTax,
+      cpp: cpp,
+      ei: ei,
+      totalTax: totalTax,
+      net: gross - totalTax,
+      effRate: gross > 0 ? (totalTax / gross) * 100 : 0
+    };
+  }
+
+  function calcUSA(gross, stateCode) {
+    var st = US_STATES[stateCode];
+
+    // Federal
+    var fedTaxable = Math.max(0, gross - US_FED.stdDeduction);
+    var fedTax = bracketTax(fedTaxable, US_FED.brackets);
+
+    // State
+    var stateTax = 0;
+    if (!st.noTax) {
+      var stateTaxable = Math.max(0, gross - (st.ded || 0));
+      stateTax = bracketTax(stateTaxable, st.brackets);
+    }
+
+    // FICA
+    var ssTax       = Math.min(gross, FICA.ssWageBase) * FICA.ssRate;
+    var medicareTax = gross * FICA.medicareRate + Math.max(0, gross - FICA.addlMedicareThreshold) * FICA.addlMedicareRate;
+
+    var totalTax = fedTax + stateTax + ssTax + medicareTax;
+    return {
+      gross: gross,
+      fedTax: fedTax,
+      stateTax: stateTax,
+      ss: ssTax,
+      medicare: medicareTax,
+      totalTax: totalTax,
+      net: gross - totalTax,
+      effRate: gross > 0 ? (totalTax / gross) * 100 : 0
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  DISPLAY
+  // ═══════════════════════════════════════════════════════════════
+  function fmt(n, dec) {
+    if (dec === undefined) dec = 2;
+    return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  }
+  function pct(n) { return n.toFixed(1) + '%'; }
+  function bar(pctVal, cls) {
+    var w = Math.min(100, Math.max(0, pctVal));
+    return '<div class="mini-bar"><div class="mini-bar-fill ' + cls + '" style="width:' + w + '%"></div></div>';
+  }
+
+  function periodTable(gross, tax, net, hoursPerWeek) {
+    var periods = [
+      { label:'Annual',      note:'per year',           div:1    },
+      { label:'Monthly',     note:'per month',          div:12   },
+      { label:'Semi-Monthly',note:'twice a month',      div:24   },
+      { label:'Biweekly',    note:'every 2 weeks',      div:26   },
+      { label:'Weekly',      note:'per week',           div:52   },
+      { label:'Daily',       note:'per working day',    div:260  },
+      { label:'Hourly',      note:hoursPerWeek + ' hrs/wk', div: hoursPerWeek * 52 }
+    ];
+    var rows = '';
+    periods.forEach(function(p) {
+      var g = gross / p.div, t = tax / p.div, n2 = net / p.div;
+      var decimals = p.div >= 260 ? 2 : 2;
+      rows += '<tr>' +
+        '<td><span class="period-label">' + p.label + '</span><br><span class="period-note">' + p.note + '</span></td>' +
+        '<td class="period-gross">' + fmt(g, decimals) + '</td>' +
+        '<td class="period-tax">'   + fmt(t, decimals) + '</td>' +
+        '<td class="period-net">'   + fmt(n2, decimals) + '</td>' +
+      '</tr>';
+    });
+    return rows;
+  }
+
+  function calculate() {
+    var salaryVal = parseFloat(document.getElementById('salaryInput').value);
+    var hours     = parseFloat(document.getElementById('hoursWeek').value) || 40;
+    var region    = document.getElementById('regionSelect').value;
+
+    if (!salaryVal || salaryVal <= 0) { alert('Please enter a valid annual salary.'); return; }
+
+    var r = currentCountry === 'CA' ? calcCanada(salaryVal, region) : calcUSA(salaryVal, region);
+
+    // Summary cards
+    document.getElementById('resGross').textContent    = fmt(r.gross, 0);
+    document.getElementById('resTotalTax').textContent = fmt(r.totalTax, 0);
+    document.getElementById('resNet').textContent      = fmt(r.net, 0);
+    document.getElementById('resEffRate').textContent  = 'effective rate: ' + pct(r.effRate);
+
+    // Rate bar (scale 0–60%)
+    var barPct = Math.min(100, (r.effRate / 60) * 100);
+    document.getElementById('effRateFill').style.width = barPct + '%';
+    document.getElementById('effRateLabel').textContent = 'Effective tax rate: ' + pct(r.effRate);
+
+    // Breakdown rows
+    var rows = '';
+    var gross = r.gross;
+    if (currentCountry === 'CA') {
+      var prov = CA_PROV[region];
+      rows += row('Federal Income Tax',   r.fedTax,  gross, 'bar-federal');
+      rows += row(prov.name + ' Tax',     r.provTax, gross, 'bar-prov');
+      rows += row('CPP Contributions',    r.cpp,     gross, 'bar-cpp');
+      rows += row('EI Premiums',          r.ei,      gross, 'bar-ei');
+      var note = 'Canada 2025 rates. Federal BPA credit ($' + CA_FED.bpa.toLocaleString() + ') applied. ';
+      if (region === 'QC') note += 'Quebec 16.5% federal abatement applied. ';
+      note += 'CPP: 5.95% on $3,500–$71,300 + 4% on $71,301–$81,200. EI: ' +
+        (region === 'QC' ? '1.31%' : '1.64%') + ' on first $65,700. Does not include RRSP or other deductions.';
+      document.getElementById('calcNoteText').textContent = note;
+    } else {
+      var st = US_STATES[region];
+      rows += row('Federal Income Tax',  r.fedTax,   gross, 'bar-federal');
+      rows += row((st.noTax ? st.name + ' (No Income Tax)' : st.name + ' Income Tax'), r.stateTax, gross, 'bar-prov');
+      rows += row('Social Security',     r.ss,       gross, 'bar-ss');
+      rows += row('Medicare',            r.medicare, gross, 'bar-medicare');
+      document.getElementById('calcNoteText').textContent =
+        'USA 2025 rates. Federal standard deduction $15,000 applied. ' +
+        'SS: 6.2% on first $176,100. Medicare: 1.45% on all wages + 0.9% over $200,000. ' +
+        'Does not include 401(k), HSA, or other pre-tax deductions.';
+    }
+    // Total + net rows
+    rows += '<tr class="row-total"><td class="td-name">Total Deductions</td>' +
+      '<td>' + fmt(r.totalTax) + '</td><td>' + pct(r.effRate) + '</td>' +
+      '<td class="td-bar-cell">' + bar((r.totalTax/gross)*100, 'bar-cpp') + '</td></tr>';
+    rows += '<tr class="row-net"><td class="td-name">&#10003; Net Take-Home</td>' +
+      '<td>' + fmt(r.net) + '</td><td>' + pct((r.net/gross)*100) + '</td>' +
+      '<td class="td-bar-cell">' + bar((r.net/gross)*100, 'bar-net') + '</td></tr>';
+    document.getElementById('breakdownBody').innerHTML = rows;
+
+    // Period table
+    document.getElementById('periodBody').innerHTML = periodTable(r.gross, r.totalTax, r.net, hours);
+
+    document.getElementById('resultsSection').classList.remove('hidden');
+    document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+
+  function row(label, amount, gross, barCls) {
+    var pctOfGross = gross > 0 ? (amount / gross) * 100 : 0;
+    return '<tr>' +
+      '<td class="td-name">' + label + '</td>' +
+      '<td>' + fmt(amount) + '</td>' +
+      '<td>' + pct(pctOfGross) + '</td>' +
+      '<td class="td-bar-cell">' + bar(pctOfGross * 3, barCls) + '</td>' +
+    '</tr>';
+  }
+
+  function resetCalc() {
+    document.getElementById('salaryInput').value = '';
+    document.getElementById('hoursWeek').value = '40';
+    document.getElementById('resultsSection').classList.add('hidden');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  INIT
+  // ═══════════════════════════════════════════════════════════════
+  document.getElementById('navToggle').addEventListener('click', function () {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // Allow Enter key to trigger calculate
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.getElementById('salaryInput') === document.activeElement) {
+      calculate();
+    }
+  });
+
+  populateRegions(); // Initialize with Canada provinces
+  </script>
+</body>
+</html>
