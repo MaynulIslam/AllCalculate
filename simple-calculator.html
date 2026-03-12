@@ -322,12 +322,14 @@
     // ══════════════════════════════════════════════
     //  Calculator State
     // ══════════════════════════════════════════════
-    let displayVal   = '0';   // what's shown in the big display
-    let storedVal    = null;  // first operand
-    let pendingOp    = null;  // +, -, *, /
-    let justEvaled   = false; // true right after pressing =
-    let memory       = 0;
-    let memHasValue  = false;
+    let displayVal        = '0';   // number shown on the big display
+    let storedVal         = null;  // left-hand operand
+    let pendingOp         = null;  // pending operator: +, -, *, /
+    let waitingForOperand = false; // true after pressing an operator — next digit clears
+                                   // display but KEEPS storedVal / pendingOp intact
+    let afterEquals       = false; // true after pressing = — next digit resets everything
+    let memory            = 0;
+    let memHasValue       = false;
 
     const elResult = document.getElementById('winResult');
     const elExpr   = document.getElementById('winExpr');
@@ -337,8 +339,7 @@
     // ── Render ──
     function render() {
       elResult.textContent = displayVal;
-      // Shrink font if number is long
-      const len = displayVal.replace('-','').replace('.','').length;
+      const len = displayVal.replace('-', '').replace('.', '').length;
       elResult.classList.toggle('shrink',  len > 12);
       elResult.classList.toggle('xshrink', len > 16);
     }
@@ -349,12 +350,18 @@
 
     // ── Number input ──
     function inputNum(n) {
-      if (justEvaled) {
-        // Start fresh after an = press
-        displayVal = n;
-        storedVal  = null;
-        pendingOp  = null;
-        justEvaled = false;
+      if (afterEquals) {
+        // Fresh start after = : clear everything
+        displayVal        = n;
+        storedVal         = null;
+        pendingOp         = null;
+        afterEquals       = false;
+        waitingForOperand = false;
+      } else if (waitingForOperand) {
+        // After an operator: start typing the second number
+        // storedVal / pendingOp are intentionally preserved
+        displayVal        = n;
+        waitingForOperand = false;
       } else if (displayVal === '0') {
         displayVal = n;
       } else {
@@ -365,7 +372,13 @@
     }
 
     function inputDot() {
-      if (justEvaled) { displayVal = '0.'; justEvaled = false; render(); return; }
+      if (afterEquals || waitingForOperand) {
+        displayVal        = '0.';
+        afterEquals       = false;
+        waitingForOperand = false;
+        render();
+        return;
+      }
       if (!displayVal.includes('.')) {
         displayVal += '.';
         render();
@@ -374,25 +387,24 @@
 
     // ── Operator ──
     function inputOp(op) {
-      justEvaled = false;
       const cur = parseFloat(displayVal);
 
-      if (storedVal !== null && pendingOp !== null) {
-        // Chain: evaluate the pending operation first
+      if (storedVal !== null && pendingOp !== null && !waitingForOperand) {
+        // Chain operation: evaluate what's pending first
         const result = compute(storedVal, pendingOp, cur);
         storedVal  = result;
         displayVal = formatResult(result);
-      } else {
+      } else if (!waitingForOperand) {
+        // First operator press — store current display value
         storedVal = cur;
       }
+      // If waitingForOperand is already true (operator pressed twice),
+      // just update the operator without re-storing the value
 
-      pendingOp = op;
+      pendingOp         = op;
+      afterEquals       = false;
+      waitingForOperand = true;
       setExpr(formatResult(storedVal) + ' ' + opSymbol(op));
-      justEvaled = false;         // allow new number entry
-      // Flag so next digit press starts fresh
-      const prev = displayVal;
-      displayVal = displayVal;    // keep showing current for context
-      justEvaled = true;          // next digit will clear display
       render();
     }
 
@@ -402,10 +414,11 @@
       const cur = parseFloat(displayVal);
       setExpr(formatResult(storedVal) + ' ' + opSymbol(pendingOp) + ' ' + formatResult(cur) + ' =');
       const result = compute(storedVal, pendingOp, cur);
-      displayVal = formatResult(result);
-      storedVal  = null;
-      pendingOp  = null;
-      justEvaled = true;
+      displayVal        = formatResult(result);
+      storedVal         = null;
+      pendingOp         = null;
+      afterEquals       = true;
+      waitingForOperand = false;
       render();
     }
 
@@ -414,35 +427,50 @@
       const val = parseFloat(displayVal);
       switch (fn) {
         case 'C':
-          displayVal = '0'; storedVal = null; pendingOp = null;
-          justEvaled = false; setExpr(''); break;
+          displayVal        = '0';
+          storedVal         = null;
+          pendingOp         = null;
+          afterEquals       = false;
+          waitingForOperand = false;
+          setExpr('');
+          break;
         case 'CE':
-          displayVal = '0'; justEvaled = false; break;
+          displayVal        = '0';
+          afterEquals       = false;
+          waitingForOperand = false;
+          break;
         case 'DEL':
-          if (justEvaled) { displayVal = '0'; break; }
-          displayVal = displayVal.length > 1 ? displayVal.slice(0, -1) : '0'; break;
+          if (afterEquals || waitingForOperand) { displayVal = '0'; afterEquals = false; waitingForOperand = false; break; }
+          displayVal = displayVal.length > 1 ? displayVal.slice(0, -1) : '0';
+          break;
         case '+/-':
-          if (displayVal !== '0') displayVal = displayVal.startsWith('-')
-            ? displayVal.slice(1) : '-' + displayVal; break;
+          if (displayVal !== '0') {
+            displayVal = displayVal.startsWith('-') ? displayVal.slice(1) : '-' + displayVal;
+          }
+          break;
         case '%':
-          // As percentage of stored value if pending op, else divide by 100
+          // Windows-style: 200 + 10% → 10% of 200 = 20, then 200+20=220
           displayVal = formatResult(storedVal !== null ? storedVal * val / 100 : val / 100);
+          waitingForOperand = false;
           break;
         case '1/x':
-          if (val === 0) { displayVal = 'Cannot divide by zero'; justEvaled = true; render(); return; }
-          displayVal = formatResult(1 / val); break;
+          if (val === 0) { displayVal = 'Cannot divide by zero'; afterEquals = true; render(); return; }
+          displayVal = formatResult(1 / val);
+          break;
         case 'x2':
-          displayVal = formatResult(val * val); break;
+          displayVal = formatResult(val * val);
+          break;
         case 'sqrt':
-          if (val < 0) { displayVal = 'Invalid input'; justEvaled = true; render(); return; }
-          displayVal = formatResult(Math.sqrt(val)); break;
+          if (val < 0) { displayVal = 'Invalid input'; afterEquals = true; render(); return; }
+          displayVal = formatResult(Math.sqrt(val));
+          break;
       }
       render();
     }
 
     // ── Memory ──
     function memStore()  { memory = parseFloat(displayVal); memHasValue = true; updateMemBtns(); }
-    function memRecall() { if (!memHasValue) return; displayVal = formatResult(memory); justEvaled = true; render(); }
+    function memRecall() { if (!memHasValue) return; displayVal = formatResult(memory); afterEquals = true; render(); }
     function memAdd()    { memory += parseFloat(displayVal); memHasValue = true; updateMemBtns(); }
     function memSub()    { memory -= parseFloat(displayVal); memHasValue = true; updateMemBtns(); }
     function memClear()  { memory = 0; memHasValue = false; updateMemBtns(); }
@@ -466,11 +494,10 @@
     }
 
     function formatResult(n) {
-      if (isNaN(n)) return 'Cannot divide by zero';
+      if (isNaN(n))     return 'Cannot divide by zero';
       if (!isFinite(n)) return 'Overflow';
-      // Avoid floating point noise
-      const s = parseFloat(n.toPrecision(14)).toString();
-      return s;
+      // toPrecision(14) removes floating-point noise (e.g. 0.1+0.2 = 0.3)
+      return parseFloat(n.toPrecision(14)).toString();
     }
 
     // ── Keyboard support ──
