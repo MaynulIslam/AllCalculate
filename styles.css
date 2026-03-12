@@ -506,56 +506,53 @@ img {
 /* ============================================================
    Calculator Page Layout
    ============================================================ */
-.page-header {
-  background: linear-gradient(135deg, #0f2b4c, #1a3c6e);
-  padding: 48px 20px 60px;
-  text-align: center;
+
+/* Inline title + breadcrumb at top of the calculator card */
+.calc-header {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--gray-200);
 }
 
-.breadcrumb {
+.calc-page-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.calc-page-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 20px;
-  font-size: 0.85rem;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
 }
 
-.breadcrumb a {
-  color: rgba(255, 255, 255, 0.7);
+.calc-page-breadcrumb a {
+  color: var(--blue-light);
   text-decoration: none;
   transition: var(--transition);
 }
 
-.breadcrumb a:hover {
-  color: var(--white);
+.calc-page-breadcrumb a:hover {
+  color: var(--blue);
+  text-decoration: underline;
 }
 
-.breadcrumb-sep {
-  color: rgba(255, 255, 255, 0.4);
+.calc-page-breadcrumb span:not(.bc-sep) {
+  color: var(--gray-500);
 }
 
-.breadcrumb-current {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.page-header h1 {
-  font-size: 2.2rem;
-  color: var(--white);
-  font-weight: 800;
-  margin-bottom: 12px;
-}
-
-.page-header p {
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 550px;
-  margin: 0 auto;
+.bc-sep {
+  color: var(--gray-400);
+  font-size: 0.9rem;
 }
 
 .calc-layout {
   max-width: 1200px;
-  margin: -30px auto 0;
+  margin: 30px auto 0;
   padding: 0 20px 60px;
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -1469,8 +1466,8 @@ img {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .page-header h1 {
-    font-size: 1.75rem;
+  .calc-page-title {
+    font-size: 1.35rem;
   }
 }
 
