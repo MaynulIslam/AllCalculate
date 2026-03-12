@@ -109,6 +109,21 @@ img {
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-logo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nav-logo-tagline {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .nav-logo-text {
@@ -323,6 +338,7 @@ img {
 
 @media (max-width: 768px) {
   .nav-center { display: none; }
+  .nav-logo-tagline { display: none; }
   .nav-user-name,
   .nav-user-caret { display: none; }
   .nav-user-chip { padding: 4px; }
@@ -1210,6 +1226,27 @@ img {
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.55);
   max-width: 280px;
+}
+
+.footer-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.footer-stat {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.05);
+  border-radius: 20px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+.footer-stat strong {
+  color: var(--orange);
+  font-weight: 700;
 }
 
 .footer-col h4 {
