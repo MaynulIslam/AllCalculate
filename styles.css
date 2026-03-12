@@ -322,10 +322,131 @@ img {
 .nav-dropdown-signout:hover { background: rgba(255,80,80,0.07) !important; }
 
 @media (max-width: 768px) {
+  .nav-center { display: none; }
   .nav-user-name,
   .nav-user-caret { display: none; }
   .nav-user-chip { padding: 4px; }
 }
+
+/* ── Auth Modal ── */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+  padding: 16px;
+}
+.auth-modal {
+  background: #1e1e1e;
+  border-radius: 20px;
+  padding: 32px 28px 28px;
+  width: 100%;
+  max-width: 370px;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.auth-close {
+  position: absolute;
+  top: 14px; right: 18px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.auth-close:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.auth-title { font-size: 1.4rem; font-weight: 700; margin: 0 0 4px; }
+.auth-subtitle { color: rgba(255,255,255,0.4); font-size: 0.83rem; margin: 0 0 20px; }
+.auth-tabs {
+  display: flex;
+  background: #262626;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+.auth-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.45);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.auth-tab.active { background: #363636; color: #fff; }
+.auth-form { display: flex; flex-direction: column; gap: 10px; }
+.auth-input {
+  background: #262626;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.auth-input:focus { border-color: #4cc2ff; }
+.auth-input::placeholder { color: rgba(255,255,255,0.28); }
+.auth-error { color: #ff6b6b; font-size: 0.76rem; min-height: 14px; }
+.auth-submit {
+  background: #4cc2ff;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 2px;
+  transition: background 0.15s;
+}
+.auth-submit:hover { background: #76cfff; }
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: rgba(255,255,255,0.18);
+  font-size: 0.75rem;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1);
+}
+.auth-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: #fff;
+  color: #333;
+  border: none;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.auth-google-btn:hover { background: #f0f0f0; }
 
 /* ============================================================
    Ad Slots

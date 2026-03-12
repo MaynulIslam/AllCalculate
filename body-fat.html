@@ -27,12 +27,24 @@
 <nav class="navbar" id="navbar">
   <div class="nav-container">
     <a href="index.html" class="nav-logo"><span class="nav-logo-text">All<span>Calculate</span></span></a>
+      <div class="nav-center">
+        <div class="nav-center-title">Free Online Calculators for Every Need</div>
+        <div class="nav-center-stats">
+          <span class="nav-center-stat"><strong>20+</strong> Calculators</span>
+          <span class="nav-center-stat"><strong>100%</strong> Free Forever</span>
+          <span class="nav-center-stat"><strong>Fast</strong> Instant Results</span>
+        </div>
+      </div>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html#finance">💰 Finance</a></li>
       <li><a href="index.html#health">❤️ Health</a></li>
       <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
       <li><a href="index.html#math">📐 Math</a></li>
     </ul>
+      <div class="nav-auth" id="navAuth">
+        <button class="nav-signin-btn" id="navSignInBtn">Sign In</button>
+      </div>
+
     <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -446,5 +458,6 @@
     document.getElementById('bfResults').classList.add('hidden');
   }
 </script>
+  <script type="module" src="firebase-auth.js"></script>
 </body>
 </html>
