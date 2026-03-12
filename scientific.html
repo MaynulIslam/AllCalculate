@@ -345,10 +345,11 @@
     let display = '0';
     let expression = '';
     let lastResult = null;
-    let justCalculated = false;
+    let justCalculated = false;   // true after = or unary fn → next digit resets everything
+    let waitingForOperand = false; // true after binary op → next digit clears display only
     let angleMode = 'deg'; // 'deg' or 'rad'
     let history = [];
-    let pendingOp = null; // for xʸ
+    let pendingOp = null; // for xʸ and binary ops
 
     // ─── Button Definitions ──────────────────────────────────────────────
     const buttons = [
@@ -452,13 +453,17 @@
       const curVal = parseFloat(display);
 
       if (action === 'ac') {
-        display = '0'; expression = ''; pendingOp = null; justCalculated = false;
+        display = '0'; expression = ''; pendingOp = null;
+        justCalculated = false; waitingForOperand = false;
         document.getElementById('sciHistory').innerHTML = '&nbsp;';
         updateDisplay(); return;
       }
 
       if (action === 'del') {
-        if (justCalculated) { display = '0'; justCalculated = false; updateDisplay(); return; }
+        if (justCalculated || waitingForOperand) {
+          display = '0'; justCalculated = false; waitingForOperand = false;
+          updateDisplay(); return;
+        }
         if (display.length > 1 && display !== 'Error') display = display.slice(0, -1);
         else display = '0';
         updateDisplay(); return;
@@ -471,14 +476,24 @@
 
       // Digits and decimal
       if ('0123456789'.includes(action)) {
-        if (justCalculated) { display = action; expression = ''; justCalculated = false; }
-        else display = (display === '0') ? action : display + action;
+        if (justCalculated) {
+          display = action; expression = '';
+          justCalculated = false; waitingForOperand = false;
+        } else if (waitingForOperand) {
+          display = action;           // clear old number, start fresh
+          waitingForOperand = false;
+        } else {
+          display = (display === '0') ? action : display + action;
+        }
         updateDisplay(); return;
       }
 
       if (action === '.') {
-        if (justCalculated) { display = '0.'; justCalculated = false; }
-        else if (!display.includes('.')) display += '.';
+        if (justCalculated || waitingForOperand) {
+          display = '0.'; justCalculated = false; waitingForOperand = false;
+        } else if (!display.includes('.')) {
+          display += '.';
+        }
         updateDisplay(); return;
       }
 
@@ -537,8 +552,8 @@
 
       // Binary operators
       if (['+', '-', '*', '/'].includes(action)) {
-        if (pendingOp) {
-          // Chain: evaluate pending first
+        if (pendingOp && !waitingForOperand) {
+          // Chain: evaluate the pending op before storing the new one
           const res = evalBinary(pendingOp.op, pendingOp.val, curVal);
           setDisplay(res);
           pendingOp = null;
@@ -546,6 +561,7 @@
         expression = display + ' ' + opLabel(action) + ' ';
         pendingOp = { op: action, val: parseFloat(display) };
         justCalculated = false;
+        waitingForOperand = true;   // ← next digit clears display
         updateDisplay(); return;
       }
 
@@ -569,6 +585,7 @@
           setDisplay(res);
           pendingOp = null;
           justCalculated = true;
+          waitingForOperand = false;
           updateDisplay();
         }
         return;
