@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Free online scientific calculator with trigonometric functions, logarithms, exponents, and more. Works on all devices.">
-  <title>Scientific Calculator Online | AllCalculate.com</title>
+  <title>Scientific Calculator Online | EasyCalculator.live</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -155,7 +155,7 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
         <div class="nav-logo-content">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
         </div>
       </a>
@@ -296,7 +296,7 @@
     <div class="footer-container">
       <div class="footer-top">
         <div class="footer-brand">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
         <div class="footer-stats">
           <span class="footer-stat"><strong>20+</strong> Calculators</span>
@@ -340,7 +340,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <span>&copy; 2025 EasyCalculator.live &mdash; All rights reserved.</span>
         <div class="footer-bottom-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Use</a>
@@ -676,6 +676,32 @@
     // ─── Init ────────────────────────────────────────────────────────────
     updateDisplay();
     renderHistory();
+  </script>
+  <script type="module">
+    import { initSavePanel } from './calc-save.js';
+
+    // We keep a mirrored history array since `history` is local to the plain script
+    window._sciHistory = [];
+
+    const { onResultReady } = initSavePanel({
+      calcId:    'scientific',
+      calcLabel: 'Scientific',
+      calcIcon:  '🔬',
+      container: document.getElementById('historyList'),
+      getData: () => ({
+        calculations: window._sciHistory.slice(),
+        preview:      (window._sciHistory[0]?.expr || '') + (window._sciHistory[0] ? ' = ' + window._sciHistory[0].result : '')
+      })
+    });
+
+    // Wrap addHistory so we can mirror entries and show the save button
+    const _origAddHistory = window.addHistory;
+    window.addHistory = function(expr, result) {
+      _origAddHistory(expr, result);
+      window._sciHistory.unshift({ expr: String(expr), result: String(result) });
+      if (window._sciHistory.length > 8) window._sciHistory.pop();
+      onResultReady();
+    };
   </script>
   <script type="module" src="firebase-auth.js"></script>
 </body>

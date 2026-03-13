@@ -185,6 +185,9 @@ function updateNavAuth(user) {
               ${tierName} Plan · ${savedCount}/${limStr} saves
             </div>
           </div>
+          <a class="nav-dropdown-item nav-dropdown-link" href="saved-sessions.html">
+            📋 Saved Calculations
+          </a>
           <div class="nav-dropdown-item nav-dropdown-signout" id="navSignOutBtn">
             ↪ Sign Out
           </div>
@@ -252,9 +255,19 @@ function friendlyErr(code) {
   })[code] || 'Something went wrong. Please try again.';
 }
 
+// ── Wire up the static navSignInBtn immediately (before Firebase resolves auth state) ──
+function setupNavSignIn() {
+  const btn = document.getElementById('navSignInBtn');
+  if (btn && !btn._authWired) {
+    btn.addEventListener('click', showAuthModal);
+    btn._authWired = true;
+  }
+}
+
 // ── Init on DOM ready ──
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectModal);
+  document.addEventListener('DOMContentLoaded', () => { injectModal(); setupNavSignIn(); });
 } else {
   injectModal();
+  setupNavSignIn();
 }

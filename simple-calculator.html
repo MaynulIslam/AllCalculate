@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Free online standard calculator — just like Windows Calculator. Add, subtract, multiply, divide with memory functions and keyboard support.">
   <meta name="keywords" content="simple calculator, basic calculator, online calculator, standard calculator, windows calculator">
-  <title>Simple Calculator | AllCalculate.com</title>
+  <title>Simple Calculator | EasyCalculator.live</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -118,37 +118,6 @@
       flex-direction: column;
       color: #fff;
     }
-    .hist-user-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 14px;
-      background: #252525;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      gap: 8px;
-    }
-    .hist-user-info {
-      color: rgba(255,255,255,0.55);
-      font-size: 0.78rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex: 1;
-    }
-    .hist-auth-btn {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.18);
-      color: rgba(255,255,255,0.65);
-      font-size: 0.72rem;
-      font-weight: 600;
-      font-family: inherit;
-      padding: 4px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s;
-    }
-    .hist-auth-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
     .hist-section-title {
       display: flex;
       align-items: center;
@@ -489,6 +458,12 @@
       line-height: 1;
     }
     .hist-delete-btn:hover { color: #ff6b6b; background: rgba(255,80,80,0.15); }
+    .hist-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-shrink: 0;
+    }
     .hist-confirm-row {
       display: flex;
       align-items: center;
@@ -529,7 +504,7 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
         <div class="nav-logo-content">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
         </div>
       </a>
@@ -616,12 +591,6 @@
 
             <!-- ── RIGHT: History Panel ── -->
             <div class="history-panel" id="historyPanel">
-
-              <!-- User bar -->
-              <div class="hist-user-bar">
-                <span class="hist-user-info" id="histUserInfo">Not signed in</span>
-                <button class="hist-auth-btn" id="histAuthBtn">Sign In</button>
-              </div>
 
               <!-- Current session -->
               <div class="hist-section-title">
@@ -715,7 +684,7 @@
     <div class="footer-container">
       <div class="footer-top">
         <div class="footer-brand">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
         <div class="footer-stats">
           <span class="footer-stat"><strong>20+</strong> Calculators</span>
@@ -760,7 +729,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <span>&copy; 2025 EasyCalculator.live &mdash; All rights reserved.</span>
         <div class="footer-bottom-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Use</a>
@@ -850,14 +819,9 @@
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
-        document.getElementById('histUserInfo').textContent =
-          user.displayName || user.email || 'User';
-        document.getElementById('histAuthBtn').textContent = 'Sign Out';
         await loadUserProfile();
         await loadSavedSessions();
       } else {
-        document.getElementById('histUserInfo').textContent = 'Not signed in';
-        document.getElementById('histAuthBtn').textContent  = 'Sign In';
         document.getElementById('histSavedList').innerHTML  =
           '<div class="hist-empty">Sign in to view saved sessions.</div>';
         userTier   = 'free';
@@ -895,6 +859,9 @@
                   ${tierName} Plan · ${savedCount}/${limStr} saves
                 </div>
               </div>
+              <a class="nav-dropdown-item nav-dropdown-link" href="saved-sessions.html">
+                📋 Saved Calculations
+              </a>
               <div class="nav-dropdown-item nav-dropdown-signout" id="navSignOutBtn">
                 ↪ Sign Out
               </div>
@@ -979,12 +946,14 @@
       div.innerHTML = `
         <div class="hist-saved-header">
           <div style="overflow:hidden;flex:1;min-width:0">
-            <div class="hist-saved-label-wrap" style="display:flex;align-items:center;gap:4px">
+            <div class="hist-saved-label-wrap">
               <span class="hist-saved-label">${esc(data.label || 'Session')}</span>
-              <button class="hist-edit-btn" title="Rename session">✏️</button>
-              <button class="hist-delete-btn" title="Delete session">🗑️</button>
             </div>
             <div class="hist-saved-preview">= ${preview}${calcs.length > 3 ? ` +${calcs.length - 3} more` : ''}</div>
+          </div>
+          <div class="hist-item-actions">
+            <button class="hist-edit-btn" title="Rename session">✏️</button>
+            <button class="hist-delete-btn" title="Delete session">🗑️</button>
           </div>
           <span class="hist-saved-arrow">›</span>
         </div>
@@ -1000,7 +969,7 @@
       // Toggle expand on header click (but not on edit button)
       const header = div.querySelector('.hist-saved-header');
       header.addEventListener('click', e => {
-        if (!e.target.closest('.hist-edit-btn') && !e.target.closest('.hist-rename-input')) {
+        if (!e.target.closest('.hist-item-actions') && !e.target.closest('.hist-rename-input')) {
           div.classList.toggle('open');
         }
       });
@@ -1054,7 +1023,7 @@
 
       // ── Inline delete with confirm ──
       const deleteBtn  = div.querySelector('.hist-delete-btn');
-      const labelWrap  = div.querySelector('.hist-saved-label-wrap');
+      const actionsDiv = div.querySelector('.hist-item-actions');
 
       deleteBtn.addEventListener('click', e => {
         e.stopPropagation();
@@ -1069,7 +1038,7 @@
           <span class="hist-confirm-label">Delete?</span>
           <button class="hist-confirm-yes">Yes</button>
           <button class="hist-confirm-no">No</button>`;
-        labelWrap.appendChild(confirmRow);
+        actionsDiv.appendChild(confirmRow);
 
         // No — restore buttons
         confirmRow.querySelector('.hist-confirm-no').addEventListener('click', e => {
@@ -1242,9 +1211,6 @@
       document.getElementById('suError').textContent = '';
     }
 
-    document.getElementById('histAuthBtn').addEventListener('click', async () => {
-      if (currentUser) { await signOut(auth); } else { showAuthModal(); }
-    });
     document.getElementById('authClose').addEventListener('click', hideAuthModal);
     document.getElementById('authOverlay').addEventListener('click', e => {
       if (e.target === e.currentTarget) hideAuthModal();

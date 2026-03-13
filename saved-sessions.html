@@ -1,0 +1,582 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View and manage all your saved calculation sessions on EasyCalculator.live.">
+  <title>Saved Sessions | EasyCalculator.live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Page layout ── */
+    .ss-layout {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 44px 20px 80px;
+    }
+
+    /* ── Page header ── */
+    .ss-page-header {
+      margin-bottom: 32px;
+    }
+    .ss-page-header h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+    .ss-page-header p {
+      color: #64748b;
+      font-size: 0.92rem;
+      margin: 0;
+    }
+
+    /* ── State / empty messages ── */
+    .ss-state {
+      text-align: center;
+      padding: 70px 20px;
+      color: #94a3b8;
+    }
+    .ss-state-icon { font-size: 2.8rem; margin-bottom: 14px; }
+    .ss-state h2 {
+      font-size: 1.15rem;
+      color: #475569;
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+    .ss-state p { font-size: 0.87rem; margin: 0 0 22px; line-height: 1.6; }
+    .ss-state-btn {
+      display: inline-block;
+      background: #4cc2ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .ss-state-btn:hover { background: #76cfff; }
+
+    /* ── Stats bar ── */
+    .ss-stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .ss-count {
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+    .ss-count strong { color: #475569; }
+
+    /* ── Card list ── */
+    .ss-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .ss-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .ss-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.09); border-color: #cbd5e1; }
+
+    /* ── Card header ── */
+    .ss-card-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      cursor: pointer;
+      gap: 10px;
+      transition: background 0.15s;
+    }
+    .ss-card-header:hover { background: #f8fafc; }
+
+    .ss-card-meta { flex: 1; min-width: 0; }
+    .ss-card-title {
+      font-size: 0.93rem;
+      font-weight: 600;
+      color: #1e293b;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ss-card-info {
+      font-size: 0.73rem;
+      color: #94a3b8;
+      margin-top: 3px;
+    }
+
+    /* ── Action buttons (pinned right) ── */
+    .ss-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .ss-edit-btn, .ss-delete-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 4px 6px;
+      border-radius: 5px;
+      transition: all 0.15s;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .ss-edit-btn   { color: rgba(76,194,255,0.8); }
+    .ss-edit-btn:hover   { color: #4cc2ff; background: rgba(76,194,255,0.1); }
+    .ss-delete-btn { color: rgba(255,107,107,0.8); }
+    .ss-delete-btn:hover { color: #ff6b6b; background: rgba(255,80,80,0.1); }
+
+    /* ── Inline rename input ── */
+    .ss-rename-input {
+      background: #f1f5f9;
+      border: 1.5px solid #4cc2ff;
+      border-radius: 6px;
+      color: #1e293b;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      outline: none;
+      width: 200px;
+      max-width: 100%;
+    }
+
+    /* ── Inline delete confirm ── */
+    .ss-confirm-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .ss-confirm-label { font-size: 0.72rem; color: #94a3b8; white-space: nowrap; }
+    .ss-confirm-yes, .ss-confirm-no {
+      background: none;
+      border-radius: 5px;
+      font-size: 0.72rem;
+      font-family: inherit;
+      font-weight: 700;
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1.5px solid;
+    }
+    .ss-confirm-yes { color: #ff6b6b; border-color: rgba(255,80,80,0.4); }
+    .ss-confirm-yes:hover { background: rgba(255,80,80,0.08); }
+    .ss-confirm-no  { color: #94a3b8; border-color: #d1d5db; }
+    .ss-confirm-no:hover { background: #f1f5f9; color: #475569; }
+
+    /* ── Arrow ── */
+    .ss-card-arrow {
+      color: #cbd5e1;
+      font-size: 1.2rem;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .ss-card.open .ss-card-arrow { transform: rotate(90deg); }
+
+    /* ── Card body (calculations) ── */
+    .ss-card-body {
+      display: none;
+      padding: 4px 16px 14px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .ss-card.open .ss-card-body { display: block; }
+
+    .ss-calc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid #f8fafc;
+      gap: 16px;
+    }
+    .ss-calc-row:last-child { border-bottom: none; }
+    .ss-calc-expr {
+      color: #94a3b8;
+      font-size: 0.82rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .ss-calc-result {
+      color: #1e293b;
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .ss-empty-body {
+      color: #94a3b8;
+      font-size: 0.82rem;
+      padding: 10px 0 4px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-content">
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
+          <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
+        </div>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#math">📐 Math</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+      </ul>
+      <div class="nav-auth" id="navAuth">
+        <button class="nav-signin-btn" id="navSignInBtn">Sign In</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- Page content -->
+  <div class="ss-layout">
+    <div class="ss-page-header">
+      <h1>Saved Sessions</h1>
+      <p>Your saved calculation history across EasyCalculator.live</p>
+    </div>
+    <div id="ssContent">
+      <div class="ss-state">
+        <div class="ss-state-icon">⏳</div>
+        <h2>Loading…</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+          <div class="footer-stats">
+            <span class="footer-stat"><strong>20+</strong> Calculators</span>
+            <span class="footer-stat"><strong>100%</strong> Free Forever</span>
+            <span class="footer-stat"><strong>Fast</strong> Instant Results</span>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="tip.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi.html">BMI Calculator</a></li>
+            <li><a href="calorie.html">Calorie Calculator</a></li>
+            <li><a href="age.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="simple-calculator.html">🖩 Simple Calculator</a></li>
+            <li><a href="percentage.html">Percentage Calculator</a></li>
+            <li><a href="scientific.html">Scientific Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 EasyCalculator.live &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { auth, db, showAuthModal } from './firebase-auth.js';
+    import { renderCalcTemplate } from './calc-save.js';
+    import { collection, getDocs, query, orderBy,
+             updateDoc, deleteDoc, doc, setDoc }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    // Mobile nav toggle
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    let currentUser  = null;
+    let localSavedCount = 0;
+
+    // ── Listen for auth state from firebase-auth.js ──
+    document.addEventListener('acAuthChange', async e => {
+      currentUser     = e.detail.user;
+      localSavedCount = e.detail.savedCount || 0;
+
+      if (!currentUser) {
+        renderSignInPrompt();
+        return;
+      }
+      await loadSessions(currentUser);
+    });
+
+    // ── Sign-in prompt ──
+    function renderSignInPrompt() {
+      document.getElementById('ssContent').innerHTML = `
+        <div class="ss-state">
+          <div class="ss-state-icon">🔒</div>
+          <h2>Sign in to view your sessions</h2>
+          <p>Your saved calculation history is stored securely with your account.</p>
+          <button class="ss-state-btn" id="ssSignInBtn">Sign In</button>
+        </div>`;
+      document.getElementById('ssSignInBtn').addEventListener('click', showAuthModal);
+    }
+
+    // ── Load all sessions from Firestore ──
+    async function loadSessions(user) {
+      const content = document.getElementById('ssContent');
+      content.innerHTML = `
+        <div class="ss-state">
+          <div class="ss-state-icon">⏳</div>
+          <h2>Loading…</h2>
+        </div>`;
+      try {
+        const q    = query(collection(db, 'users', user.uid, 'sessions'),
+                           orderBy('createdAt', 'desc'));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          renderEmpty(content);
+          return;
+        }
+
+        const count    = snap.size;
+        const statsBar = document.createElement('div');
+        statsBar.className = 'ss-stats-bar';
+        statsBar.innerHTML = `<span class="ss-count" id="ssCount">
+          <strong>${count}</strong> saved session${count !== 1 ? 's' : ''}
+        </span>`;
+
+        const list = document.createElement('div');
+        list.className = 'ss-list';
+        snap.forEach(d => list.appendChild(buildCard(d.id, d.data(), user)));
+
+        content.innerHTML = '';
+        content.appendChild(statsBar);
+        content.appendChild(list);
+      } catch (err) {
+        content.innerHTML = `
+          <div class="ss-state">
+            <div class="ss-state-icon">⚠️</div>
+            <h2>Error loading sessions</h2>
+            <p>${esc(err.message)}</p>
+          </div>`;
+        console.error(err);
+      }
+    }
+
+    function renderEmpty(container) {
+      container.innerHTML = `
+        <div class="ss-state">
+          <div class="ss-state-icon">📭</div>
+          <h2>No saved sessions yet</h2>
+          <p>Save results from any calculator on EasyCalculator.live and they'll appear here.</p>
+          <a class="ss-state-btn" href="index.html">Browse Calculators</a>
+        </div>`;
+    }
+
+    // ── HTML escape ──
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Format Firestore timestamp ──
+    function fmtDate(ts) {
+      if (!ts) return '';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return d.toLocaleString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric',
+        hour: 'numeric', minute: '2-digit'
+      });
+    }
+
+    // ── Calculator display names ──
+    const CALC_LABELS = {
+      'simple-calculator': '🖩 Simple Calculator',
+      'scientific':        '🔬 Scientific Calculator',
+      'gpa':               '🎓 GPA Calculator',
+      'square-footage':    '📐 Square Footage',
+      'mortgage':          '🏠 Mortgage',
+      'loan-emi':          '💳 Loan / EMI',
+      'compound-interest': '📈 Compound Interest',
+      'retirement':        '🏖️ Retirement',
+      'salary-hourly':     '💼 Salary to Hourly',
+      'salary-tax':        '🧾 Salary Tax',
+      'bmi':               '⚖️ BMI',
+      'calorie':           '🔥 Calorie',
+      'body-fat':          '📊 Body Fat',
+      'pregnancy':         '🤰 Pregnancy',
+      'days-between':      '📅 Days Between',
+    };
+
+    // ── Build a session card ──
+    function buildCard(id, data, user) {
+      const dateStr   = fmtDate(data.createdAt);
+      const calcType  = data.calculator || 'simple-calculator';
+      const calcLabel = CALC_LABELS[calcType] || calcType;
+      const preview   = data.preview || '';
+      const calcInfo  = [calcLabel, preview, dateStr].filter(Boolean).join(' · ');
+
+      const card = document.createElement('div');
+      card.className = 'ss-card';
+      card.innerHTML = `
+        <div class="ss-card-header">
+          <div class="ss-card-meta">
+            <span class="ss-card-title">${esc(data.label || 'Session')}</span>
+            <div class="ss-card-info">${esc(calcInfo)}</div>
+          </div>
+          <div class="ss-card-actions">
+            <button class="ss-edit-btn"   title="Rename session">✏️</button>
+            <button class="ss-delete-btn" title="Delete session">🗑️</button>
+          </div>
+          <span class="ss-card-arrow">›</span>
+        </div>
+        <div class="ss-card-body">
+          ${renderCalcTemplate(data)}
+        </div>`;
+
+      const header     = card.querySelector('.ss-card-header');
+      const actionsDiv = card.querySelector('.ss-card-actions');
+      const editBtn    = card.querySelector('.ss-edit-btn');
+      const deleteBtn  = card.querySelector('.ss-delete-btn');
+      const titleSpan  = card.querySelector('.ss-card-title');
+
+      // ── Expand / collapse ──
+      header.addEventListener('click', e => {
+        if (!e.target.closest('.ss-card-actions') && !e.target.closest('.ss-rename-input')) {
+          card.classList.toggle('open');
+        }
+      });
+
+      // ── Inline rename ──
+      editBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        const currentName = titleSpan.textContent;
+        const input = document.createElement('input');
+        input.type      = 'text';
+        input.className = 'ss-rename-input';
+        input.value     = currentName;
+        titleSpan.replaceWith(input);
+        editBtn.style.display = 'none';
+        input.focus();
+        input.select();
+
+        async function commitRename() {
+          const newName = input.value.trim() || currentName;
+          const newSpan = document.createElement('span');
+          newSpan.className   = 'ss-card-title';
+          newSpan.textContent = newName;
+          input.replaceWith(newSpan);
+          editBtn.style.display = '';
+          if (newName !== currentName) {
+            try {
+              await updateDoc(doc(db, 'users', user.uid, 'sessions', id), { label: newName });
+            } catch (err) {
+              console.error('Rename error:', err);
+              newSpan.textContent = currentName;
+            }
+          }
+        }
+
+        input.addEventListener('blur', commitRename);
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Enter')  { e.preventDefault(); input.blur(); }
+          if (e.key === 'Escape') { input.value = currentName; input.blur(); }
+        });
+      });
+
+      // ── Inline delete with confirm ──
+      deleteBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        editBtn.style.display   = 'none';
+        deleteBtn.style.display = 'none';
+
+        const confirmRow = document.createElement('div');
+        confirmRow.className = 'ss-confirm-row';
+        confirmRow.innerHTML = `
+          <span class="ss-confirm-label">Delete?</span>
+          <button class="ss-confirm-yes">Yes</button>
+          <button class="ss-confirm-no">No</button>`;
+        actionsDiv.appendChild(confirmRow);
+
+        // No — restore buttons
+        confirmRow.querySelector('.ss-confirm-no').addEventListener('click', e => {
+          e.stopPropagation();
+          confirmRow.remove();
+          editBtn.style.display   = '';
+          deleteBtn.style.display = '';
+        });
+
+        // Yes — delete from Firestore and remove card
+        confirmRow.querySelector('.ss-confirm-yes').addEventListener('click', async e => {
+          e.stopPropagation();
+          const yesBtn = e.currentTarget;
+          yesBtn.textContent = '…';
+          yesBtn.disabled    = true;
+          try {
+            await deleteDoc(doc(db, 'users', user.uid, 'sessions', id));
+            // Decrement savedCount in Firestore profile
+            localSavedCount = Math.max(0, localSavedCount - 1);
+            await setDoc(doc(db, 'users', user.uid, 'profile', 'data'),
+                         { savedCount: localSavedCount }, { merge: true });
+            card.remove();
+
+            // Update the count badge or show empty state
+            const list      = document.querySelector('.ss-list');
+            const remaining = list ? list.querySelectorAll('.ss-card').length : 0;
+            const countEl   = document.getElementById('ssCount');
+            if (remaining === 0) {
+              renderEmpty(document.getElementById('ssContent'));
+            } else if (countEl) {
+              countEl.innerHTML = `<strong>${remaining}</strong> saved session${remaining !== 1 ? 's' : ''}`;
+            }
+          } catch (err) {
+            console.error('Delete error:', err);
+            confirmRow.remove();
+            editBtn.style.display   = '';
+            deleteBtn.style.display = '';
+          }
+        });
+      });
+
+      return card;
+    }
+  </script>
+
+</body>
+</html>

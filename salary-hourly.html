@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Convert your annual salary to hourly rate, and see weekly, biweekly, and monthly pay. Free salary calculator.">
   <meta name="keywords" content="salary to hourly calculator, annual salary converter, hourly rate, weekly pay, biweekly pay, monthly salary">
-  <title>Salary to Hourly Calculator - Convert Annual Pay | AllCalculate.com</title>
+  <title>Salary to Hourly Calculator - Convert Annual Pay | EasyCalculator.live</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -58,7 +58,7 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
         <div class="nav-logo-content">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
         </div>
       </a>
@@ -268,7 +268,7 @@
     <div class="footer-container">
       <div class="footer-top">
         <div class="footer-brand">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
         <div class="footer-stats">
           <span class="footer-stat"><strong>20+</strong> Calculators</span>
@@ -312,7 +312,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <span>&copy; 2025 EasyCalculator.live &mdash; All rights reserved.</span>
         <div class="footer-bottom-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Use</a>
@@ -397,6 +397,40 @@
       document.getElementById('vacationDays').value = '10';
       document.getElementById('salaryResults').classList.add('hidden');
     }
+  </script>
+  <script type="module">
+    import { initSavePanel } from './calc-save.js';
+
+    const { onResultReady } = initSavePanel({
+      calcId:    'salary-hourly',
+      calcLabel: 'Salary to Hourly',
+      calcIcon:  '💼',
+      container: document.getElementById('salaryResults'),
+      getData: () => ({
+        inputs: {
+          'Salary Amount': document.getElementById('salaryAmount').value,
+          'Pay Period':    (() => {
+            const s = document.getElementById('payPeriod');
+            return s.options[s.selectedIndex].text;
+          })(),
+          'Hours/Week':    document.getElementById('hoursPerWeek').value,
+        },
+        results: {
+          'Hourly Rate':   document.getElementById('hourlyRate').textContent,
+          'Monthly Pay':   document.getElementById('monthlyPay').textContent,
+          'Annual Salary': document.getElementById('annualPay').textContent,
+        },
+        preview: document.getElementById('hourlyRate').textContent + '/hr'
+      })
+    });
+
+    const _orig = window.calculateSalary;
+    window.calculateSalary = function() {
+      _orig();
+      if (!document.getElementById('salaryResults').classList.contains('hidden')) {
+        onResultReady();
+      }
+    };
   </script>
   <script type="module" src="firebase-auth.js"></script>
 </body>

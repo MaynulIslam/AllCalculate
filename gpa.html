@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Calculate your GPA by entering course names, grades, and credit hours. Supports both letter grades and grade points.">
-  <title>GPA Calculator — College &amp; High School | AllCalculate.com</title>
+  <title>GPA Calculator — College &amp; High School | EasyCalculator.live</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -127,7 +127,7 @@
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
         <div class="nav-logo-content">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
         </div>
       </a>
@@ -354,7 +354,7 @@
     <div class="footer-container">
       <div class="footer-top">
         <div class="footer-brand">
-          <span class="nav-logo-text">All<span>Calculate</span></span>
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
           <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
         <div class="footer-stats">
           <span class="footer-stat"><strong>20+</strong> Calculators</span>
@@ -398,7 +398,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; 2025 AllCalculate.com &mdash; All rights reserved.</span>
+        <span>&copy; 2025 EasyCalculator.live &mdash; All rights reserved.</span>
         <div class="footer-bottom-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Use</a>
@@ -586,6 +586,39 @@
     addCourse('Math 201', 'B+', 4);
     addCourse('History 150', 'A-', 3);
     addCourse('Physics 110', 'B', 4);
+  </script>
+  <script type="module">
+    import { initSavePanel } from './calc-save.js';
+
+    const { onResultReady } = initSavePanel({
+      calcId:    'gpa',
+      calcLabel: 'GPA',
+      calcIcon:  '🎓',
+      container: document.getElementById('resultsSection'),
+      getData: () => {
+        const courses = [...document.querySelectorAll('.course-row')].map(row => ({
+          name:    row.querySelector('.course-name')?.value   || '',
+          grade:   row.querySelector('.course-grade')?.value  || '',
+          credits: row.querySelector('.course-credits')?.value || '',
+        }));
+        return {
+          courses,
+          semGPA:       document.getElementById('semGPA')?.textContent || '',
+          cumGPA:       document.getElementById('cumGPA')?.textContent || '',
+          totalCredits: document.getElementById('creditsAttempted')?.textContent || '',
+          preview:      'GPA ' + (document.getElementById('semGPA')?.textContent || '')
+        };
+      }
+    });
+
+    // calculate() is called on every oninput — wrap it to show save button
+    const _origCalculate = window.calculate;
+    window.calculate = function() {
+      _origCalculate();
+      if (!document.getElementById('resultsSection').classList.contains('hidden')) {
+        onResultReady();
+      }
+    };
   </script>
   <script type="module" src="firebase-auth.js"></script>
 </body>

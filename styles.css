@@ -1,5 +1,5 @@
-/* ============================================================
-   AllCalculate.com - Main Stylesheet
+﻿/* ============================================================
+   EasyCalculator.live - Main Stylesheet
    ============================================================ */
 
 /* ============================================================
@@ -333,6 +333,8 @@ img {
   transition: background 0.15s;
 }
 .nav-dropdown-item:hover { background: rgba(255,255,255,0.06); }
+.nav-dropdown-link { text-decoration: none; color: rgba(255,255,255,0.75); }
+.nav-dropdown-link:hover { color: #fff; }
 .nav-dropdown-signout { color: #ff6b6b; }
 .nav-dropdown-signout:hover { background: rgba(255,80,80,0.07) !important; }
 
@@ -1781,4 +1783,220 @@ img {
     flex-wrap: wrap;
     gap: 20px;
   }
+}
+
+/* ══════════════════════════════════════
+   Calc Save Panel  (.csp-*)
+══════════════════════════════════════ */
+.csp-wrap { margin-top: 1.5rem; }
+
+/* Save button row */
+.csp-save-row { display: none; margin-bottom: .75rem; }
+.csp-save-row.visible { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+
+.csp-save-btn {
+  padding: .5rem 1.1rem;
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: .9rem;
+  font-family: inherit;
+  font-weight: 600;
+  transition: background .15s;
+}
+.csp-save-btn:hover { background: #574fd6; }
+
+/* Inline name input form */
+.csp-name-form { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; width: 100%; }
+.csp-name-input {
+  flex: 1;
+  min-width: 160px;
+  padding: .45rem .75rem;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 8px;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  font-size: .88rem;
+  font-family: inherit;
+  outline: none;
+}
+.csp-name-input:focus { border-color: rgba(108,99,255,.8); box-shadow: 0 0 0 2px rgba(108,99,255,.25); }
+.csp-confirm-btn {
+  padding: .45rem .9rem;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: .85rem;
+  font-family: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.csp-confirm-btn:hover { background: #16a34a; }
+.csp-cancel-btn {
+  padding: .45rem .9rem;
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.6);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: .85rem;
+  font-family: inherit;
+}
+.csp-cancel-btn:hover { background: rgba(255,255,255,.18); }
+.csp-limit-msg { font-size: .8rem; color: #f87171; margin-top: .35rem; width: 100%; }
+
+/* Mini list section */
+.csp-list-section { margin-top: 1.25rem; }
+.csp-list-heading {
+  font-size: .8rem;
+  color: rgba(255,255,255,.45);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .6rem;
+  font-weight: 600;
+}
+.csp-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .45rem; }
+.csp-item-empty, .csp-item-noauth {
+  font-size: .82rem;
+  color: rgba(255,255,255,.4);
+  font-style: italic;
+  padding: .35rem 0;
+  list-style: none;
+}
+.csp-signin-prompt {
+  background: none;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 8px;
+  color: rgba(255,255,255,.65);
+  cursor: pointer;
+  font-size: .83rem;
+  font-family: inherit;
+  padding: .4rem .9rem;
+}
+.csp-signin-prompt:hover { background: rgba(255,255,255,.07); color: #fff; }
+
+/* Individual session items */
+.csp-item {
+  background: rgba(255,255,255,.06);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.07);
+}
+.csp-item-header {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .55rem .75rem;
+  cursor: pointer;
+  transition: background .15s;
+}
+.csp-item-header:hover { background: rgba(255,255,255,.04); }
+.csp-item-label {
+  flex: 1;
+  font-size: .88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.csp-item-preview {
+  font-size: .76rem;
+  color: rgba(255,255,255,.45);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+.csp-item-date {
+  font-size: .7rem;
+  color: rgba(255,255,255,.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.csp-item-actions { display: flex; gap: .2rem; flex-shrink: 0; }
+.csp-item-edit-btn,
+.csp-item-del-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: .82rem;
+  padding: .1rem .3rem;
+  opacity: .55;
+  transition: opacity .15s;
+}
+.csp-item-edit-btn:hover, .csp-item-del-btn:hover { opacity: 1; }
+.csp-item-arrow {
+  color: rgba(255,255,255,.3);
+  font-size: .8rem;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.csp-item.open .csp-item-arrow { transform: rotate(90deg); }
+.csp-item-body {
+  display: none;
+  padding: .75rem .9rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.csp-item.open .csp-item-body { display: block; }
+.csp-rename-input {
+  flex: 1;
+  min-width: 100px;
+  padding: .25rem .55rem;
+  background: rgba(255,255,255,.1);
+  border: 1.5px solid rgba(108,99,255,.7);
+  border-radius: 6px;
+  color: #fff;
+  font-size: .88rem;
+  font-family: inherit;
+  outline: none;
+}
+
+/* Template styles */
+.csp-tmpl { font-size: .83rem; line-height: 1.5; }
+.csp-tmpl-section { margin-bottom: .9rem; }
+.csp-tmpl-heading {
+  font-size: .72rem;
+  color: rgba(255,255,255,.38);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .4rem;
+  font-weight: 600;
+}
+.csp-tmpl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .22rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  gap: 1rem;
+}
+.csp-tmpl-row span:first-child { color: rgba(255,255,255,.6); }
+.csp-tmpl-row span:last-child  { text-align: right; }
+.csp-tmpl-row.highlight span:last-child { color: #a78bfa; font-weight: 700; }
+.csp-tmpl-empty { font-size: .8rem; color: rgba(255,255,255,.4); font-style: italic; }
+.csp-tmpl-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .8rem;
+}
+.csp-tmpl-table th {
+  color: rgba(255,255,255,.4);
+  font-weight: 600;
+  text-align: left;
+  padding: .25rem .35rem;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.csp-tmpl-table td {
+  padding: .28rem .35rem;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  color: rgba(255,255,255,.8);
 }
