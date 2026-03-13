@@ -475,6 +475,47 @@
       max-width: 100%;
     }
 
+    /* ── Delete button + inline confirm ── */
+    .hist-delete-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.25);
+      cursor: pointer;
+      font-size: 0.72rem;
+      padding: 2px 5px;
+      border-radius: 4px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .hist-delete-btn:hover { color: #ff6b6b; background: rgba(255,80,80,0.12); }
+    .hist-confirm-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .hist-confirm-label {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.45);
+      white-space: nowrap;
+    }
+    .hist-confirm-yes, .hist-confirm-no {
+      background: none;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-family: inherit;
+      font-weight: 700;
+      padding: 2px 7px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid;
+    }
+    .hist-confirm-yes { color: #ff6b6b; border-color: rgba(255,80,80,0.4); }
+    .hist-confirm-yes:hover { background: rgba(255,80,80,0.15); }
+    .hist-confirm-no  { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.18); }
+    .hist-confirm-no:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
     @media (max-width: 720px) {
       .win-calc { width: 100%; min-width: unset; max-width: 340px; }
       .history-panel { width: 100%; min-width: unset; max-width: 340px; }
@@ -779,7 +820,7 @@
              signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
     import { getFirestore, collection, addDoc, getDocs, query,
-             orderBy, limit as fsLimit, doc, getDoc, setDoc, updateDoc, serverTimestamp }
+             orderBy, limit as fsLimit, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     // ── Firebase init ──
@@ -941,6 +982,7 @@
             <div class="hist-saved-label-wrap" style="display:flex;align-items:center;gap:4px">
               <span class="hist-saved-label">${esc(data.label || 'Session')}</span>
               <button class="hist-edit-btn" title="Rename session">✏️</button>
+              <button class="hist-delete-btn" title="Delete session">🗑️</button>
             </div>
             <div class="hist-saved-preview">= ${preview}${calcs.length > 3 ? ` +${calcs.length - 3} more` : ''}</div>
           </div>
@@ -1006,6 +1048,60 @@
           if (e.key === 'Escape') {
             input.value = currentName;
             input.blur();
+          }
+        });
+      });
+
+      // ── Inline delete with confirm ──
+      const deleteBtn  = div.querySelector('.hist-delete-btn');
+      const labelWrap  = div.querySelector('.hist-saved-label-wrap');
+
+      deleteBtn.addEventListener('click', e => {
+        e.stopPropagation();
+
+        // Hide edit + delete, show confirm row
+        editBtn.style.display   = 'none';
+        deleteBtn.style.display = 'none';
+
+        const confirmRow = document.createElement('div');
+        confirmRow.className = 'hist-confirm-row';
+        confirmRow.innerHTML = `
+          <span class="hist-confirm-label">Delete?</span>
+          <button class="hist-confirm-yes">Yes</button>
+          <button class="hist-confirm-no">No</button>`;
+        labelWrap.appendChild(confirmRow);
+
+        // No — restore buttons
+        confirmRow.querySelector('.hist-confirm-no').addEventListener('click', e => {
+          e.stopPropagation();
+          confirmRow.remove();
+          editBtn.style.display   = '';
+          deleteBtn.style.display = '';
+        });
+
+        // Yes — delete from Firestore + remove from DOM
+        confirmRow.querySelector('.hist-confirm-yes').addEventListener('click', async e => {
+          e.stopPropagation();
+          const yesBtn = e.currentTarget;
+          yesBtn.textContent = '…';
+          yesBtn.disabled = true;
+          try {
+            await deleteDoc(doc(db, 'users', currentUser.uid, 'sessions', id));
+            savedCount = Math.max(0, savedCount - 1);
+            await setDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'),
+                         { savedCount }, { merge: true });
+            updateTierBadge();
+            div.remove();
+            // Show empty state if no sessions remain
+            const list = document.getElementById('histSavedList');
+            if (!list.querySelector('.hist-saved-item')) {
+              list.innerHTML = '<div class="hist-empty">No saved sessions yet.</div>';
+            }
+          } catch (err) {
+            console.error('Delete error:', err);
+            confirmRow.remove();
+            editBtn.style.display   = '';
+            deleteBtn.style.display = '';
           }
         });
       });
