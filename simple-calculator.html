@@ -931,7 +931,18 @@
           return;
         }
         list.innerHTML = '';
-        snap.forEach(d => list.appendChild(buildSavedItem(d.id, d.data())));
+        let count = 0;
+        snap.forEach(d => {
+          const calcId = d.data().calculator;
+          // Show only simple-calculator sessions (or legacy sessions with no calculator field)
+          if (!calcId || calcId === 'simple-calculator') {
+            list.appendChild(buildSavedItem(d.id, d.data()));
+            count++;
+          }
+        });
+        if (count === 0) {
+          list.innerHTML = '<div class="hist-empty">No saved sessions yet.</div>';
+        }
       } catch (e) {
         list.innerHTML = '<div class="hist-empty">Error loading sessions.</div>';
         console.error(e);
@@ -1150,6 +1161,7 @@
 
       try {
         await addDoc(collection(db, 'users', currentUser.uid, 'sessions'), {
+          calculator: 'simple-calculator',
           label,
           calculations: currentSession.slice(),
           createdAt: serverTimestamp()

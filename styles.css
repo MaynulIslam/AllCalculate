@@ -1958,7 +1958,7 @@ img {
 }
 
 /* Template styles */
-.csp-tmpl { font-size: .83rem; line-height: 1.5; }
+.csp-tmpl { font-size: .83rem; line-height: 1.5; color: rgba(255,255,255,.85); }
 .csp-tmpl-section { margin-bottom: .9rem; }
 .csp-tmpl-heading {
   font-size: .72rem;
@@ -1973,11 +1973,11 @@ img {
   justify-content: space-between;
   align-items: center;
   padding: .22rem 0;
-  border-bottom: 1px solid rgba(255,255,255,.05);
+  border-bottom: 1px solid rgba(255,255,255,.07);
   gap: 1rem;
 }
 .csp-tmpl-row span:first-child { color: rgba(255,255,255,.6); }
-.csp-tmpl-row span:last-child  { text-align: right; }
+.csp-tmpl-row span:last-child  { text-align: right; color: rgba(255,255,255,.9); }
 .csp-tmpl-row.highlight span:last-child { color: #a78bfa; font-weight: 700; }
 .csp-tmpl-empty { font-size: .8rem; color: rgba(255,255,255,.4); font-style: italic; }
 .csp-tmpl-table {
@@ -1986,7 +1986,7 @@ img {
   font-size: .8rem;
 }
 .csp-tmpl-table th {
-  color: rgba(255,255,255,.4);
+  color: rgba(255,255,255,.45);
   font-weight: 600;
   text-align: left;
   padding: .25rem .35rem;
@@ -1997,6 +1997,6 @@ img {
 }
 .csp-tmpl-table td {
   padding: .28rem .35rem;
-  border-bottom: 1px solid rgba(255,255,255,.04);
-  color: rgba(255,255,255,.8);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  color: rgba(255,255,255,.85);
 }
