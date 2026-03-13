@@ -1,4 +1,4 @@
-/**
+﻿/**
  * calc-save.js
  * Shared save-panel module for AllCalculate.com calculators.
  * Exports:
