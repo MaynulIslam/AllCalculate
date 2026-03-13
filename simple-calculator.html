@@ -206,22 +206,7 @@
       font-size: 0.85rem;
       white-space: nowrap;
     }
-    .hist-actions { padding: 8px 14px 12px; }
-    .hist-save-btn {
-      width: 100%;
-      background: #4cc2ff;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .hist-save-btn:hover:not(:disabled) { background: #76cfff; }
-    .hist-save-btn:disabled { opacity: 0.35; cursor: default; background: #4cc2ff; }
+    /* .hist-actions and .hist-save-btn moved to session naming block above */
     .hist-saved-wrap { border-top: 1px solid rgba(255,255,255,0.07); }
     .hist-saved-list {
       max-height: 220px;
@@ -406,6 +391,90 @@
     }
     .hist-upgrade-note a:hover { text-decoration: underline; }
 
+    /* ── Session naming (pre-save) ── */
+    .hist-name-row {
+      padding: 0 14px 8px;
+      display: none;
+    }
+    .hist-name-row.visible { display: block; }
+    .hist-name-input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 8px 10px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .hist-name-input:focus { border-color: #4cc2ff; }
+    .hist-name-input::placeholder { color: rgba(255,255,255,0.3); }
+    .hist-save-row {
+      display: flex;
+      gap: 6px;
+      padding: 0 14px 12px;
+    }
+    .hist-save-btn {
+      flex: 1;
+      background: #4cc2ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .hist-save-btn:hover:not(:disabled) { background: #76cfff; }
+    .hist-save-btn:disabled { opacity: 0.35; cursor: default; background: #4cc2ff; }
+    .hist-save-cancel-btn {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: none;
+    }
+    .hist-save-cancel-btn.visible { display: block; }
+    .hist-save-cancel-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+    /* ── Inline rename (post-save) ── */
+    .hist-edit-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.25);
+      cursor: pointer;
+      font-size: 0.72rem;
+      padding: 2px 5px;
+      border-radius: 4px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .hist-edit-btn:hover { color: #4cc2ff; background: rgba(76,194,255,0.12); }
+    .hist-rename-input {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #4cc2ff;
+      border-radius: 6px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 7px;
+      outline: none;
+      width: 140px;
+      max-width: 100%;
+    }
+
     @media (max-width: 720px) {
       .win-calc { width: 100%; min-width: unset; max-width: 340px; }
       .history-panel { width: 100%; min-width: unset; max-width: 340px; }
@@ -521,9 +590,13 @@
                 <div class="hist-empty">Start calculating to log your history here.</div>
               </div>
 
-              <!-- Save button -->
-              <div class="hist-actions">
+              <!-- Save button + name row -->
+              <div class="hist-name-row" id="histNameRow">
+                <input type="text" class="hist-name-input" id="histNameInput" placeholder="Name this session…">
+              </div>
+              <div class="hist-save-row">
                 <button class="hist-save-btn" id="histSaveBtn" disabled>💾 Save Session</button>
+                <button class="hist-save-cancel-btn" id="histSaveCancelBtn" title="Cancel">✕</button>
               </div>
 
               <!-- Saved sessions -->
@@ -706,7 +779,7 @@
              signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
     import { getFirestore, collection, addDoc, getDocs, query,
-             orderBy, limit as fsLimit, doc, getDoc, setDoc, serverTimestamp }
+             orderBy, limit as fsLimit, doc, getDoc, setDoc, updateDoc, serverTimestamp }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     // ── Firebase init ──
@@ -864,8 +937,11 @@
       div.className = 'hist-saved-item';
       div.innerHTML = `
         <div class="hist-saved-header">
-          <div style="overflow:hidden">
-            <div class="hist-saved-label">${esc(data.label || 'Session')}</div>
+          <div style="overflow:hidden;flex:1;min-width:0">
+            <div class="hist-saved-label-wrap" style="display:flex;align-items:center;gap:4px">
+              <span class="hist-saved-label">${esc(data.label || 'Session')}</span>
+              <button class="hist-edit-btn" title="Rename session">✏️</button>
+            </div>
             <div class="hist-saved-preview">= ${preview}${calcs.length > 3 ? ` +${calcs.length - 3} more` : ''}</div>
           </div>
           <span class="hist-saved-arrow">›</span>
@@ -878,8 +954,62 @@
              </div>`
           ).join('')}
         </div>`;
-      div.querySelector('.hist-saved-header')
-         .addEventListener('click', () => div.classList.toggle('open'));
+
+      // Toggle expand on header click (but not on edit button)
+      const header = div.querySelector('.hist-saved-header');
+      header.addEventListener('click', e => {
+        if (!e.target.closest('.hist-edit-btn') && !e.target.closest('.hist-rename-input')) {
+          div.classList.toggle('open');
+        }
+      });
+
+      // ── Inline rename ──
+      const editBtn   = div.querySelector('.hist-edit-btn');
+      const labelSpan = div.querySelector('.hist-saved-label');
+
+      editBtn.addEventListener('click', e => {
+        e.stopPropagation();
+
+        // Replace label span with input
+        const currentName = labelSpan.textContent;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'hist-rename-input';
+        input.value = currentName;
+        labelSpan.replaceWith(input);
+        editBtn.style.display = 'none';
+        input.focus();
+        input.select();
+
+        async function commitRename() {
+          const newName = input.value.trim() || currentName;
+          // Restore label span immediately
+          const newSpan = document.createElement('span');
+          newSpan.className = 'hist-saved-label';
+          newSpan.textContent = newName;
+          input.replaceWith(newSpan);
+          editBtn.style.display = '';
+
+          if (newName !== currentName) {
+            try {
+              await updateDoc(doc(db, 'users', currentUser.uid, 'sessions', id), { label: newName });
+            } catch (err) {
+              console.error('Rename error:', err);
+              newSpan.textContent = currentName; // revert on error
+            }
+          }
+        }
+
+        input.addEventListener('blur', commitRename);
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Enter')  { e.preventDefault(); input.blur(); }
+          if (e.key === 'Escape') {
+            input.value = currentName;
+            input.blur();
+          }
+        });
+      });
+
       return div;
     }
 
@@ -889,8 +1019,51 @@
     }
 
     // ════════════════════════════════════════
-    //  SAVE SESSION
+    //  SAVE SESSION — two-step: name then save
     // ════════════════════════════════════════
+    let savePending = false;   // true when name row is showing
+
+    function autoLabel() {
+      return `Session ${new Date().toLocaleString('en-US', {
+        month:'short', day:'numeric', year:'numeric',
+        hour:'numeric', minute:'2-digit'
+      })}`;
+    }
+
+    function showNameRow() {
+      const nameRow   = document.getElementById('histNameRow');
+      const nameInput = document.getElementById('histNameInput');
+      const saveBtn   = document.getElementById('histSaveBtn');
+      const cancelBtn = document.getElementById('histSaveCancelBtn');
+      nameInput.value = autoLabel();
+      nameRow.classList.add('visible');
+      cancelBtn.classList.add('visible');
+      saveBtn.textContent = '✓ Confirm Save';
+      saveBtn.style.background = '#34c96a';
+      savePending = true;
+      nameInput.focus();
+      nameInput.select();
+    }
+
+    function hideNameRow() {
+      const nameRow   = document.getElementById('histNameRow');
+      const saveBtn   = document.getElementById('histSaveBtn');
+      const cancelBtn = document.getElementById('histSaveCancelBtn');
+      nameRow.classList.remove('visible');
+      cancelBtn.classList.remove('visible');
+      saveBtn.textContent = '💾 Save Session';
+      saveBtn.style.background = '';
+      savePending = false;
+    }
+
+    document.getElementById('histSaveCancelBtn').addEventListener('click', hideNameRow);
+
+    // Enter key in name input confirms save
+    document.getElementById('histNameInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('histSaveBtn').click();
+      if (e.key === 'Escape') hideNameRow();
+    });
+
     document.getElementById('histSaveBtn').addEventListener('click', async () => {
       if (currentSession.length === 0) return;
       if (!currentUser) { showAuthModal(); return; }
@@ -901,15 +1074,16 @@
         return;
       }
 
-      const btn = document.getElementById('histSaveBtn');
+      // Step 1 — show name input if not yet showing
+      if (!savePending) { showNameRow(); return; }
+
+      // Step 2 — actually save
+      const label = document.getElementById('histNameInput').value.trim() || autoLabel();
+      const btn   = document.getElementById('histSaveBtn');
       btn.disabled = true;
       btn.textContent = 'Saving…';
 
       try {
-        const label = `Session ${new Date().toLocaleString('en-US', {
-          month:'short', day:'numeric', year:'numeric',
-          hour:'numeric', minute:'2-digit'
-        })}`;
         await addDoc(collection(db, 'users', currentUser.uid, 'sessions'), {
           label,
           calculations: currentSession.slice(),
@@ -923,12 +1097,14 @@
 
         currentSession = [];
         updateSessionLog();
+        hideNameRow();
         btn.textContent = '✓ Saved!';
+        btn.disabled = true;
         setTimeout(() => { btn.textContent = '💾 Save Session'; }, 2000);
       } catch (e) {
         console.error('Save error:', e);
         btn.disabled = false;
-        btn.textContent = '💾 Save Session';
+        btn.textContent = '✓ Confirm Save';
       }
     });
 
