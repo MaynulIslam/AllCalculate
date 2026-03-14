@@ -2,6 +2,16 @@ const { onCall, onRequest, HttpsError } = require('firebase-functions/v2/https')
 const { defineSecret }  = require('firebase-functions/params');
 const admin             = require('firebase-admin');
 
+// ── Allowed origins for CORS ──────────────────────────────────────────────────
+const ALLOWED_ORIGINS = [
+  'https://easycalculator.live',
+  'https://www.easycalculator.live',
+  'allcalculate-e8d15.firebaseapp.com',
+  'allcalculate-e8d15.web.app',
+  'http://localhost:3000',
+  'http://localhost:5500',
+];
+
 admin.initializeApp();
 const db = admin.firestore();
 
@@ -18,7 +28,7 @@ const PRICE_TO_TIER = {
 
 // ── 1. Create Stripe Checkout Session ────────────────────────────────────────
 exports.createCheckoutSession = onCall(
-  { secrets: [stripeSecretKey] },
+  { secrets: [stripeSecretKey], cors: ALLOWED_ORIGINS },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'You must be signed in to upgrade.');
@@ -74,7 +84,7 @@ exports.createCheckoutSession = onCall(
 
 // ── 2. Stripe Webhook ─────────────────────────────────────────────────────────
 exports.stripeWebhook = onRequest(
-  { secrets: [stripeSecretKey, stripeWebhookSecret] },
+  { secrets: [stripeSecretKey, stripeWebhookSecret], cors: ALLOWED_ORIGINS },
   async (req, res) => {
     const stripe = require('stripe')(stripeSecretKey.value());
     const sig    = req.headers['stripe-signature'];
