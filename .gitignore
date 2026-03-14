@@ -1,0 +1,26 @@
+# ─────────────────────────────────────────────
+# EasyCalculator.live — .gitignore
+# ─────────────────────────────────────────────
+
+# ⚠️  SECURITY: Firebase credentials — NEVER commit this file
+firebase-config.js
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (if ever used)
+node_modules/

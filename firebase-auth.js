@@ -13,15 +13,9 @@ import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-// ── Firebase init (safe against double-init) ──
-const firebaseConfig = {
-  apiKey:            'AIzaSyBILVYQEfrPCxFmRpZJAQAvW-GF-OBHR2Y',
-  authDomain:        'allcalculate-e8d15.firebaseapp.com',
-  projectId:         'allcalculate-e8d15',
-  storageBucket:     'allcalculate-e8d15.firebasestorage.app',
-  messagingSenderId: '483222561073',
-  appId:             '1:483222561073:web:26a43bd7213c45cf3ed010'
-};
+// ── Firebase config loaded from external file (kept out of version control) ──
+// See firebase-config.js — never hardcode credentials here.
+import { firebaseConfig } from './firebase-config.js';
 const app  = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
