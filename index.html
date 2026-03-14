@@ -305,7 +305,7 @@
       document.getElementById('navLinks').classList.toggle('open');
     });
 
-    // Search functionality
+    // Search functionality (input wired up wherever searchInput exists in the page)
     const calcData = [
       { name: 'Mortgage Calculator', url: 'mortgage-calculator.html', keywords: 'mortgage payment house loan' },
       { name: 'Loan / EMI Calculator', url: 'loan-emi-calculator.html', keywords: 'loan emi monthly payment' },
@@ -328,7 +328,9 @@
     ];
 
     function searchCalcs() {
-      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const searchEl = document.getElementById('searchInput');
+      if (!searchEl) return;
+      const q = searchEl.value.toLowerCase().trim();
       if (!q) return;
       const match = calcData.find(c => c.name.toLowerCase().includes(q) || c.keywords.includes(q));
       if (match) {
@@ -338,9 +340,12 @@
       }
     }
 
-    document.getElementById('searchInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') searchCalcs();
-    });
+    const searchEl = document.getElementById('searchInput');
+    if (searchEl) {
+      searchEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') searchCalcs();
+      });
+    }
   </script>
 
   <script type="module" src="firebase-auth.js"></script>
