@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing – EasyCalculator.live</title>
+  <meta name="description" content="Simple, affordable plans to save your calculator sessions on EasyCalculator.live.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Pricing page specific styles ── */
+    .pricing-hero {
+      background: linear-gradient(135deg, #0f2b4c 0%, #1a3c6e 50%, #1d4ed8 100%);
+      padding: 60px 20px 40px;
+      text-align: center;
+      color: #fff;
+    }
+    .pricing-hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 10px; }
+    .pricing-hero h1 span { color: #f97316; }
+    .pricing-hero p  { font-size: 1.1rem; opacity: .85; }
+
+    .pricing-wrap {
+      max-width: 1000px;
+      margin: 48px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .plan-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .plan-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.1); }
+    .plan-card.popular {
+      border-color: #f97316;
+      box-shadow: 0 8px 24px rgba(249,115,22,.2);
+    }
+    .popular-badge {
+      position: absolute;
+      top: -14px; left: 50%; transform: translateX(-50%);
+      background: #f97316; color: #fff;
+      font-size: .75rem; font-weight: 700;
+      padding: 4px 16px; border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .plan-icon  { font-size: 2.2rem; margin-bottom: 12px; }
+    .plan-name  { font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+    .plan-price { font-size: 2.4rem; font-weight: 800; color: #1d4ed8; line-height: 1; }
+    .plan-price span { font-size: 1rem; font-weight: 500; color: #64748b; }
+    .plan-saves { font-size: .9rem; color: #64748b; margin: 10px 0 20px; }
+
+    .plan-features {
+      list-style: none; padding: 0; margin: 0 0 24px;
+      text-align: left;
+    }
+    .plan-features li {
+      padding: 6px 0;
+      font-size: .9rem; color: #374151;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .plan-features li::before { content: '✓'; color: #22c55e; font-weight: 700; }
+
+    .plan-btn {
+      width: 100%;
+      padding: 12px 0;
+      border: none; border-radius: 10px;
+      font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: .2s;
+      font-family: inherit;
+    }
+    .plan-btn.free-btn {
+      background: #f1f5f9; color: #475569;
+    }
+    .plan-btn.free-btn:hover { background: #e2e8f0; }
+    .plan-btn.paid-btn {
+      background: #1d4ed8; color: #fff;
+    }
+    .plan-btn.paid-btn:hover  { background: #1e40af; transform: translateY(-1px); }
+    .plan-btn.popular-btn     { background: #f97316; }
+    .plan-btn.popular-btn:hover { background: #ea6000; }
+    .plan-btn:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
+
+    .plan-btn.current-plan {
+      background: #dcfce7; color: #16a34a;
+      cursor: default;
+    }
+
+    .pricing-note {
+      text-align: center;
+      color: #64748b;
+      font-size: .9rem;
+      padding: 0 20px 48px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      background: #1e293b; color: #fff;
+      padding: 12px 24px; border-radius: 10px;
+      font-size: .95rem; z-index: 9999;
+      opacity: 0; transition: opacity .3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-content">
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
+          <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
+        </div>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#math">📐 Math</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+      </ul>
+      <div class="nav-auth" id="navAuth">
+        <button class="nav-signin-btn" id="navSignInBtn">Sign In</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="pricing-hero">
+    <h1>Simple, <span>Affordable</span> Plans</h1>
+    <p>Save your calculator sessions and pick up where you left off — on any device.</p>
+  </div>
+
+  <!-- Pricing Cards -->
+  <div class="pricing-wrap">
+
+    <!-- Free -->
+    <div class="plan-card" id="card-free">
+      <div class="plan-icon">🆓</div>
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0 <span>/mo</span></div>
+      <div class="plan-saves">5 saved sessions</div>
+      <ul class="plan-features">
+        <li>All calculators</li>
+        <li>Save up to 5 sessions</li>
+        <li>No credit card needed</li>
+      </ul>
+      <button class="plan-btn free-btn" id="btn-free" onclick="handleFree()">Get Started Free</button>
+    </div>
+
+    <!-- Basic -->
+    <div class="plan-card" id="card-basic">
+      <div class="plan-icon">⚡</div>
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">$1 <span>/mo</span></div>
+      <div class="plan-saves">500 saved sessions</div>
+      <ul class="plan-features">
+        <li>All calculators</li>
+        <li>Save up to 500 sessions</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="plan-btn paid-btn" id="btn-basic"
+              onclick="handleUpgrade('price_1TAsSzA4zaUVQc8ceNW3tIJH', 'basic')">
+        Upgrade to Basic
+      </button>
+    </div>
+
+    <!-- Executive (Popular) -->
+    <div class="plan-card popular" id="card-executive">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="plan-icon">🚀</div>
+      <div class="plan-name">Executive</div>
+      <div class="plan-price">$2 <span>/mo</span></div>
+      <div class="plan-saves">1,500 saved sessions</div>
+      <ul class="plan-features">
+        <li>All calculators</li>
+        <li>Save up to 1,500 sessions</li>
+        <li>Priority support</li>
+        <li>Early access to new features</li>
+      </ul>
+      <button class="plan-btn paid-btn popular-btn" id="btn-executive"
+              onclick="handleUpgrade('price_1TAsUYA4zaUVQc8cHyqQHIHy', 'executive')">
+        Upgrade to Executive
+      </button>
+    </div>
+
+    <!-- Premium -->
+    <div class="plan-card" id="card-premium">
+      <div class="plan-icon">👑</div>
+      <div class="plan-name">Premium</div>
+      <div class="plan-price">$5 <span>/mo</span></div>
+      <div class="plan-saves">Unlimited saved sessions</div>
+      <ul class="plan-features">
+        <li>All calculators</li>
+        <li>Unlimited saved sessions</li>
+        <li>Priority support</li>
+        <li>Early access to new features</li>
+        <li>Premium badge on profile</li>
+      </ul>
+      <button class="plan-btn paid-btn" id="btn-premium"
+              onclick="handleUpgrade('price_1TAsVBA4zaUVQc8c6ZDxQA4K', 'premium')">
+        Upgrade to Premium
+      </button>
+    </div>
+
+  </div>
+
+  <p class="pricing-note">
+    💳 Secure payments via Stripe &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; No hidden fees
+  </p>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { initializeApp }         from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js';
+    import { firebaseConfig }        from './firebase-config.js';
+
+    const app       = initializeApp(firebaseConfig);
+    const functions = getFunctions(app);
+
+    // ── Toast helper ──────────────────────────────────────────────
+    function showToast(msg, duration = 3500) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), duration);
+    }
+
+    // ── Handle success / cancel redirect params ───────────────────
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('success') === 'true') {
+      showToast('🎉 Payment successful! Your plan has been upgraded.', 5000);
+      window.history.replaceState({}, '', 'pricing.html');
+    }
+    if (params.get('cancelled') === 'true') {
+      showToast('Payment cancelled. No charge was made.');
+      window.history.replaceState({}, '', 'pricing.html');
+    }
+
+    // ── Highlight current plan once auth loads ────────────────────
+    window.addEventListener('easycalc:authReady', (e) => {
+      const tier = e.detail?.userTier || 'free';
+      highlightCurrentPlan(tier);
+    });
+
+    function highlightCurrentPlan(tier) {
+      const tiers = ['free', 'basic', 'executive', 'premium'];
+      tiers.forEach(t => {
+        const btn = document.getElementById(`btn-${t}`);
+        if (!btn) return;
+        if (t === tier) {
+          btn.textContent = '✓ Current Plan';
+          btn.className   = 'plan-btn current-plan';
+          btn.disabled    = true;
+        }
+      });
+    }
+
+    // ── Upgrade handler (exposed to onclick) ─────────────────────
+    window.handleUpgrade = async function(priceId, planName) {
+      const btn = event?.target;
+
+      // Must be signed in
+      const authEvent = await new Promise(resolve => {
+        const cached = window.__easycalcAuth;
+        if (cached) return resolve(cached);
+        window.addEventListener('easycalc:authReady', e => resolve(e.detail), { once: true });
+      });
+
+      if (!authEvent?.user) {
+        showToast('Please sign in first to upgrade your plan.');
+        document.getElementById('navSignInBtn')?.click();
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Redirecting…'; }
+
+      try {
+        const createSession = httpsCallable(functions, 'createCheckoutSession');
+        const result        = await createSession({ priceId });
+        window.location.href = result.data.url;
+      } catch (err) {
+        console.error(err);
+        showToast('Something went wrong. Please try again.');
+        if (btn) { btn.disabled = false; btn.textContent = `Upgrade to ${planName}`; }
+      }
+    };
+
+    window.handleFree = function() {
+      window.location.href = 'index.html';
+    };
+  </script>
+
+  <script>
+    // Nav toggle
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+
+  <script type="module" src="firebase-auth.js"></script>
+</body>
+</html>

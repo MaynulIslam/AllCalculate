@@ -182,6 +182,9 @@ function updateNavAuth(user) {
           <a class="nav-dropdown-item nav-dropdown-link" href="saved-sessions.html">
             📋 Saved Calculations
           </a>
+          <a class="nav-dropdown-item nav-dropdown-link nav-upgrade-link" href="pricing.html">
+            ⚡ Upgrade Plan
+          </a>
           <div class="nav-dropdown-item nav-dropdown-signout" id="navSignOutBtn">
             ↪ Sign Out
           </div>
@@ -230,8 +233,16 @@ onAuthStateChanged(auth, async (user) => {
 
   updateNavAuth(user);
 
+  // Cache auth state globally so pricing page can read it synchronously
+  window.__easycalcAuth = { user, userTier, savedCount, db, auth };
+
   // Let page-specific code hook into auth state changes
   document.dispatchEvent(new CustomEvent('acAuthChange', {
+    detail: { user, userTier, savedCount, db, auth }
+  }));
+
+  // Also fire easycalc:authReady for pricing page
+  window.dispatchEvent(new CustomEvent('easycalc:authReady', {
     detail: { user, userTier, savedCount, db, auth }
   }));
 });

@@ -337,6 +337,8 @@ img {
 .nav-dropdown-link:hover { color: #fff; }
 .nav-dropdown-signout { color: #ff6b6b; }
 .nav-dropdown-signout:hover { background: rgba(255,80,80,0.07) !important; }
+.nav-upgrade-link { color: #f97316 !important; font-weight: 600; }
+.nav-upgrade-link:hover { color: #fb923c !important; }
 
 @media (max-width: 768px) {
   .nav-center { display: none; }
