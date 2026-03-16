@@ -224,16 +224,18 @@
 <body>
 
 <!-- ══════════════════════════════════════════════════════
-     GATE — Password screen (shown first)
+     GATE — Username + Password screen (shown first)
 ══════════════════════════════════════════════════════ -->
 <div id="gate">
   <div class="gate-box">
     <div class="gate-icon">⚙️</div>
     <h1>Restricted Area</h1>
-    <p>Enter your access key to continue.</p>
+    <p>Enter your credentials to continue.</p>
+    <input type="text"     id="gateUser" class="gate-input"
+           placeholder="Username" autocomplete="off" spellcheck="false">
     <input type="password" id="gatePass" class="gate-input"
-           placeholder="Access key…" autocomplete="off" spellcheck="false">
-    <button id="gateBtn" class="gate-btn">Continue →</button>
+           placeholder="Password" autocomplete="off" spellcheck="false">
+    <button id="gateBtn" class="gate-btn" id="gateBtn">Continue →</button>
     <div id="gateErr" class="gate-err"></div>
   </div>
 </div>
@@ -295,18 +297,12 @@
 
 <script type="module">
 // ════════════════════════════════════════════════════════════════
-//  ⚙️  CONFIGURATION — CHANGE BOTH VALUES BELOW
+//  ⚙️  CONFIGURATION
 // ════════════════════════════════════════════════════════════════
-//
-//  ACCESS_KEY  → the password shown on the gate screen.
-//                Change it to any long passphrase only you know.
-//
-//  ADMIN_EMAIL → your Firebase account email.
-//                Only this account can see the user data.
-//
-// ════════════════════════════════════════════════════════════════
-const ACCESS_KEY  = 'EcLv#8mK2$pZ9nR4!xQ6wF1@jT3yA5bD7cG';   // ← CHANGE THIS
-const ADMIN_EMAIL = 'maynulislam3@gmail.com';
+const ADMIN_USERNAME   = 'Maynul03';
+const ADMIN_PASSWORD   = 'Muna@07/11/1994';
+const FIREBASE_EMAIL   = 'maynulislam3@gmail.com';
+const FIREBASE_PASS    = 'Muna@07/11/1994';
 
 // ── Firebase ─────────────────────────────────────────────────
 import { initializeApp, getApps, getApp }
@@ -323,31 +319,36 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 
 // ── State ─────────────────────────────────────────────────────
-let gateUnlocked = false;
-let allUsers     = [];
+let allUsers = [];
 
 // ════════════════════════════════════════════════════════════════
-//  GATE LOGIC
+//  GATE LOGIC — checks username + password, then auto-signs in
 // ════════════════════════════════════════════════════════════════
-function tryGate() {
-  const val = document.getElementById('gatePass').value;
-  if (val === ACCESS_KEY) {
-    gateUnlocked = true;
-    document.getElementById('gate').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    // If already signed in as admin, go straight to data
-    const cur = auth.currentUser;
-    if (cur && cur.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-      loadDashboard(cur);
-    } else {
-      showSignInState();
+async function tryGate() {
+  const user = document.getElementById('gateUser').value.trim();
+  const pass = document.getElementById('gatePass').value;
+  const err  = document.getElementById('gateErr');
+  const btn  = document.getElementById('gateBtn');
+
+  if (user === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
+    err.textContent = '';
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+    try {
+      // Auto-sign into Firebase behind the scenes
+      await signInWithEmailAndPassword(auth, FIREBASE_EMAIL, FIREBASE_PASS);
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadDashboard(auth.currentUser);
+    } catch (e) {
+      err.textContent = 'Auth error — check Firebase credentials.';
+      btn.textContent = 'Continue →';
+      btn.disabled = false;
     }
   } else {
-    const err = document.getElementById('gateErr');
-    err.textContent = 'Incorrect access key. Try again.';
+    err.textContent = 'Incorrect username or password.';
     document.getElementById('gatePass').value = '';
-    document.getElementById('gatePass').focus();
-    // Clear error after 3s
+    document.getElementById('gateUser').focus();
     setTimeout(() => { err.textContent = ''; }, 3000);
   }
 }
@@ -356,80 +357,23 @@ document.getElementById('gateBtn').addEventListener('click', tryGate);
 document.getElementById('gatePass').addEventListener('keydown', e => {
   if (e.key === 'Enter') tryGate();
 });
-
-// ════════════════════════════════════════════════════════════════
-//  AUTH STATE LISTENER
-// ════════════════════════════════════════════════════════════════
-onAuthStateChanged(auth, user => {
-  if (!gateUnlocked) return;
-
-  if (user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-    loadDashboard(user);
-  } else if (user) {
-    showWrongAccountState(user.email);
-  } else {
-    showSignInState();
-  }
+document.getElementById('gateUser').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('gatePass').focus();
 });
 
-document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+document.getElementById('signOutBtn').addEventListener('click', async () => {
+  await signOut(auth);
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('gateUser').value = '';
+  document.getElementById('gatePass').value = '';
+  document.getElementById('gateBtn').textContent = 'Continue →';
+  document.getElementById('gateBtn').disabled = false;
+});
+
 document.getElementById('refreshBtn').addEventListener('click', () => {
-  if (auth.currentUser?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-    loadDashboard(auth.currentUser);
-  }
+  if (auth.currentUser) loadDashboard(auth.currentUser);
 });
-
-// ════════════════════════════════════════════════════════════════
-//  STATES: sign-in prompt / wrong account
-// ════════════════════════════════════════════════════════════════
-function showSignInState() {
-  document.getElementById('dashSubtitle').textContent = 'Sign in with your admin account to view data.';
-  document.getElementById('tableContent').innerHTML = `
-    <div class="state-box">
-      <div style="font-size:2rem;margin-bottom:14px;">🔒</div>
-      <h3>Admin Sign In Required</h3>
-      <p style="margin-bottom:24px;">Only the owner account can view this data.</p>
-      <div class="signin-form">
-        <input type="email"    id="siEmail" placeholder="Admin email"    autocomplete="email">
-        <input type="password" id="siPass"  placeholder="Password"       autocomplete="current-password">
-        <button class="signin-btn" id="siBtn">Sign In</button>
-        <div class="signin-err" id="siErr"></div>
-      </div>
-    </div>`;
-
-  document.getElementById('siBtn').addEventListener('click', async () => {
-    const email = document.getElementById('siEmail').value.trim();
-    const pass  = document.getElementById('siPass').value;
-    const err   = document.getElementById('siErr');
-    err.textContent = '';
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-    } catch (e) {
-      err.textContent = 'Sign-in failed — check credentials.';
-    }
-  });
-
-  document.getElementById('siPass').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('siBtn').click();
-  });
-}
-
-function showWrongAccountState(email) {
-  document.getElementById('dashSubtitle').textContent = 'Wrong account signed in.';
-  document.getElementById('tableContent').innerHTML = `
-    <div class="state-box">
-      <div style="font-size:2rem;margin-bottom:14px;">⛔</div>
-      <h3 style="color:#f87171;">Wrong Account</h3>
-      <p style="margin-bottom:20px;">
-        Signed in as <strong style="color:#fca5a5;">${esc(email)}</strong><br>
-        This is not the admin account.
-      </p>
-      <button id="wrongSignOut" style="padding:9px 24px;background:#334155;color:#e2e8f0;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;">
-        Sign Out &amp; Try Again
-      </button>
-    </div>`;
-  document.getElementById('wrongSignOut').addEventListener('click', () => signOut(auth));
-}
 
 // ════════════════════════════════════════════════════════════════
 //  LOAD DASHBOARD DATA
