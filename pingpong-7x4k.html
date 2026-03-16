@@ -22,14 +22,14 @@
   ║          && request.auth.uid == uid;                         ║
   ║        allow read: if request.auth != null                   ║
   ║          && request.auth.token.email ==                      ║
-  ║             'YOUR_ADMIN_EMAIL@EXAMPLE.COM';                  ║
+  ║             'maynulislam3@gmail.com';                        ║
   ║      }                                                       ║
   ║      match /users/{uid}/profile/{doc} {                      ║
   ║        allow read, write: if request.auth != null            ║
   ║          && request.auth.uid == uid;                         ║
   ║        allow read: if request.auth != null                   ║
   ║          && request.auth.token.email ==                      ║
-  ║             'YOUR_ADMIN_EMAIL@EXAMPLE.COM';                  ║
+  ║             'maynulislam3@gmail.com';                        ║
   ║      }                                                       ║
   ║    }                                                         ║
   ║  }                                                           ║
@@ -306,7 +306,7 @@
 //
 // ════════════════════════════════════════════════════════════════
 const ACCESS_KEY  = 'EcLv#8mK2$pZ9nR4!xQ6wF1@jT3yA5bD7cG';   // ← CHANGE THIS
-const ADMIN_EMAIL = 'REPLACE_WITH_YOUR_ADMIN_EMAIL@EXAMPLE.COM'; // ← CHANGE THIS
+const ADMIN_EMAIL = 'maynulislam3@gmail.com';
 
 // ── Firebase ─────────────────────────────────────────────────
 import { initializeApp, getApps, getApp }
