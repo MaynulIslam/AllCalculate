@@ -217,6 +217,7 @@ document.addEventListener('click', () => {
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
+      // ── Read / create profile subcollection ──
       const ref  = doc(db, 'users', user.uid, 'profile', 'data');
       const snap = await getDoc(ref);
       if (snap.exists()) {
@@ -226,6 +227,17 @@ onAuthStateChanged(auth, async (user) => {
         await setDoc(ref, { tier: 'free', savedCount: 0, createdAt: serverTimestamp() });
         userTier = 'free'; savedCount = 0;
       }
+
+      // ── Also maintain top-level user doc (used by admin dashboard) ──
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        email:       user.email       || '',
+        displayName: user.displayName || '',
+        tier:        userTier,
+        savedCount:  savedCount,
+        lastSeen:    serverTimestamp(),
+      }, { merge: true });
+
     } catch (e) { console.error('Profile load error:', e); }
   } else {
     userTier = 'free'; savedCount = 0;

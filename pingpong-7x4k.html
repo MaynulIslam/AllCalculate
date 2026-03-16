@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Prevent any search engine from indexing or following this page -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Service Status</title>
+  <!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  EasyCalculator.live — Admin Dashboard                      ║
+  ║  URL: /pingpong-7x4k.html  (do not link anywhere)          ║
+  ║                                                              ║
+  ║  REQUIRED: Firestore Security Rules                         ║
+  ║  Paste these rules in Firebase Console → Firestore → Rules: ║
+  ║                                                              ║
+  ║  rules_version = '2';                                        ║
+  ║  service cloud.firestore {                                   ║
+  ║    match /databases/{database}/documents {                   ║
+  ║      match /users/{uid} {                                    ║
+  ║        allow read, write: if request.auth != null            ║
+  ║          && request.auth.uid == uid;                         ║
+  ║        allow read: if request.auth != null                   ║
+  ║          && request.auth.token.email ==                      ║
+  ║             'YOUR_ADMIN_EMAIL@EXAMPLE.COM';                  ║
+  ║      }                                                       ║
+  ║      match /users/{uid}/profile/{doc} {                      ║
+  ║        allow read, write: if request.auth != null            ║
+  ║          && request.auth.uid == uid;                         ║
+  ║        allow read: if request.auth != null                   ║
+  ║          && request.auth.token.email ==                      ║
+  ║             'YOUR_ADMIN_EMAIL@EXAMPLE.COM';                  ║
+  ║      }                                                       ║
+  ║    }                                                         ║
+  ║  }                                                           ║
+  ╚══════════════════════════════════════════════════════════════╝
+  -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* ── GATE SCREEN ── */
+    #gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .gate-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 44px 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+    .gate-icon { font-size: 2.6rem; margin-bottom: 18px; }
+    .gate-box h1 { font-size: 1.35rem; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+    .gate-box p  { font-size: 0.83rem; color: #64748b; margin-bottom: 26px; }
+    .gate-input {
+      width: 100%; padding: 12px 16px;
+      background: #0f172a; border: 1px solid #475569;
+      border-radius: 8px; color: #f1f5f9; font-size: 0.95rem;
+      margin-bottom: 12px; outline: none; transition: border-color 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .gate-input:focus { border-color: #7c3aed; }
+    .gate-btn {
+      width: 100%; padding: 12px;
+      background: #7c3aed; color: #fff; border: none;
+      border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .gate-btn:hover { background: #6d28d9; }
+    .gate-err { color: #f87171; font-size: 0.82rem; margin-top: 10px; min-height: 18px; }
+
+    /* ── DASHBOARD ── */
+    #dashboard { display: none; min-height: 100vh; }
+
+    .dash-header {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 14px 28px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .dash-logo { font-size: 1.05rem; font-weight: 800; color: #a78bfa; flex: 1; }
+    .dash-logo span { color: #f1f5f9; }
+    .dash-admin-label {
+      font-size: 0.78rem; color: #94a3b8;
+      background: #0f172a; border: 1px solid #334155;
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .dash-admin-label strong { color: #c4b5fd; }
+    .dash-signout {
+      padding: 6px 14px;
+      background: transparent; border: 1px solid #475569;
+      border-radius: 6px; color: #94a3b8; font-size: 0.78rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .dash-signout:hover { border-color: #f87171; color: #f87171; }
+    .dash-refresh {
+      padding: 6px 14px;
+      background: transparent; border: 1px solid #334155;
+      border-radius: 6px; color: #64748b; font-size: 0.78rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .dash-refresh:hover { border-color: #7c3aed; color: #a78bfa; }
+
+    .dash-body { padding: 28px; max-width: 1200px; margin: 0 auto; }
+    .dash-title { font-size: 1.4rem; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+    .dash-subtitle { font-size: 0.82rem; color: #475569; margin-bottom: 26px; }
+
+    /* Stats cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 12px; padding: 20px 16px; text-align: center;
+    }
+    .stat-num   { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+    .stat-label { font-size: 0.7rem; color: #64748b; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .stat-card.s-total .stat-num { color: #a78bfa; }
+    .stat-card.s-free  .stat-num { color: #94a3b8; }
+    .stat-card.s-basic .stat-num { color: #60a5fa; }
+    .stat-card.s-exec  .stat-num { color: #c084fc; }
+    .stat-card.s-prem  .stat-num { color: #fbbf24; }
+
+    /* Table controls */
+    .table-controls {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1; min-width: 200px; max-width: 320px;
+      padding: 9px 14px; background: #1e293b;
+      border: 1px solid #334155; border-radius: 8px;
+      color: #e2e8f0; font-size: 0.85rem; outline: none;
+    }
+    .search-input:focus { border-color: #7c3aed; }
+    .search-input::placeholder { color: #475569; }
+    .record-count { font-size: 0.8rem; color: #475569; margin-left: auto; }
+
+    /* Table */
+    .table-wrap {
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 12px; overflow: hidden; overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    thead { background: #0f172a; }
+    th {
+      padding: 12px 16px; text-align: left; color: #475569;
+      font-weight: 600; font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.6px; border-bottom: 1px solid #334155; white-space: nowrap;
+    }
+    td { padding: 12px 16px; border-bottom: 1px solid #1a2a40; color: #cbd5e1; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(124,58,237,0.04); }
+    .td-num     { color: #334155; font-size: 0.75rem; width: 40px; }
+    .td-email   { font-weight: 500; color: #e2e8f0; }
+    .td-name    { color: #94a3b8; }
+    .td-saves   { font-weight: 600; color: #e2e8f0; text-align: right; }
+    .td-date    { font-size: 0.77rem; color: #475569; white-space: nowrap; }
+
+    /* Plan badges */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .badge-free      { background: #1e293b; color: #64748b; border: 1px solid #334155; }
+    .badge-basic     { background: #1e3a5f; color: #60a5fa; border: 1px solid #1d4ed844; }
+    .badge-executive { background: #2e1065; color: #c084fc; border: 1px solid #7c3aed44; }
+    .badge-premium   { background: #451a03; color: #fbbf24; border: 1px solid #d9770644; }
+
+    /* Loading / states */
+    .state-box { text-align: center; padding: 60px 20px; }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #334155; border-top-color: #7c3aed;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .state-box p  { color: #475569; font-size: 0.9rem; }
+    .state-box h3 { color: #e2e8f0; margin-bottom: 8px; }
+
+    /* Signin form inside dashboard */
+    .signin-form { max-width: 300px; margin: 0 auto; }
+    .signin-form input {
+      display: block; width: 100%; margin-bottom: 10px;
+      padding: 10px 14px; background: #0f172a;
+      border: 1px solid #334155; border-radius: 8px;
+      color: #e2e8f0; font-size: 0.9rem; outline: none;
+    }
+    .signin-form input:focus { border-color: #7c3aed; }
+    .signin-btn {
+      width: 100%; padding: 10px;
+      background: #7c3aed; color: #fff; border: none;
+      border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    }
+    .signin-btn:hover { background: #6d28d9; }
+    .signin-err { color: #f87171; font-size: 0.82rem; margin-top: 10px; min-height: 16px; }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .dash-header { padding: 12px 16px; flex-wrap: wrap; }
+      .dash-body { padding: 16px; }
+      .dash-admin-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     GATE — Password screen (shown first)
+══════════════════════════════════════════════════════ -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">⚙️</div>
+    <h1>Restricted Area</h1>
+    <p>Enter your access key to continue.</p>
+    <input type="password" id="gatePass" class="gate-input"
+           placeholder="Access key…" autocomplete="off" spellcheck="false">
+    <button id="gateBtn" class="gate-btn">Continue →</button>
+    <div id="gateErr" class="gate-err"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     DASHBOARD — shown after gate + Firebase auth
+══════════════════════════════════════════════════════ -->
+<div id="dashboard">
+  <header class="dash-header">
+    <div class="dash-logo">Easy<span>Calc</span> · Admin</div>
+    <div class="dash-admin-label">Signed in as <strong id="adminEmailLabel">—</strong></div>
+    <button class="dash-refresh" id="refreshBtn">↻ Refresh</button>
+    <button class="dash-signout" id="signOutBtn">Sign Out</button>
+  </header>
+
+  <div class="dash-body">
+    <div class="dash-title">User Dashboard</div>
+    <div class="dash-subtitle" id="dashSubtitle">Loading…</div>
+
+    <!-- Stats row -->
+    <div class="stats-grid">
+      <div class="stat-card s-total">
+        <div class="stat-num" id="statTotal">—</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card s-free">
+        <div class="stat-num" id="statFree">—</div>
+        <div class="stat-label">Free</div>
+      </div>
+      <div class="stat-card s-basic">
+        <div class="stat-num" id="statBasic">—</div>
+        <div class="stat-label">Basic</div>
+      </div>
+      <div class="stat-card s-exec">
+        <div class="stat-num" id="statExec">—</div>
+        <div class="stat-label">Executive</div>
+      </div>
+      <div class="stat-card s-prem">
+        <div class="stat-num" id="statPrem">—</div>
+        <div class="stat-label">Premium</div>
+      </div>
+    </div>
+
+    <!-- Search + count -->
+    <div class="table-controls">
+      <input type="text" id="searchBox" class="search-input"
+             placeholder="Search by email or name…" autocomplete="off">
+      <span class="record-count" id="recordCount"></span>
+    </div>
+
+    <!-- User table (or loading/signin state) -->
+    <div class="table-wrap">
+      <div id="tableContent">
+        <div class="state-box"><div class="spinner"></div><p>Loading…</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+// ════════════════════════════════════════════════════════════════
+//  ⚙️  CONFIGURATION — CHANGE BOTH VALUES BELOW
+// ════════════════════════════════════════════════════════════════
+//
+//  ACCESS_KEY  → the password shown on the gate screen.
+//                Change it to any long passphrase only you know.
+//
+//  ADMIN_EMAIL → your Firebase account email.
+//                Only this account can see the user data.
+//
+// ════════════════════════════════════════════════════════════════
+const ACCESS_KEY  = 'EcLv#8mK2$pZ9nR4!xQ6wF1@jT3yA5bD7cG';   // ← CHANGE THIS
+const ADMIN_EMAIL = 'REPLACE_WITH_YOUR_ADMIN_EMAIL@EXAMPLE.COM'; // ← CHANGE THIS
+
+// ── Firebase ─────────────────────────────────────────────────
+import { initializeApp, getApps, getApp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut,
+         signInWithEmailAndPassword }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, getDocs }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { firebaseConfig } from './firebase-config.js';
+
+const app  = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ── State ─────────────────────────────────────────────────────
+let gateUnlocked = false;
+let allUsers     = [];
+
+// ════════════════════════════════════════════════════════════════
+//  GATE LOGIC
+// ════════════════════════════════════════════════════════════════
+function tryGate() {
+  const val = document.getElementById('gatePass').value;
+  if (val === ACCESS_KEY) {
+    gateUnlocked = true;
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    // If already signed in as admin, go straight to data
+    const cur = auth.currentUser;
+    if (cur && cur.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      loadDashboard(cur);
+    } else {
+      showSignInState();
+    }
+  } else {
+    const err = document.getElementById('gateErr');
+    err.textContent = 'Incorrect access key. Try again.';
+    document.getElementById('gatePass').value = '';
+    document.getElementById('gatePass').focus();
+    // Clear error after 3s
+    setTimeout(() => { err.textContent = ''; }, 3000);
+  }
+}
+
+document.getElementById('gateBtn').addEventListener('click', tryGate);
+document.getElementById('gatePass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryGate();
+});
+
+// ════════════════════════════════════════════════════════════════
+//  AUTH STATE LISTENER
+// ════════════════════════════════════════════════════════════════
+onAuthStateChanged(auth, user => {
+  if (!gateUnlocked) return;
+
+  if (user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    loadDashboard(user);
+  } else if (user) {
+    showWrongAccountState(user.email);
+  } else {
+    showSignInState();
+  }
+});
+
+document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  if (auth.currentUser?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    loadDashboard(auth.currentUser);
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+//  STATES: sign-in prompt / wrong account
+// ════════════════════════════════════════════════════════════════
+function showSignInState() {
+  document.getElementById('dashSubtitle').textContent = 'Sign in with your admin account to view data.';
+  document.getElementById('tableContent').innerHTML = `
+    <div class="state-box">
+      <div style="font-size:2rem;margin-bottom:14px;">🔒</div>
+      <h3>Admin Sign In Required</h3>
+      <p style="margin-bottom:24px;">Only the owner account can view this data.</p>
+      <div class="signin-form">
+        <input type="email"    id="siEmail" placeholder="Admin email"    autocomplete="email">
+        <input type="password" id="siPass"  placeholder="Password"       autocomplete="current-password">
+        <button class="signin-btn" id="siBtn">Sign In</button>
+        <div class="signin-err" id="siErr"></div>
+      </div>
+    </div>`;
+
+  document.getElementById('siBtn').addEventListener('click', async () => {
+    const email = document.getElementById('siEmail').value.trim();
+    const pass  = document.getElementById('siPass').value;
+    const err   = document.getElementById('siErr');
+    err.textContent = '';
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (e) {
+      err.textContent = 'Sign-in failed — check credentials.';
+    }
+  });
+
+  document.getElementById('siPass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('siBtn').click();
+  });
+}
+
+function showWrongAccountState(email) {
+  document.getElementById('dashSubtitle').textContent = 'Wrong account signed in.';
+  document.getElementById('tableContent').innerHTML = `
+    <div class="state-box">
+      <div style="font-size:2rem;margin-bottom:14px;">⛔</div>
+      <h3 style="color:#f87171;">Wrong Account</h3>
+      <p style="margin-bottom:20px;">
+        Signed in as <strong style="color:#fca5a5;">${esc(email)}</strong><br>
+        This is not the admin account.
+      </p>
+      <button id="wrongSignOut" style="padding:9px 24px;background:#334155;color:#e2e8f0;border:none;border-radius:8px;cursor:pointer;font-size:0.88rem;">
+        Sign Out &amp; Try Again
+      </button>
+    </div>`;
+  document.getElementById('wrongSignOut').addEventListener('click', () => signOut(auth));
+}
+
+// ════════════════════════════════════════════════════════════════
+//  LOAD DASHBOARD DATA
+// ════════════════════════════════════════════════════════════════
+async function loadDashboard(user) {
+  document.getElementById('adminEmailLabel').textContent = user.email;
+  document.getElementById('dashSubtitle').textContent = 'Loading users…';
+  document.getElementById('tableContent').innerHTML =
+    '<div class="state-box"><div class="spinner"></div><p>Fetching user data…</p></div>';
+
+  try {
+    const snap = await getDocs(collection(db, 'users'));
+    allUsers = [];
+    snap.forEach(d => allUsers.push({ uid: d.id, ...d.data() }));
+
+    // Sort by most recent join date
+    allUsers.sort((a, b) => {
+      const ta = a.createdAt?.seconds || 0;
+      const tb = b.createdAt?.seconds || 0;
+      return tb - ta;
+    });
+
+    updateStats();
+    renderTable(allUsers);
+
+    const now = new Date();
+    document.getElementById('dashSubtitle').textContent =
+      `${allUsers.length} user${allUsers.length !== 1 ? 's' : ''} · Refreshed at ${now.toLocaleTimeString()}`;
+
+  } catch (e) {
+    document.getElementById('tableContent').innerHTML = `
+      <div class="state-box">
+        <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
+        <h3 style="color:#f87171;">Permission Denied</h3>
+        <p>Firestore rules need to be updated.<br>
+           See the comments at the top of this HTML file for the exact rules to add.</p>
+        <p style="margin-top:10px;font-size:0.78rem;color:#334155;">${esc(e.message)}</p>
+      </div>`;
+  }
+
+  // Search / filter
+  document.getElementById('searchBox').oninput = e => {
+    const q = e.target.value.toLowerCase();
+    const filtered = allUsers.filter(u =>
+      (u.email       || '').toLowerCase().includes(q) ||
+      (u.displayName || '').toLowerCase().includes(q)
+    );
+    renderTable(filtered);
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+//  STATS
+// ════════════════════════════════════════════════════════════════
+function updateStats() {
+  const counts = { free: 0, basic: 0, executive: 0, premium: 0 };
+  allUsers.forEach(u => {
+    const t = (u.tier || 'free').toLowerCase();
+    if (t in counts) counts[t]++; else counts.free++;
+  });
+  document.getElementById('statTotal').textContent = allUsers.length;
+  document.getElementById('statFree').textContent  = counts.free;
+  document.getElementById('statBasic').textContent = counts.basic;
+  document.getElementById('statExec').textContent  = counts.executive;
+  document.getElementById('statPrem').textContent  = counts.premium;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  TABLE RENDER
+// ════════════════════════════════════════════════════════════════
+function renderTable(users) {
+  document.getElementById('recordCount').textContent =
+    `${users.length} user${users.length !== 1 ? 's' : ''}`;
+
+  if (!users.length) {
+    document.getElementById('tableContent').innerHTML =
+      '<div class="state-box"><p>No users match your search.</p></div>';
+    return;
+  }
+
+  const rows = users.map((u, i) => `
+    <tr>
+      <td class="td-num">${i + 1}</td>
+      <td class="td-email">${esc(u.email || '—')}</td>
+      <td class="td-name">${esc(u.displayName || '—')}</td>
+      <td>${planBadge(u.tier)}</td>
+      <td class="td-saves">${u.savedCount ?? 0}</td>
+      <td class="td-date">${fmtDate(u.createdAt)}</td>
+      <td class="td-date">${fmtDate(u.lastSeen)}</td>
+    </tr>`).join('');
+
+  document.getElementById('tableContent').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Email</th>
+          <th>Display Name</th>
+          <th>Plan</th>
+          <th style="text-align:right">Saves</th>
+          <th>Joined</th>
+          <th>Last Seen</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function planBadge(tier) {
+  const t = (tier || 'free').toLowerCase();
+  const labels = { free: 'Free', basic: 'Basic', executive: 'Executive', premium: 'Premium' };
+  return `<span class="badge badge-${t}">${labels[t] || t}</span>`;
+}
+
+function fmtDate(ts) {
+  if (!ts) return '—';
+  try {
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+  } catch { return '—'; }
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
+
+</body>
+</html>
