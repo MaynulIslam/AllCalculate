@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free electrical calculator for professionals — voltage drop, wire ampacity, Ohm's Law, conduit fill, three-phase power, load calculation, and motor sizing.">
+  <meta property="og:title" content="Electrical Calculator | EasyCalculator.live">
+  <meta property="og:description" content="Free electrical calculator for professionals — voltage drop, wire ampacity, Ohm's Law, conduit fill, three-phase power, load calculation, and motor sizing.">
+  <meta property="og:url" content="https://easycalculator.live/electrical-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EasyCalculator.live">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Electrical Calculator | EasyCalculator.live">
+  <meta name="twitter:description" content="Free electrical calculator for professionals — voltage drop, wire ampacity, Ohm's Law, conduit fill, three-phase power, load calculation, and motor sizing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Electrical Calculator",
+    "url": "https://easycalculator.live/electrical-calculator.html",
+    "description": "Free electrical calculator for professionals — voltage drop, wire ampacity, Ohm's Law, conduit fill, three-phase power, load calculation, and motor sizing.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <meta name="keywords" content="electrical calculator, voltage drop calculator, wire ampacity, conduit fill, Ohm's law, three phase power, load calculation, motor FLC">
+  <title>Electrical Calculator | EasyCalculator.live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Fix: allow 7 tab buttons to wrap to 2 rows without causing horizontal page scroll */
+    .tabs .tab-btn { flex: 0 0 auto; }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5277511564882514" crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JGP14YZ4V8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JGP14YZ4V8');
+  </script>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-content">
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
+          <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
+        </div>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#math">📐 Math</a></li>
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      </ul>
+      <div class="nav-auth" id="navAuth">
+        <button class="nav-signin-btn" id="navSignInBtn">Sign In</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+
+          <div class="calc-header">
+            <h1 class="calc-page-title">Electrical Calculator</h1>
+            <nav class="calc-page-breadcrumb">
+              <a href="index.html">Home</a>
+              <span class="bc-sep">&#8250;</span>
+              <a href="index.html#math">Math &amp; Everyday</a>
+              <span class="bc-sep">&#8250;</span>
+              <span>Electrical Calculator</span>
+            </nav>
+          </div>
+
+          <!-- Tabs -->
+          <div style="margin-bottom:24px">
+            <div class="tabs" style="flex-wrap:wrap;gap:8px">
+              <button class="tab-btn active" onclick="switchTab(0,this)">⚡ Voltage Drop</button>
+              <button class="tab-btn" onclick="switchTab(1,this)">🔌 Wire &amp; Breaker</button>
+              <button class="tab-btn" onclick="switchTab(2,this)">⭕ Ohm's Law</button>
+              <button class="tab-btn" onclick="switchTab(3,this)">📦 Conduit Fill</button>
+              <button class="tab-btn" onclick="switchTab(4,this)">🔺 3-Phase Power</button>
+              <button class="tab-btn" onclick="switchTab(5,this)">🏠 Load Calc</button>
+              <button class="tab-btn" onclick="switchTab(6,this)">⚙️ Motor Sizing</button>
+            </div>
+          </div>
+
+          <!-- TAB 0: Voltage Drop Calculator -->
+          <div class="tab-panel" id="tab-0">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Voltage Drop Calculator</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">System Voltage</label>
+                <select class="form-select" id="vd-voltage">
+                  <option value="120">120V</option>
+                  <option value="208">208V</option>
+                  <option value="240">240V</option>
+                  <option value="277">277V</option>
+                  <option value="480">480V</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phase</label>
+                <select class="form-select" id="vd-phase">
+                  <option value="single">Single-Phase</option>
+                  <option value="three">Three-Phase</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Wire Material</label>
+                <select class="form-select" id="vd-material">
+                  <option value="copper">Copper</option>
+                  <option value="aluminum">Aluminum</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Wire Gauge</label>
+                <select class="form-select" id="vd-gauge">
+                  <option value="14">14 AWG</option>
+                  <option value="12" selected>12 AWG</option>
+                  <option value="10">10 AWG</option>
+                  <option value="8">8 AWG</option>
+                  <option value="6">6 AWG</option>
+                  <option value="4">4 AWG</option>
+                  <option value="2">2 AWG</option>
+                  <option value="1">1 AWG</option>
+                  <option value="1/0">1/0 AWG</option>
+                  <option value="2/0">2/0 AWG</option>
+                  <option value="3/0">3/0 AWG</option>
+                  <option value="4/0">4/0 AWG</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">One-Way Length</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="vd-length" placeholder="100" min="0">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Load Current</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="vd-current" placeholder="20" min="0">
+                  <span class="input-suffix">A</span>
+                </div>
+              </div>
+            </div>
+            <div id="vd-error" style="color:#dc2626;font-size:0.85rem;margin-top:8px;display:none"></div>
+            <button class="btn-calculate" onclick="calcVD()">Calculate Voltage Drop</button>
+            <button class="btn-reset" onclick="resetVD()" style="margin-top:10px">Reset</button>
+            <div id="result0" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result0Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result0Grid"></div>
+              <div id="vd-recommendation" style="margin-top:12px;font-size:0.85rem;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;display:none"></div>
+            </div>
+          </div>
+
+          <!-- TAB 1: Wire Ampacity & Breaker Sizing -->
+          <div class="tab-panel hidden" id="tab-1">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Wire Ampacity &amp; Breaker Sizing</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Wire Gauge</label>
+                <select class="form-select" id="amp-gauge">
+                  <option value="14">14 AWG</option>
+                  <option value="12" selected>12 AWG</option>
+                  <option value="10">10 AWG</option>
+                  <option value="8">8 AWG</option>
+                  <option value="6">6 AWG</option>
+                  <option value="4">4 AWG</option>
+                  <option value="2">2 AWG</option>
+                  <option value="1">1 AWG</option>
+                  <option value="1/0">1/0 AWG</option>
+                  <option value="2/0">2/0 AWG</option>
+                  <option value="3/0">3/0 AWG</option>
+                  <option value="4/0">4/0 AWG</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Wire Material</label>
+                <select class="form-select" id="amp-material">
+                  <option value="copper">Copper</option>
+                  <option value="aluminum">Aluminum</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Temperature Rating</label>
+                <select class="form-select" id="amp-temp">
+                  <option value="60">60°C</option>
+                  <option value="75" selected>75°C</option>
+                  <option value="90">90°C</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Conductors in Conduit</label>
+                <select class="form-select" id="amp-conduit">
+                  <option value="1-3" selected>1–3 (No derating)</option>
+                  <option value="4-6">4–6 (80%)</option>
+                  <option value="7-9">7–9 (70%)</option>
+                  <option value="10-20">10–20 (50%)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Ambient Temperature</label>
+                <select class="form-select" id="amp-ambient">
+                  <option value="86" selected>86°F / 30°C (1.00)</option>
+                  <option value="95">95°F / 35°C (0.94)</option>
+                  <option value="104">104°F / 40°C (0.88)</option>
+                  <option value="113">113°F / 45°C (0.82)</option>
+                  <option value="122">122°F / 50°C (0.75)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Load Type</label>
+                <select class="form-select" id="amp-loadtype">
+                  <option value="noncontinuous">Non-Continuous</option>
+                  <option value="continuous">Continuous (×1.25 NEC 210.20)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Load Current</label>
+              <div class="input-group">
+                <input class="form-input has-suffix" type="number" id="amp-load" placeholder="20" min="0">
+                <span class="input-suffix">A</span>
+              </div>
+            </div>
+            <div id="amp-error" style="color:#dc2626;font-size:0.85rem;margin-top:8px;display:none"></div>
+            <button class="btn-calculate" onclick="calcAmpacity()">Calculate Ampacity</button>
+            <button class="btn-reset" onclick="resetAmpacity()" style="margin-top:10px">Reset</button>
+            <div id="result1" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result1Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result1Grid"></div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Ohm's Law Calculator -->
+          <div class="tab-panel hidden" id="tab-2">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Ohm's Law Calculator</h3>
+            <p style="font-size:0.85rem;color:#64748b;margin-bottom:16px">Enter any 2 values — leave the others blank</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Voltage (V)</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="ohm-v" placeholder="Leave blank to calculate">
+                  <span class="input-suffix">V</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Current (I)</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="ohm-i" placeholder="Leave blank to calculate">
+                  <span class="input-suffix">A</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Resistance (R)</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="ohm-r" placeholder="Leave blank to calculate">
+                  <span class="input-suffix">Ω</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Power (P)</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="ohm-p" placeholder="Leave blank to calculate">
+                  <span class="input-suffix">W</span>
+                </div>
+              </div>
+            </div>
+            <div id="ohm-error" style="color:#dc2626;font-size:0.85rem;margin-top:8px;display:none"></div>
+            <button class="btn-calculate" onclick="calcOhm()">Calculate</button>
+            <button class="btn-reset" onclick="resetOhm()" style="margin-top:10px">Reset</button>
+            <div id="result2" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result2Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result2Grid"></div>
+              <div id="ohm-formulas" style="margin-top:12px;font-size:0.82rem;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-family:monospace;line-height:1.8"></div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Conduit Fill Calculator -->
+          <div class="tab-panel hidden" id="tab-3">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Conduit Fill Calculator</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Conduit Type</label>
+                <select class="form-select" id="cf-type">
+                  <option value="EMT">EMT</option>
+                  <option value="RMC">RMC</option>
+                  <option value="IMC">IMC</option>
+                  <option value="PVC Sch40">PVC Schedule 40</option>
+                  <option value="PVC Sch80">PVC Schedule 80</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Conduit Size</label>
+                <select class="form-select" id="cf-size">
+                  <option value="1/2">1/2"</option>
+                  <option value="3/4">3/4"</option>
+                  <option value="1">1"</option>
+                  <option value="1-1/4">1-1/4"</option>
+                  <option value="1-1/2">1-1/2"</option>
+                  <option value="2" selected>2"</option>
+                  <option value="2-1/2">2-1/2"</option>
+                  <option value="3">3"</option>
+                  <option value="3-1/2">3-1/2"</option>
+                  <option value="4">4"</option>
+                </select>
+              </div>
+            </div>
+            <p style="font-size:0.85rem;color:#64748b;margin-bottom:12px">Wire entries (THWN/THWN-2 — NEC Chapter 9 Table 5):</p>
+            <div id="cf-wire-rows">
+              <div class="form-row" style="align-items:center">
+                <div class="form-group">
+                  <label class="form-label">Wire 1 Gauge</label>
+                  <select class="form-select cf-gauge">
+                    <option value="">— Select —</option>
+                    <option value="14">14 AWG</option>
+                    <option value="12">12 AWG</option>
+                    <option value="10">10 AWG</option>
+                    <option value="8">8 AWG</option>
+                    <option value="6">6 AWG</option>
+                    <option value="4">4 AWG</option>
+                    <option value="2">2 AWG</option>
+                    <option value="1">1 AWG</option>
+                    <option value="1/0">1/0 AWG</option>
+                    <option value="2/0">2/0 AWG</option>
+                    <option value="3/0">3/0 AWG</option>
+                    <option value="4/0">4/0 AWG</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity</label>
+                  <input class="form-input cf-qty" type="number" placeholder="e.g. 3" min="1">
+                </div>
+              </div>
+              <div class="form-row" style="align-items:center">
+                <div class="form-group">
+                  <label class="form-label">Wire 2 Gauge</label>
+                  <select class="form-select cf-gauge">
+                    <option value="">— Select —</option>
+                    <option value="14">14 AWG</option>
+                    <option value="12">12 AWG</option>
+                    <option value="10">10 AWG</option>
+                    <option value="8">8 AWG</option>
+                    <option value="6">6 AWG</option>
+                    <option value="4">4 AWG</option>
+                    <option value="2">2 AWG</option>
+                    <option value="1">1 AWG</option>
+                    <option value="1/0">1/0 AWG</option>
+                    <option value="2/0">2/0 AWG</option>
+                    <option value="3/0">3/0 AWG</option>
+                    <option value="4/0">4/0 AWG</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity</label>
+                  <input class="form-input cf-qty" type="number" placeholder="e.g. 3" min="1">
+                </div>
+              </div>
+              <div class="form-row" style="align-items:center">
+                <div class="form-group">
+                  <label class="form-label">Wire 3 Gauge</label>
+                  <select class="form-select cf-gauge">
+                    <option value="">— Select —</option>
+                    <option value="14">14 AWG</option>
+                    <option value="12">12 AWG</option>
+                    <option value="10">10 AWG</option>
+                    <option value="8">8 AWG</option>
+                    <option value="6">6 AWG</option>
+                    <option value="4">4 AWG</option>
+                    <option value="2">2 AWG</option>
+                    <option value="1">1 AWG</option>
+                    <option value="1/0">1/0 AWG</option>
+                    <option value="2/0">2/0 AWG</option>
+                    <option value="3/0">3/0 AWG</option>
+                    <option value="4/0">4/0 AWG</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity</label>
+                  <input class="form-input cf-qty" type="number" placeholder="e.g. 3" min="1">
+                </div>
+              </div>
+              <div class="form-row" style="align-items:center">
+                <div class="form-group">
+                  <label class="form-label">Wire 4 Gauge</label>
+                  <select class="form-select cf-gauge">
+                    <option value="">— Select —</option>
+                    <option value="14">14 AWG</option>
+                    <option value="12">12 AWG</option>
+                    <option value="10">10 AWG</option>
+                    <option value="8">8 AWG</option>
+                    <option value="6">6 AWG</option>
+                    <option value="4">4 AWG</option>
+                    <option value="2">2 AWG</option>
+                    <option value="1">1 AWG</option>
+                    <option value="1/0">1/0 AWG</option>
+                    <option value="2/0">2/0 AWG</option>
+                    <option value="3/0">3/0 AWG</option>
+                    <option value="4/0">4/0 AWG</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity</label>
+                  <input class="form-input cf-qty" type="number" placeholder="e.g. 3" min="1">
+                </div>
+              </div>
+              <div class="form-row" style="align-items:center">
+                <div class="form-group">
+                  <label class="form-label">Wire 5 Gauge</label>
+                  <select class="form-select cf-gauge">
+                    <option value="">— Select —</option>
+                    <option value="14">14 AWG</option>
+                    <option value="12">12 AWG</option>
+                    <option value="10">10 AWG</option>
+                    <option value="8">8 AWG</option>
+                    <option value="6">6 AWG</option>
+                    <option value="4">4 AWG</option>
+                    <option value="2">2 AWG</option>
+                    <option value="1">1 AWG</option>
+                    <option value="1/0">1/0 AWG</option>
+                    <option value="2/0">2/0 AWG</option>
+                    <option value="3/0">3/0 AWG</option>
+                    <option value="4/0">4/0 AWG</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity</label>
+                  <input class="form-input cf-qty" type="number" placeholder="e.g. 3" min="1">
+                </div>
+              </div>
+            </div>
+            <div id="cf-error" style="color:#dc2626;font-size:0.85rem;margin-top:8px;display:none"></div>
+            <button class="btn-calculate" onclick="calcConduit()">Calculate Fill</button>
+            <button class="btn-reset" onclick="resetConduit()" style="margin-top:10px">Reset</button>
+            <div id="result3" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result3Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result3Grid"></div>
+              <div id="cf-suggestion" style="margin-top:12px;font-size:0.85rem;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;display:none"></div>
+            </div>
+          </div>
+
+          <!-- TAB 4: Three-Phase Power Calculator -->
+          <div class="tab-panel hidden" id="tab-4">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Three-Phase Power Calculator</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Line Voltage</label>
+                <select class="form-select" id="tp-voltage" onchange="toggleCustomVoltage()">
+                  <option value="208">208V</option>
+                  <option value="240">240V</option>
+                  <option value="480" selected>480V</option>
+                  <option value="600">600V</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              <div class="form-group" id="tp-custom-wrap" style="display:none">
+                <label class="form-label">Custom Voltage</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="tp-custom-v" placeholder="480" min="1">
+                  <span class="input-suffix">V</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Power Factor</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="tp-pf" placeholder="0.85" value="0.85" min="0.01" max="1" step="0.01">
+                  <span class="input-suffix">PF</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Calculate From</label>
+                <select class="form-select" id="tp-inputtype" onchange="updateTPLabel()">
+                  <option value="current">Line Current (A)</option>
+                  <option value="kw">Real Power (kW)</option>
+                  <option value="kva">Apparent Power (kVA)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" id="tp-value-label">Line Current</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="tp-value" placeholder="0" min="0">
+                  <span class="input-suffix" id="tp-value-suffix">A</span>
+                </div>
+              </div>
+            </div>
+            <div id="tp-error" style="color:#dc2626;font-size:0.85rem;margin-top:8px;display:none"></div>
+            <button class="btn-calculate" onclick="calc3Phase()">Calculate</button>
+            <button class="btn-reset" onclick="reset3Phase()" style="margin-top:10px">Reset</button>
+            <div id="result4" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result4Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result4Grid"></div>
+            </div>
+          </div>
+
+          <!-- TAB 5: Load Calculation -->
+          <div class="tab-panel hidden" id="tab-5">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:4px">Dwelling Load Calculation</h3>
+            <p style="font-size:0.82rem;color:#64748b;margin-bottom:16px">NEC Article 220 Standard Method — Single-Family Dwelling</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Dwelling Area</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="lc-sqft" placeholder="2000" min="0">
+                  <span class="input-suffix">sq ft</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Small Appliance Circuits</label>
+                <input class="form-input" type="number" id="lc-smallapp" placeholder="2" value="2" min="0">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Laundry Circuits</label>
+                <input class="form-input" type="number" id="lc-laundry" placeholder="1" value="1" min="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Electric Range</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="lc-range" placeholder="8" value="0" min="0">
+                  <span class="input-suffix">kW</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Electric Dryer</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="lc-dryer" placeholder="5" value="0" min="0">
+                  <span class="input-suffix">kW</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Water Heater</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="lc-wh" placeholder="4.5" value="4.5" min="0">
+                  <span class="input-suffix">kW</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">A/C Load</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="lc-ac" placeholder="0" value="0" min="0">
+                  <span class="input-suffix">A (at 240V)</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Electric Heat</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="lc-heat" placeholder="0" value="0" min="0">
+                  <span class="input-suffix">kW</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Other Fixed Appliances</label>
+              <div class="input-group">
+                <input class="form-input has-suffix" type="number" id="lc-other" placeholder="0" value="0" min="0">
+                <span class="input-suffix">VA</span>
+              </div>
+            </div>
+            <div id="lc-error" style="color:#dc2626;font-size:0.85rem;margin-top:8px;display:none"></div>
+            <button class="btn-calculate" onclick="calcLoad()">Calculate Service Size</button>
+            <button class="btn-reset" onclick="resetLoad()" style="margin-top:10px">Reset</button>
+            <div id="result5" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result5Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result5Grid"></div>
+              <div id="lc-breakdown" style="margin-top:14px;font-size:0.82rem;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:12px"></div>
+            </div>
+          </div>
+
+          <!-- TAB 6: Motor FLC & Starter Sizing -->
+          <div class="tab-panel hidden" id="tab-6">
+            <h3 style="font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:16px">Motor FLC &amp; Starter Sizing</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Motor Phase</label>
+                <select class="form-select" id="mot-phase" onchange="updateMotorVoltage()">
+                  <option value="three" selected>Three-Phase</option>
+                  <option value="single">Single-Phase</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Voltage</label>
+                <select class="form-select" id="mot-voltage">
+                  <option value="208">208V</option>
+                  <option value="230">230V</option>
+                  <option value="460" selected>460V</option>
+                  <option value="575">575V</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Motor HP</label>
+                <select class="form-select" id="mot-hp">
+                  <option value="0.5">0.5 HP</option>
+                  <option value="0.75">0.75 HP</option>
+                  <option value="1">1 HP</option>
+                  <option value="1.5">1.5 HP</option>
+                  <option value="2">2 HP</option>
+                  <option value="3">3 HP</option>
+                  <option value="5" selected>5 HP</option>
+                  <option value="7.5">7.5 HP</option>
+                  <option value="10">10 HP</option>
+                  <option value="15">15 HP</option>
+                  <option value="20">20 HP</option>
+                  <option value="25">25 HP</option>
+                  <option value="30">30 HP</option>
+                  <option value="40">40 HP</option>
+                  <option value="50">50 HP</option>
+                  <option value="60">60 HP</option>
+                  <option value="75">75 HP</option>
+                  <option value="100">100 HP</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Service Factor</label>
+                <select class="form-select" id="mot-sf">
+                  <option value="1.15" selected>1.15</option>
+                  <option value="1.0">1.0</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Protection Type</label>
+              <select class="form-select" id="mot-prot">
+                <option value="inverse">Inverse Time Breaker</option>
+                <option value="dual">Dual-Element Fuse</option>
+                <option value="instantaneous">Instantaneous Trip Breaker</option>
+              </select>
+            </div>
+            <div id="mot-error" style="color:#dc2626;font-size:0.85rem;margin-top:8px;display:none"></div>
+            <button class="btn-calculate" onclick="calcMotor()">Calculate Motor Circuit</button>
+            <button class="btn-reset" onclick="resetMotor()" style="margin-top:10px">Reset</button>
+            <div id="result6" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result6Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result6Grid"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Middle Ad -->
+      <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+      <!-- Info Section -->
+      <div class="info-section" style="margin-top:28px">
+        <h2>Professional Electrical Calculator Guide</h2>
+        <p>This electrical calculator suite provides seven professional-grade tools covering the most common NEC code calculations used by electricians, electrical engineers, and contractors. Each tool uses current NEC code formulas and table values to give you accurate, code-compliant results.</p>
+
+        <h3>What Each Tool Does</h3>
+        <ul>
+          <li><strong>Voltage Drop:</strong> Calculates the voltage lost over a wire run using the CM (circular mils) method. Flags runs that exceed the NEC-recommended 3% limit and suggests a larger wire gauge to fix the problem.</li>
+          <li><strong>Wire &amp; Breaker:</strong> Looks up NEC 310.16 ampacity for copper or aluminum wire, then applies conduit fill derating and ambient temperature correction factors to find the true safe ampacity and size the breaker.</li>
+          <li><strong>Ohm's Law:</strong> Solves for any unknown value (V, I, R, or P) given any two known values using the full Ohm's Law / Watt's Law wheel.</li>
+          <li><strong>Conduit Fill:</strong> Sums the cross-section areas of wires (NEC Chapter 9 Table 5) and compares to the 40% fill limit for the selected conduit type and size (NEC Chapter 9 Table 4).</li>
+          <li><strong>3-Phase Power:</strong> Converts between line current, real power (kW), apparent power (kVA), and reactive power (kVAR) for three-phase systems at any voltage and power factor.</li>
+          <li><strong>Load Calculation:</strong> Performs the NEC Article 220 Standard Method dwelling load calculation, applying demand factors for general lighting, small appliance circuits, and range loads to determine the minimum service amperage.</li>
+          <li><strong>Motor Sizing:</strong> Pulls Full Load Current (FLC) from NEC Tables 430.248 and 430.250, then sizes the branch circuit conductor (NEC 430.22), overload relay (NEC 430.32), and short-circuit protection (NEC Table 430.52).</li>
+        </ul>
+
+        <h3>NEC Code References</h3>
+        <ul>
+          <li><strong>Voltage Drop:</strong> NEC 210.19(A) Informational Note No. 4 (3% recommended maximum); NEC 215.2 (feeders)</li>
+          <li><strong>Wire Ampacity:</strong> NEC 310.12 / 310.16 (ampacity tables); NEC 310.15(C)(1) (conduit fill derating); NEC 310.15(B)(2) (ambient temperature correction)</li>
+          <li><strong>Conduit Fill:</strong> NEC Chapter 9, Table 1 (40% fill for 3+ wires); Table 4 (conduit dimensions); Table 5 (wire dimensions)</li>
+          <li><strong>Load Calculation:</strong> NEC Article 220 (branch circuit, feeder, service load calculations); NEC 220.55 (ranges); NEC 220.60 (non-coincident loads)</li>
+          <li><strong>Motor Circuits:</strong> NEC Article 430; Table 430.248 (single-phase FLC); Table 430.250 (three-phase FLC); 430.22 (conductors); 430.32 (overload); Table 430.52 (short-circuit protection)</li>
+        </ul>
+
+        <h3>Voltage Drop Formula</h3>
+        <div class="formula-box">
+          <strong>Single-Phase:</strong> VD = (2 × K × I × L) / CM<br><br>
+          <strong>Three-Phase:</strong> VD = (√3 × K × I × L) / CM<br><br>
+          <strong>Where:</strong><br>
+          K = Resistivity constant (Copper: 12.9, Aluminum: 21.2)<br>
+          I = Load current in amperes<br>
+          L = One-way length in feet<br>
+          CM = Circular mils of the wire<br>
+          VD% = (VD ÷ Source Voltage) × 100
+        </div>
+
+        <h3>Safety Note</h3>
+        <p style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px;color:#7f1d1d;font-size:0.9rem">
+          <strong>Important:</strong> These calculators are provided for educational and planning purposes only. All electrical work must be performed by a licensed electrician and inspected by the authority having jurisdiction (AHJ). Always verify calculations against the current adopted edition of the National Electrical Code (NEC) in your jurisdiction. Local codes may have additional requirements that supersede NEC minimums.
+        </p>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="plumbing-calculator.html">🔧 Plumbing Calculator</a></li>
+          <li><a href="scientific-calculator.html">🔬 Scientific Calculator</a></li>
+          <li><a href="unit-converter.html">📏 Unit Converter</a></li>
+          <li><a href="percentage-calculator.html">% Percentage Calculator</a></li>
+          <li><a href="square-footage-calculator.html">📐 Square Footage</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-widget" style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px">
+        <div class="sidebar-widget-title" style="color:#92400e">⚡ Quick Reference</div>
+        <table style="width:100%;font-size:0.8rem;border-collapse:collapse">
+          <thead><tr style="border-bottom:1px solid #fde68a"><th style="text-align:left;padding:4px;color:#78350f">AWG</th><th style="text-align:left;padding:4px;color:#78350f">Amps (Cu)</th><th style="text-align:left;padding:4px;color:#78350f">Common Use</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:4px">14 AWG</td><td style="padding:4px">15 A</td><td style="padding:4px">Lights/outlets</td></tr>
+            <tr style="background:#fffbeb"><td style="padding:4px">12 AWG</td><td style="padding:4px">20 A</td><td style="padding:4px">Kitchen circuits</td></tr>
+            <tr><td style="padding:4px">10 AWG</td><td style="padding:4px">30 A</td><td style="padding:4px">Dryers, A/C</td></tr>
+            <tr style="background:#fffbeb"><td style="padding:4px">8 AWG</td><td style="padding:4px">40 A</td><td style="padding:4px">Ranges, ovens</td></tr>
+            <tr><td style="padding:4px">6 AWG</td><td style="padding:4px">55 A</td><td style="padding:4px">Hot tubs, EV</td></tr>
+            <tr style="background:#fffbeb"><td style="padding:4px">4 AWG</td><td style="padding:4px">70 A</td><td style="padding:4px">Subpanels</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+          <div class="footer-stats">
+            <span class="footer-stat"><strong>22+</strong> Calculators</span>
+            <span class="footer-stat"><strong>100%</strong> Free Forever</span>
+            <span class="footer-stat"><strong>Fast</strong> Instant Results</span>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage-calculator.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi-calculator.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest-calculator.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="salary-tax-calculator.html">Salary Tax Calculator</a></li>
+            <li><a href="retirement-calculator.html">Retirement Calculator</a></li>
+            <li><a href="tip-calculator.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi-calculator.html">BMI Calculator</a></li>
+            <li><a href="calorie-calculator.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy-calculator.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat-calculator.html">Body Fat Calculator</a></li>
+            <li><a href="age-calculator.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="electrical-calculator.html">Electrical Calculator</a></li>
+            <li><a href="plumbing-calculator.html">Plumbing Calculator</a></li>
+            <li><a href="percentage-calculator.html">Percentage Calculator</a></li>
+            <li><a href="scientific-calculator.html">Scientific Calculator</a></li>
+            <li><a href="gpa-calculator.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage-calculator.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 EasyCalculator.live &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // ── Tab Switching ──────────────────────────────────────────────────
+    function switchTab(index, btn) {
+      document.querySelectorAll('.tab-panel').forEach(function(p, i) {
+        p.classList.toggle('hidden', i !== index);
+      });
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+
+    // ── Shared Helpers ─────────────────────────────────────────────────
+    function makeItem(label, value, highlight) {
+      var color = highlight ? '#f97316' : '#1e293b';
+      return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px">' +
+        '<div style="font-size:0.75rem;color:#64748b;margin-bottom:2px">' + label + '</div>' +
+        '<div style="font-size:1rem;font-weight:700;color:' + color + '">' + value + '</div>' +
+        '</div>';
+    }
+
+    function makeStatusItem(label, value, pass, warn) {
+      var bg = pass ? '#f0fdf4' : (warn ? '#fffbeb' : '#fef2f2');
+      var border = pass ? '#bbf7d0' : (warn ? '#fde68a' : '#fecaca');
+      var color = pass ? '#16a34a' : (warn ? '#d97706' : '#dc2626');
+      return '<div style="background:' + bg + ';border:1px solid ' + border + ';border-radius:8px;padding:10px 14px">' +
+        '<div style="font-size:0.75rem;color:#64748b;margin-bottom:2px">' + label + '</div>' +
+        '<div style="font-size:1rem;font-weight:700;color:' + color + '">' + value + '</div>' +
+        '</div>';
+    }
+
+    function fmtN(n, decimals) {
+      if (!isFinite(n)) return 'N/A';
+      if (decimals === undefined) decimals = 2;
+      return parseFloat(n.toFixed(decimals)).toLocaleString('en-US', {maximumFractionDigits: decimals});
+    }
+
+    function fmtElec(n) {
+      if (!isFinite(n)) return 'N/A';
+      if (Math.abs(n) === 0) return '0';
+      if (Math.abs(n) < 0.001) return n.toExponential(3);
+      if (Math.abs(n) >= 1000000) return fmtN(n / 1000000, 3) + ' M';
+      if (Math.abs(n) >= 1000) return fmtN(n / 1000, 3) + ' k';
+      return fmtN(n, 4);
+    }
+
+    function showError(id, msg) {
+      var el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = msg ? 'block' : 'none';
+    }
+
+    // ── Shared Data ────────────────────────────────────────────────────
+    var CM_TABLE = {14:4110, 12:6530, 10:10380, 8:16510, 6:26240, 4:41740, 2:66360, 1:83690, '1/0':105600, '2/0':133100, '3/0':167800, '4/0':211600};
+    var GAUGE_ORDER = ['14','12','10','8','6','4','2','1','1/0','2/0','3/0','4/0'];
+
+    var AMP_CU = {
+      '60':  {14:15,  12:20, 10:30, 8:40, 6:55, 4:70, 2:95,  1:110, '1/0':125, '2/0':145, '3/0':165, '4/0':195},
+      '75':  {14:20,  12:25, 10:35, 8:50, 6:65, 4:85, 2:115, 1:130, '1/0':150, '2/0':175, '3/0':200, '4/0':230},
+      '90':  {14:25,  12:30, 10:40, 8:55, 6:75, 4:95, 2:130, 1:150, '1/0':170, '2/0':195, '3/0':225, '4/0':260}
+    };
+    var AMP_AL = {
+      '60':  {12:15, 10:25, 8:30, 6:40, 4:55, 2:75, 1:85, '1/0':100, '2/0':115, '3/0':130, '4/0':155},
+      '75':  {12:20, 10:30, 8:40, 6:50, 4:65, 2:90, 1:100, '1/0':120, '2/0':135, '3/0':155, '4/0':180},
+      '90':  {12:25, 10:35, 8:45, 6:60, 4:75, 2:100, 1:115, '1/0':135, '2/0':150, '3/0':175, '4/0':205}
+    };
+
+    var CONDUIT_FACTOR = {'1-3':1.0, '4-6':0.80, '7-9':0.70, '10-20':0.50};
+    var AMBIENT_FACTOR = {'86':1.00, '95':0.94, '104':0.88, '113':0.82, '122':0.75};
+    var BREAKER_SIZES = [15,20,25,30,35,40,45,50,60,70,80,90,100,110,125,150,175,200,225,250,300,350,400];
+
+    // Ampacity at 75°C copper (for wire sizing in motor tab)
+    var AMP_75CU = AMP_CU['75'];
+
+    function nextBreaker(amps) {
+      for (var i = 0; i < BREAKER_SIZES.length; i++) {
+        if (BREAKER_SIZES[i] >= amps) return BREAKER_SIZES[i];
+      }
+      return Math.ceil(amps);
+    }
+
+    // ── TAB 0: Voltage Drop ────────────────────────────────────────────
+    function calcVD() {
+      showError('vd-error', '');
+      var V      = parseFloat(document.getElementById('vd-voltage').value);
+      var phase  = document.getElementById('vd-phase').value;
+      var mat    = document.getElementById('vd-material').value;
+      var gauge  = document.getElementById('vd-gauge').value;
+      var L      = parseFloat(document.getElementById('vd-length').value);
+      var I      = parseFloat(document.getElementById('vd-current').value);
+
+      if (isNaN(L) || L <= 0) { showError('vd-error', 'Enter a valid one-way length greater than 0.'); return; }
+      if (isNaN(I) || I <= 0) { showError('vd-error', 'Enter a valid load current greater than 0.'); return; }
+
+      var cm = CM_TABLE[gauge];
+      var K  = (mat === 'copper') ? 12.9 : 21.2;
+      var VD = (phase === 'single') ? (2 * K * I * L) / cm : (1.732 * K * I * L) / cm;
+      var VDpct   = (VD / V) * 100;
+      var VatLoad = V - VD;
+
+      var pass = VDpct <= 3;
+      var warn = !pass && VDpct <= 5;
+
+      var statusText = pass ? 'PASS (≤3%)' : (warn ? 'CAUTION (3–5%)' : 'FAIL (>5%)');
+
+      document.getElementById('result0').classList.remove('hidden');
+      document.getElementById('result0Primary').textContent = 'Voltage Drop: ' + fmtN(VD, 2) + ' V (' + fmtN(VDpct, 2) + '%)';
+
+      document.getElementById('result0Grid').innerHTML =
+        makeItem('Voltage Drop', fmtN(VD, 3) + ' V') +
+        makeStatusItem('VD Percentage', fmtN(VDpct, 2) + '%', pass, warn) +
+        makeItem('Voltage at Load End', fmtN(VatLoad, 2) + ' V') +
+        makeStatusItem('NEC 3% Status', statusText, pass, warn);
+
+      // Recommendation
+      var recDiv = document.getElementById('vd-recommendation');
+      if (!pass) {
+        var recGauge = null;
+        for (var gi = 0; gi < GAUGE_ORDER.length; gi++) {
+          var g = GAUGE_ORDER[gi];
+          var cm2 = CM_TABLE[g];
+          var vd2 = (phase === 'single') ? (2 * K * I * L) / cm2 : (1.732 * K * I * L) / cm2;
+          var vdpct2 = (vd2 / V) * 100;
+          if (vdpct2 <= 3) { recGauge = g; break; }
+        }
+        recDiv.style.display = 'block';
+        recDiv.textContent = recGauge
+          ? 'Recommendation: Increase to ' + recGauge + ' AWG to meet the 3% voltage drop limit (' + fmtN((phase === 'single' ? (2 * K * I * L) / CM_TABLE[recGauge] : (1.732 * K * I * L) / CM_TABLE[recGauge]) / V * 100, 2) + '%).'
+          : 'No standard AWG gauge up to 4/0 can achieve 3% VD at this length and current. Consider reducing run length or increasing voltage.';
+      } else {
+        recDiv.style.display = 'none';
+      }
+    }
+
+    function resetVD() {
+      document.getElementById('vd-voltage').value = '120';
+      document.getElementById('vd-phase').value = 'single';
+      document.getElementById('vd-material').value = 'copper';
+      document.getElementById('vd-gauge').value = '12';
+      document.getElementById('vd-length').value = '';
+      document.getElementById('vd-current').value = '';
+      document.getElementById('result0').classList.add('hidden');
+      showError('vd-error', '');
+    }
+
+    // ── TAB 1: Ampacity & Breaker ──────────────────────────────────────
+    function calcAmpacity() {
+      showError('amp-error', '');
+      var gauge    = document.getElementById('amp-gauge').value;
+      var mat      = document.getElementById('amp-material').value;
+      var temp     = document.getElementById('amp-temp').value;
+      var conduit  = document.getElementById('amp-conduit').value;
+      var ambient  = document.getElementById('amp-ambient').value;
+      var loadtype = document.getElementById('amp-loadtype').value;
+      var load     = parseFloat(document.getElementById('amp-load').value);
+
+      if (isNaN(load) || load <= 0) { showError('amp-error', 'Enter a valid load current greater than 0.'); return; }
+
+      var table = (mat === 'copper') ? AMP_CU : AMP_AL;
+      var baseAmp = table[temp][gauge];
+      if (baseAmp === undefined) {
+        showError('amp-error', 'Aluminum wire does not have a standard ampacity for 14 AWG. Use copper or select a larger gauge.');
+        return;
+      }
+
+      var cf = CONDUIT_FACTOR[conduit];
+      var af = AMBIENT_FACTOR[ambient];
+      var correctedAmp = baseAmp * cf * af;
+      var requiredAmp  = (loadtype === 'continuous') ? load * 1.25 : load;
+      var pass = correctedAmp >= requiredAmp;
+
+      var recBreaker = nextBreaker(requiredAmp);
+      // Breaker must not exceed correctedAmp (NEC 240.4)
+      // If standard breaker > correctedAmp, flag it
+      var breakerOk = recBreaker <= correctedAmp;
+
+      document.getElementById('result1').classList.remove('hidden');
+      document.getElementById('result1Primary').textContent = 'Wire Ampacity: ' + fmtN(correctedAmp, 1) + ' A (after derating)';
+
+      var gridHTML =
+        makeItem('Base Ampacity (NEC 310.16)', baseAmp + ' A') +
+        makeItem('Corrected Ampacity', fmtN(correctedAmp, 1) + ' A') +
+        makeItem('Required Ampacity', fmtN(requiredAmp, 1) + ' A') +
+        makeItem('Recommended Breaker', (breakerOk ? recBreaker : 'N/A — upgrade wire') + (breakerOk ? ' A' : '')) +
+        makeStatusItem('Result', pass ? 'PASS' : 'FAIL — Select larger gauge', pass, false);
+
+      if (!pass) {
+        gridHTML += makeItem('Action Required', 'Select a larger wire gauge to handle ' + fmtN(requiredAmp,1) + ' A');
+      }
+      document.getElementById('result1Grid').innerHTML = gridHTML;
+    }
+
+    function resetAmpacity() {
+      document.getElementById('amp-gauge').value = '12';
+      document.getElementById('amp-material').value = 'copper';
+      document.getElementById('amp-temp').value = '75';
+      document.getElementById('amp-conduit').value = '1-3';
+      document.getElementById('amp-ambient').value = '86';
+      document.getElementById('amp-loadtype').value = 'noncontinuous';
+      document.getElementById('amp-load').value = '';
+      document.getElementById('result1').classList.add('hidden');
+      showError('amp-error', '');
+    }
+
+    // ── TAB 2: Ohm's Law ──────────────────────────────────────────────
+    function calcOhm() {
+      showError('ohm-error', '');
+      var Vs = document.getElementById('ohm-v').value.trim();
+      var Is = document.getElementById('ohm-i').value.trim();
+      var Rs = document.getElementById('ohm-r').value.trim();
+      var Ps = document.getElementById('ohm-p').value.trim();
+
+      var V = Vs !== '' ? parseFloat(Vs) : null;
+      var I = Is !== '' ? parseFloat(Is) : null;
+      var R = Rs !== '' ? parseFloat(Rs) : null;
+      var P = Ps !== '' ? parseFloat(Ps) : null;
+
+      var known = [V,I,R,P].filter(function(x){return x !== null;}).length;
+      if (known < 2) { showError('ohm-error', 'Please enter at least 2 values.'); return; }
+
+      var formulas = [];
+
+      // Solve all combinations
+      if (V !== null && I !== null) {
+        if (R === null) { R = V / I; formulas.push('R = V ÷ I = ' + fmtElec(V) + ' ÷ ' + fmtElec(I) + ' = ' + fmtElec(R) + ' Ω'); }
+        if (P === null) { P = V * I; formulas.push('P = V × I = ' + fmtElec(V) + ' × ' + fmtElec(I) + ' = ' + fmtElec(P) + ' W'); }
+      } else if (V !== null && R !== null) {
+        if (I === null) { I = V / R; formulas.push('I = V ÷ R = ' + fmtElec(V) + ' ÷ ' + fmtElec(R) + ' = ' + fmtElec(I) + ' A'); }
+        if (P === null) { P = V * V / R; formulas.push('P = V² ÷ R = ' + fmtElec(V) + '² ÷ ' + fmtElec(R) + ' = ' + fmtElec(P) + ' W'); }
+      } else if (V !== null && P !== null) {
+        if (I === null) { I = P / V; formulas.push('I = P ÷ V = ' + fmtElec(P) + ' ÷ ' + fmtElec(V) + ' = ' + fmtElec(I) + ' A'); }
+        if (R === null) { R = V * V / P; formulas.push('R = V² ÷ P = ' + fmtElec(V) + '² ÷ ' + fmtElec(P) + ' = ' + fmtElec(R) + ' Ω'); }
+      } else if (I !== null && R !== null) {
+        if (V === null) { V = I * R; formulas.push('V = I × R = ' + fmtElec(I) + ' × ' + fmtElec(R) + ' = ' + fmtElec(V) + ' V'); }
+        if (P === null) { P = I * I * R; formulas.push('P = I² × R = ' + fmtElec(I) + '² × ' + fmtElec(R) + ' = ' + fmtElec(P) + ' W'); }
+      } else if (I !== null && P !== null) {
+        if (V === null) { V = P / I; formulas.push('V = P ÷ I = ' + fmtElec(P) + ' ÷ ' + fmtElec(I) + ' = ' + fmtElec(V) + ' V'); }
+        if (R === null) { R = P / (I * I); formulas.push('R = P ÷ I² = ' + fmtElec(P) + ' ÷ ' + fmtElec(I) + '² = ' + fmtElec(R) + ' Ω'); }
+      } else if (R !== null && P !== null) {
+        if (V === null) { V = Math.sqrt(P * R); formulas.push('V = √(P × R) = √(' + fmtElec(P) + ' × ' + fmtElec(R) + ') = ' + fmtElec(V) + ' V'); }
+        if (I === null) { I = Math.sqrt(P / R); formulas.push('I = √(P ÷ R) = √(' + fmtElec(P) + ' ÷ ' + fmtElec(R) + ') = ' + fmtElec(I) + ' A'); }
+      }
+
+      if (V === null || I === null || R === null || P === null) {
+        showError('ohm-error', 'Could not solve with the given values. Please check your inputs.');
+        return;
+      }
+
+      document.getElementById('result2').classList.remove('hidden');
+      document.getElementById('result2Primary').textContent =
+        'V = ' + fmtElec(V) + ' V   I = ' + fmtElec(I) + ' A   R = ' + fmtElec(R) + ' Ω   P = ' + fmtElec(P) + ' W';
+
+      document.getElementById('result2Grid').innerHTML =
+        makeItem('Voltage (V)', fmtElec(V) + ' V', Vs === '') +
+        makeItem('Current (I)', fmtElec(I) + ' A', Is === '') +
+        makeItem('Resistance (R)', fmtElec(R) + ' Ω', Rs === '') +
+        makeItem('Power (P)', fmtElec(P) + ' W', Ps === '');
+
+      document.getElementById('ohm-formulas').innerHTML = formulas.join('<br>');
+    }
+
+    function resetOhm() {
+      ['ohm-v','ohm-i','ohm-r','ohm-p'].forEach(function(id){ document.getElementById(id).value = ''; });
+      document.getElementById('result2').classList.add('hidden');
+      showError('ohm-error', '');
+    }
+
+    // ── TAB 3: Conduit Fill ────────────────────────────────────────────
+    var CF_FILL = {
+      'EMT':       {'1/2':0.122,'3/4':0.213,'1':0.346,'1-1/4':0.598,'1-1/2':0.814,'2':1.342,'2-1/2':2.343,'3':3.538,'3-1/2':4.618,'4':5.901},
+      'RMC':       {'1/2':0.125,'3/4':0.221,'1':0.355,'1-1/4':0.610,'1-1/2':0.829,'2':1.363,'2-1/2':2.290,'3':3.637,'3-1/2':4.618,'4':6.277},
+      'IMC':       {'1/2':0.131,'3/4':0.229,'1':0.370,'1-1/4':0.631,'1-1/2':0.854,'2':1.452,'2-1/2':2.253,'3':3.475,'3-1/2':4.794,'4':6.171},
+      'PVC Sch40': {'1/2':0.120,'3/4':0.211,'1':0.333,'1-1/4':0.598,'1-1/2':0.814,'2':1.342,'2-1/2':2.290,'3':3.475,'3-1/2':4.794,'4':6.171},
+      'PVC Sch80': {'1/2':0.099,'3/4':0.175,'1':0.285,'1-1/4':0.507,'1-1/2':0.692,'2':1.150,'2-1/2':1.986,'3':3.082,'3-1/2':4.212,'4':5.452}
+    };
+    var WIRE_AREA = {14:0.0097,12:0.0133,10:0.0211,8:0.0366,6:0.0507,4:0.0824,2:0.1158,1:0.1562,'1/0':0.1855,'2/0':0.2233,'3/0':0.2679,'4/0':0.3237};
+    var CONDUIT_SIZES = ['1/2','3/4','1','1-1/4','1-1/2','2','2-1/2','3','3-1/2','4'];
+
+    function calcConduit() {
+      showError('cf-error', '');
+      var ctype = document.getElementById('cf-type').value;
+      var csize = document.getElementById('cf-size').value;
+      var gaugeEls = document.querySelectorAll('.cf-gauge');
+      var qtyEls   = document.querySelectorAll('.cf-qty');
+
+      var totalArea = 0;
+      var hasWires = false;
+      for (var i = 0; i < gaugeEls.length; i++) {
+        var g = gaugeEls[i].value;
+        var q = parseFloat(qtyEls[i].value);
+        if (g && !isNaN(q) && q > 0) {
+          totalArea += WIRE_AREA[g] * q;
+          hasWires = true;
+        }
+      }
+
+      if (!hasWires) { showError('cf-error', 'Enter at least one wire type and quantity.'); return; }
+
+      var allowable = CF_FILL[ctype][csize];
+      var fillPct = (totalArea / allowable) * 100;
+      var pass = fillPct <= 40;
+
+      document.getElementById('result3').classList.remove('hidden');
+      document.getElementById('result3Primary').textContent = 'Conduit Fill: ' + fmtN(fillPct, 1) + '%';
+
+      document.getElementById('result3Grid').innerHTML =
+        makeItem('Total Wire Area', fmtN(totalArea, 4) + ' in²') +
+        makeItem('Allowable Area (40%)', fmtN(allowable, 4) + ' in²') +
+        makeStatusItem('Fill Percentage', fmtN(fillPct, 1) + '%', pass, false) +
+        makeStatusItem('NEC 40% Status', pass ? 'PASS' : 'FAIL', pass, false);
+
+      var sugDiv = document.getElementById('cf-suggestion');
+      if (!pass) {
+        // Find next size up
+        var nextSize = null;
+        var idx = CONDUIT_SIZES.indexOf(csize);
+        for (var j = idx + 1; j < CONDUIT_SIZES.length; j++) {
+          var sz = CONDUIT_SIZES[j];
+          var allw = CF_FILL[ctype][sz];
+          if (allw && (totalArea / allw) * 100 <= 40) { nextSize = sz; break; }
+        }
+        sugDiv.style.display = 'block';
+        sugDiv.textContent = nextSize
+          ? 'Suggestion: Upgrade to ' + nextSize + '" ' + ctype + ' conduit to achieve ' + fmtN((totalArea/CF_FILL[ctype][nextSize])*100,1) + '% fill.'
+          : 'Total wire area exceeds even 4" conduit capacity. Consider splitting into multiple conduits.';
+      } else {
+        sugDiv.style.display = 'none';
+      }
+    }
+
+    function resetConduit() {
+      document.getElementById('cf-type').value = 'EMT';
+      document.getElementById('cf-size').value = '2';
+      document.querySelectorAll('.cf-gauge').forEach(function(el){ el.value = ''; });
+      document.querySelectorAll('.cf-qty').forEach(function(el){ el.value = ''; });
+      document.getElementById('result3').classList.add('hidden');
+      showError('cf-error', '');
+    }
+
+    // ── TAB 4: Three-Phase Power ───────────────────────────────────────
+    function toggleCustomVoltage() {
+      var sel = document.getElementById('tp-voltage').value;
+      var wrap = document.getElementById('tp-custom-wrap');
+      wrap.style.display = (sel === 'custom') ? 'block' : 'none';
+    }
+
+    function updateTPLabel() {
+      var type = document.getElementById('tp-inputtype').value;
+      var label = document.getElementById('tp-value-label');
+      var suffix = document.getElementById('tp-value-suffix');
+      if (type === 'current') { label.textContent = 'Line Current'; suffix.textContent = 'A'; }
+      else if (type === 'kw')  { label.textContent = 'Real Power';   suffix.textContent = 'kW'; }
+      else                      { label.textContent = 'Apparent Power'; suffix.textContent = 'kVA'; }
+    }
+
+    function calc3Phase() {
+      showError('tp-error', '');
+      var volSel = document.getElementById('tp-voltage').value;
+      var V = (volSel === 'custom') ? parseFloat(document.getElementById('tp-custom-v').value) : parseFloat(volSel);
+      var PF = parseFloat(document.getElementById('tp-pf').value);
+      var inputType = document.getElementById('tp-inputtype').value;
+      var val = parseFloat(document.getElementById('tp-value').value);
+
+      if (isNaN(V) || V <= 0) { showError('tp-error', 'Enter a valid voltage.'); return; }
+      if (isNaN(PF) || PF <= 0 || PF > 1) { showError('tp-error', 'Power factor must be between 0.01 and 1.00.'); return; }
+      if (isNaN(val) || val <= 0) { showError('tp-error', 'Enter a valid value greater than 0.'); return; }
+
+      var sqrt3 = 1.7321;
+      var S, P, I, Q;
+
+      if (inputType === 'current') {
+        I = val;
+        S = V * I * sqrt3 / 1000;
+        P = S * PF;
+      } else if (inputType === 'kw') {
+        P = val;
+        S = P / PF;
+        I = S * 1000 / (V * sqrt3);
+      } else {
+        S = val;
+        P = S * PF;
+        I = S * 1000 / (V * sqrt3);
+      }
+      Q = Math.sqrt(Math.max(0, S * S - P * P));
+
+      var primaryLabel = (inputType === 'current') ? 'kVA: ' + fmtN(S,2) + ' kVA | kW: ' + fmtN(P,2) + ' kW'
+                       : (inputType === 'kw')       ? 'Line Current: ' + fmtN(I,2) + ' A | kVA: ' + fmtN(S,2) + ' kVA'
+                                                     : 'Line Current: ' + fmtN(I,2) + ' A | kW: ' + fmtN(P,2) + ' kW';
+
+      document.getElementById('result4').classList.remove('hidden');
+      document.getElementById('result4Primary').textContent = primaryLabel;
+      document.getElementById('result4Grid').innerHTML =
+        makeItem('Real Power', fmtN(P,3) + ' kW') +
+        makeItem('Apparent Power', fmtN(S,3) + ' kVA') +
+        makeItem('Reactive Power', fmtN(Q,3) + ' kVAR') +
+        makeItem('Line Current', fmtN(I,2) + ' A') +
+        makeItem('Power Factor', PF.toFixed(2)) +
+        makeItem('Phase Current (Wye)', fmtN(I,2) + ' A') +
+        makeItem('Phase Current (Delta)', fmtN(I/sqrt3,2) + ' A') +
+        makeItem('Line Voltage', fmtN(V,0) + ' V');
+    }
+
+    function reset3Phase() {
+      document.getElementById('tp-voltage').value = '480';
+      document.getElementById('tp-custom-v').value = '';
+      document.getElementById('tp-custom-wrap').style.display = 'none';
+      document.getElementById('tp-pf').value = '0.85';
+      document.getElementById('tp-inputtype').value = 'current';
+      document.getElementById('tp-value').value = '';
+      updateTPLabel();
+      document.getElementById('result4').classList.add('hidden');
+      showError('tp-error', '');
+    }
+
+    // ── TAB 5: Load Calculation ────────────────────────────────────────
+    function calcLoad() {
+      showError('lc-error', '');
+      var sqft       = parseFloat(document.getElementById('lc-sqft').value);
+      var smallCirc  = parseFloat(document.getElementById('lc-smallapp').value) || 2;
+      var laundry    = parseFloat(document.getElementById('lc-laundry').value) || 1;
+      var rangeKW    = parseFloat(document.getElementById('lc-range').value) || 0;
+      var dryerKW    = parseFloat(document.getElementById('lc-dryer').value) || 0;
+      var whKW       = parseFloat(document.getElementById('lc-wh').value) || 0;
+      var acAmps     = parseFloat(document.getElementById('lc-ac').value) || 0;
+      var heatKW     = parseFloat(document.getElementById('lc-heat').value) || 0;
+      var otherVA    = parseFloat(document.getElementById('lc-other').value) || 0;
+
+      if (isNaN(sqft) || sqft <= 0) { showError('lc-error', 'Enter a valid dwelling area in square feet.'); return; }
+
+      // 1. General lighting 3 VA/sq ft
+      var lightingVA = sqft * 3;
+      // 2. Small appliance circuits 1500 VA each
+      var smallAppVA = smallCirc * 1500;
+      // 3. Laundry 1500 VA each
+      var laundryVA  = laundry * 1500;
+
+      // 4. Demand factor for lighting + small app + laundry
+      var sub1 = lightingVA + smallAppVA + laundryVA;
+      var demandSub1 = (sub1 <= 3000) ? sub1 : 3000 + (sub1 - 3000) * 0.35;
+
+      // 5. Range demand (NEC 220.55 simplified)
+      var rangeDemand = 0;
+      if (rangeKW > 0 && rangeKW <= 12) rangeDemand = 8000;
+      else if (rangeKW > 12) rangeDemand = 8000 + (rangeKW - 12) * 400;
+
+      // 6. Dryer 100%
+      var dryerVA = dryerKW * 1000;
+
+      // 7. Water heater 100%
+      var whVA = whKW * 1000;
+
+      // 8. HVAC — non-coincident (NEC 220.60) use larger
+      var acVA   = acAmps * 240;
+      var heatVA = heatKW * 1000;
+      var hvacVA = Math.max(acVA, heatVA);
+
+      // 9. Total
+      var totalVA   = demandSub1 + rangeDemand + dryerVA + whVA + hvacVA + otherVA;
+      var totalAmps = totalVA / 240;
+
+      var serviceSize;
+      if (totalAmps <= 100) serviceSize = 100;
+      else if (totalAmps <= 150) serviceSize = 150;
+      else if (totalAmps <= 200) serviceSize = 200;
+      else serviceSize = 400;
+
+      document.getElementById('result5').classList.remove('hidden');
+      document.getElementById('result5Primary').textContent = 'Minimum Service: ' + serviceSize + ' Amps';
+
+      document.getElementById('result5Grid').innerHTML =
+        makeItem('General Lighting Load', fmtN(lightingVA,0) + ' VA') +
+        makeItem('After Demand Factor', fmtN(demandSub1,0) + ' VA') +
+        makeItem('Range Demand', fmtN(rangeDemand,0) + ' VA') +
+        makeItem('Dryer + Water Heater', fmtN(dryerVA + whVA,0) + ' VA') +
+        makeItem('HVAC Load (larger of A/C or heat)', fmtN(hvacVA,0) + ' VA') +
+        makeItem('Total Computed Load', fmtN(totalVA,0) + ' VA') +
+        makeItem('Load at 240V', fmtN(totalAmps,1) + ' A') +
+        makeItem('Recommended Service', serviceSize + ' A', true);
+
+      var bd = document.getElementById('lc-breakdown');
+      bd.innerHTML =
+        '<strong>Load Breakdown:</strong><br>' +
+        'General Lighting (3 VA × ' + fmtN(sqft,0) + ' sq ft): ' + fmtN(lightingVA,0) + ' VA<br>' +
+        'Small Appliance Circuits (' + smallCirc + ' × 1,500 VA): ' + fmtN(smallAppVA,0) + ' VA<br>' +
+        'Laundry Circuits (' + laundry + ' × 1,500 VA): ' + fmtN(laundryVA,0) + ' VA<br>' +
+        'Lighting/Appliance Subtotal: ' + fmtN(sub1,0) + ' VA → After demand: ' + fmtN(demandSub1,0) + ' VA<br>' +
+        (rangeDemand > 0 ? 'Range (' + rangeKW + ' kW, NEC 220.55 demand): ' + fmtN(rangeDemand,0) + ' VA<br>' : '') +
+        (dryerVA > 0 ? 'Dryer: ' + fmtN(dryerVA,0) + ' VA<br>' : '') +
+        (whVA > 0 ? 'Water Heater: ' + fmtN(whVA,0) + ' VA<br>' : '') +
+        (hvacVA > 0 ? 'HVAC (non-coincident, NEC 220.60): ' + fmtN(hvacVA,0) + ' VA<br>' : '') +
+        (otherVA > 0 ? 'Other Fixed Appliances: ' + fmtN(otherVA,0) + ' VA<br>' : '') +
+        '<strong>Total: ' + fmtN(totalVA,0) + ' VA ÷ 240V = ' + fmtN(totalAmps,1) + ' A</strong>';
+    }
+
+    function resetLoad() {
+      document.getElementById('lc-sqft').value = '';
+      document.getElementById('lc-smallapp').value = '2';
+      document.getElementById('lc-laundry').value = '1';
+      document.getElementById('lc-range').value = '0';
+      document.getElementById('lc-dryer').value = '0';
+      document.getElementById('lc-wh').value = '4.5';
+      document.getElementById('lc-ac').value = '0';
+      document.getElementById('lc-heat').value = '0';
+      document.getElementById('lc-other').value = '0';
+      document.getElementById('result5').classList.add('hidden');
+      showError('lc-error', '');
+    }
+
+    // ── TAB 6: Motor FLC & Starter Sizing ─────────────────────────────
+    // NEC Table 430.248 — Single-phase FLC at 115V
+    var FLC_1PH_115 = {0.5:9.8, 0.75:13.8, 1:16, 1.5:20, 2:24, 3:34, 5:56, 7.5:80, 10:100};
+    // NEC Table 430.250 — Three-phase FLC at 460V
+    var FLC_3PH_460 = {0.5:1.1, 0.75:1.6, 1:2.1, 1.5:3.0, 2:3.4, 3:4.8, 5:7.6, 7.5:11, 10:14, 15:21, 20:27, 25:34, 30:40, 40:52, 50:65, 60:77, 75:96, 100:124};
+
+    function updateMotorVoltage() {
+      var phase = document.getElementById('mot-phase').value;
+      var sel   = document.getElementById('mot-voltage');
+      var hpSel = document.getElementById('mot-hp');
+      sel.innerHTML = '';
+      if (phase === 'single') {
+        sel.innerHTML = '<option value="115">115V</option><option value="230">230V</option>';
+        // Remove 3-phase only HP values
+        var singleHPs = ['0.5','0.75','1','1.5','2','3','5','7.5','10'];
+        hpSel.innerHTML = singleHPs.map(function(h){ return '<option value="'+h+'">'+h+' HP</option>'; }).join('');
+      } else {
+        sel.innerHTML = '<option value="208">208V</option><option value="230">230V</option><option value="460" selected>460V</option><option value="575">575V</option>';
+        var threeHPs = ['0.5','0.75','1','1.5','2','3','5','7.5','10','15','20','25','30','40','50','60','75','100'];
+        hpSel.innerHTML = threeHPs.map(function(h){ return '<option value="'+h+'">'+h+' HP</option>'; }).join('');
+        hpSel.value = '5';
+      }
+    }
+
+    function getMotorFLC(phase, voltage, hp) {
+      hp = parseFloat(hp);
+      voltage = parseInt(voltage);
+      if (phase === 'single') {
+        var base115 = FLC_1PH_115[hp];
+        if (base115 === undefined) return null;
+        if (voltage === 115) return base115;
+        if (voltage === 230) return base115 * 0.5;
+        return null;
+      } else {
+        var base460 = FLC_3PH_460[hp];
+        if (base460 === undefined) return null;
+        if (voltage === 460) return base460;
+        if (voltage === 230) return base460 * 2;
+        if (voltage === 208) return base460 * 2.21;
+        if (voltage === 575) return base460 * 0.8;
+        return null;
+      }
+    }
+
+    function minWireGauge(amps) {
+      for (var i = 0; i < GAUGE_ORDER.length; i++) {
+        var g = GAUGE_ORDER[i];
+        var a = AMP_75CU[g];
+        if (a !== undefined && a >= amps) return g + ' AWG';
+      }
+      return '4/0+ AWG (consult engineer)';
+    }
+
+    function calcMotor() {
+      showError('mot-error', '');
+      var phase  = document.getElementById('mot-phase').value;
+      var volt   = document.getElementById('mot-voltage').value;
+      var hp     = document.getElementById('mot-hp').value;
+      var sf     = parseFloat(document.getElementById('mot-sf').value);
+      var prot   = document.getElementById('mot-prot').value;
+
+      var flc = getMotorFLC(phase, volt, hp);
+      if (flc === null) { showError('mot-error', 'No NEC table data available for this HP/voltage combination.'); return; }
+
+      // NEC 430.22: Min conductor = FLC × 1.25
+      var conductorAmp = flc * 1.25;
+
+      // NEC 430.32: Overload relay trip
+      var overloadTrip = (sf >= 1.15) ? flc * 1.25 : flc * 1.15;
+
+      // NEC Table 430.52: Max short-circuit protection
+      var maxProtMultiplier, protLabel, protType;
+      if (prot === 'inverse')       { maxProtMultiplier = 2.50; protLabel = 'Inverse Time Breaker'; protType = 'breaker'; }
+      else if (prot === 'dual')     { maxProtMultiplier = 1.75; protLabel = 'Dual-Element Fuse';    protType = 'fuse'; }
+      else                           { maxProtMultiplier = 8.00; protLabel = 'Instant Trip Breaker';  protType = 'breaker'; }
+
+      var maxProtCalc = flc * maxProtMultiplier;
+      var maxProtSize = nextBreaker(maxProtCalc);
+      // If rounded-up exceeds the multiplier limit by less than 125% of FLC, it's NEC-acceptable
+      // NEC 430.52(C)(1) Exception 1: round up to next standard size
+      var minWire = minWireGauge(conductorAmp);
+
+      document.getElementById('result6').classList.remove('hidden');
+      document.getElementById('result6Primary').textContent = 'FLC: ' + fmtN(flc, 1) + ' Amps (NEC Table 430.25' + (phase === 'single' ? '8' : '0') + ')';
+
+      document.getElementById('result6Grid').innerHTML =
+        makeItem('FLC (NEC Table)', fmtN(flc,1) + ' A') +
+        makeItem('Min Conductor Ampacity', fmtN(conductorAmp,1) + ' A (FLC × 1.25)') +
+        makeItem('Min Wire Gauge (75°C Cu)', minWire) +
+        makeItem('Overload Relay Trip', fmtN(overloadTrip,1) + ' A (NEC 430.32)') +
+        makeItem('Max ' + protLabel, maxProtSize + ' A (NEC Table 430.52)') +
+        makeItem('Motor HP / Voltage', hp + ' HP @ ' + volt + 'V ' + (phase === 'single' ? '1ø' : '3ø')) +
+        makeItem('FLC × 1.25 Multiplier', maxProtMultiplier * 100 + '% per NEC 430.52');
+    }
+
+    function resetMotor() {
+      document.getElementById('mot-phase').value = 'three';
+      updateMotorVoltage();
+      document.getElementById('mot-voltage').value = '460';
+      document.getElementById('mot-hp').value = '5';
+      document.getElementById('mot-sf').value = '1.15';
+      document.getElementById('mot-prot').value = 'inverse';
+      document.getElementById('result6').classList.add('hidden');
+      showError('mot-error', '');
+    }
+  </script>
+  <script type="module">
+    import { initSavePanel } from './calc-save.js';
+
+    var _elecData = { tab: '⚡ Voltage Drop', inputs: {}, results: {}, preview: 'No result yet' };
+
+    const { onResultReady } = initSavePanel({
+      calcId:    'electrical',
+      calcLabel: 'Electrical Calculator',
+      calcIcon:  '⚡',
+      container: null,
+      getData:   () => _elecData
+    });
+
+    var ELEC_TABS = [
+      { fn: 'calcVD',       rid: 'result0', name: '⚡ Voltage Drop'   },
+      { fn: 'calcAmpacity', rid: 'result1', name: '🔌 Wire & Breaker'  },
+      { fn: 'calcOhm',      rid: 'result2', name: '⭕ Ohm\'s Law'      },
+      { fn: 'calcConduit',  rid: 'result3', name: '📦 Conduit Fill'    },
+      { fn: 'calc3Phase',   rid: 'result4', name: '🔺 3-Phase Power'   },
+      { fn: 'calcLoad',     rid: 'result5', name: '🏠 Load Calc'       },
+      { fn: 'calcMotor',    rid: 'result6', name: '⚙️ Motor Sizing'    }
+    ];
+
+    ELEC_TABS.forEach(function(t) {
+      var orig = window[t.fn];
+      window[t.fn] = function() {
+        orig.apply(this, arguments);
+        var el = document.getElementById(t.rid);
+        if (el && !el.classList.contains('hidden')) {
+          var primary = document.getElementById(t.rid + 'Primary');
+          var resultText = primary ? primary.textContent : '';
+          _elecData = {
+            tab:     t.name,
+            inputs:  { 'Calculator': t.name },
+            results: { 'Result': resultText },
+            preview: t.name + ' — ' + resultText
+          };
+          onResultReady();
+        }
+      };
+    });
+  </script>
+  <script type="module" src="firebase-auth.js"></script>
+</body>
+</html>

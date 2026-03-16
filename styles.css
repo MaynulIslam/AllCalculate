@@ -781,7 +781,39 @@ img {
   margin-bottom: 24px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
+
+/* Wraps h1 + breadcrumb so they stack vertically as one flex child */
+.csp-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Save widget — right side of header, padded to vertically center with the h1 title text */
+.csp-header-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  padding-top: 7px;
+}
+
+/* "Your Sessions →" link */
+.csp-sessions-link {
+  font-size: .78rem;
+  color: #6c63ff;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  transition: color .15s;
+}
+.csp-sessions-link:hover { color: #574fd6; text-decoration: underline; }
 
 .calc-page-title {
   font-size: 1.6rem;
@@ -1797,37 +1829,8 @@ img {
 .csp-save-row.visible { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
 
 .csp-save-btn {
-  padding: .5rem 1.1rem;
+  padding: .45rem 1rem;
   background: #6c63ff;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: .9rem;
-  font-family: inherit;
-  font-weight: 600;
-  transition: background .15s;
-}
-.csp-save-btn:hover { background: #574fd6; }
-
-/* Inline name input form */
-.csp-name-form { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; width: 100%; }
-.csp-name-input {
-  flex: 1;
-  min-width: 160px;
-  padding: .45rem .75rem;
-  border: 1px solid rgba(255,255,255,.25);
-  border-radius: 8px;
-  background: rgba(255,255,255,.1);
-  color: #fff;
-  font-size: .88rem;
-  font-family: inherit;
-  outline: none;
-}
-.csp-name-input:focus { border-color: rgba(108,99,255,.8); box-shadow: 0 0 0 2px rgba(108,99,255,.25); }
-.csp-confirm-btn {
-  padding: .45rem .9rem;
-  background: #22c55e;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -1836,19 +1839,56 @@ img {
   font-family: inherit;
   font-weight: 600;
   white-space: nowrap;
+  transition: background .15s;
 }
-.csp-confirm-btn:hover { background: #16a34a; }
-.csp-cancel-btn {
-  padding: .45rem .9rem;
-  background: rgba(255,255,255,.1);
-  color: rgba(255,255,255,.6);
+.csp-save-btn:hover:not(:disabled) { background: #574fd6; }
+.csp-save-btn:disabled,
+.csp-save-btn[disabled] {
+  background: #c4c1f0;
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Inline name input form */
+.csp-name-form { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; width: 100%; }
+.csp-name-input {
+  flex: 1;
+  min-width: 140px;
+  padding: .4rem .65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #1e293b;
+  font-size: .85rem;
+  font-family: inherit;
+  outline: none;
+}
+.csp-name-input:focus { border-color: #6c63ff; box-shadow: 0 0 0 2px rgba(108,99,255,.2); }
+.csp-confirm-btn {
+  padding: .4rem .85rem;
+  background: #22c55e;
+  color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: .85rem;
+  font-size: .82rem;
+  font-family: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.csp-confirm-btn:hover { background: #16a34a; }
+.csp-cancel-btn {
+  padding: .4rem .85rem;
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: .82rem;
   font-family: inherit;
 }
-.csp-cancel-btn:hover { background: rgba(255,255,255,.18); }
+.csp-cancel-btn:hover { background: #e2e8f0; color: #334155; }
 .csp-limit-msg { font-size: .8rem; color: #f87171; margin-top: .35rem; width: 100%; }
 
 /* Mini list section */
@@ -1883,10 +1923,10 @@ img {
 
 /* Individual session items */
 .csp-item {
-  background: rgba(255,255,255,.06);
+  background: #f8fafc;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,.07);
+  border: 1px solid #e2e8f0;
 }
 .csp-item-header {
   display: flex;
@@ -1896,11 +1936,12 @@ img {
   cursor: pointer;
   transition: background .15s;
 }
-.csp-item-header:hover { background: rgba(255,255,255,.04); }
+.csp-item-header:hover { background: #f1f5f9; }
 .csp-item-label {
   flex: 1;
   font-size: .88rem;
   font-weight: 500;
+  color: #1e293b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1908,7 +1949,7 @@ img {
 }
 .csp-item-preview {
   font-size: .76rem;
-  color: rgba(255,255,255,.45);
+  color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1917,7 +1958,7 @@ img {
 }
 .csp-item-date {
   font-size: .7rem;
-  color: rgba(255,255,255,.3);
+  color: #94a3b8;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -1934,7 +1975,7 @@ img {
 }
 .csp-item-edit-btn:hover, .csp-item-del-btn:hover { opacity: 1; }
 .csp-item-arrow {
-  color: rgba(255,255,255,.3);
+  color: #94a3b8;
   font-size: .8rem;
   transition: transform .2s;
   flex-shrink: 0;
@@ -1943,9 +1984,21 @@ img {
 .csp-item-body {
   display: none;
   padding: .75rem .9rem;
-  border-top: 1px solid rgba(255,255,255,.07);
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
 }
 .csp-item.open .csp-item-body { display: block; }
+
+/* Dark text overrides — calc page save panel sits on a white background */
+.csp-item-body .csp-tmpl                              { color: #334155; }
+.csp-item-body .csp-tmpl-heading                      { color: #94a3b8; }
+.csp-item-body .csp-tmpl-row                          { border-bottom-color: #f1f5f9; }
+.csp-item-body .csp-tmpl-row span:first-child         { color: #64748b; }
+.csp-item-body .csp-tmpl-row span:last-child          { color: #1e293b; }
+.csp-item-body .csp-tmpl-row.highlight span:last-child{ color: #6366f1; font-weight: 700; }
+.csp-item-body .csp-tmpl-empty                        { color: #94a3b8; }
+.csp-item-body .csp-tmpl-table th                     { color: #64748b; border-bottom-color: #e2e8f0; }
+.csp-item-body .csp-tmpl-table td                     { color: #1e293b; border-bottom-color: #f1f5f9; }
 .csp-rename-input {
   flex: 1;
   min-width: 100px;

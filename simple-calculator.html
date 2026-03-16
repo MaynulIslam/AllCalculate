@@ -1,9 +1,33 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Free online standard calculator — just like Windows Calculator. Add, subtract, multiply, divide with memory functions and keyboard support.">
+  <meta property="og:title" content="Simple Calculator | EasyCalculator.live">
+  <meta property="og:description" content="Free online standard calculator — just like Windows Calculator. Add, subtract, multiply, divide with memory functions and keyboard support.">
+  <meta property="og:url" content="https://easycalculator.live/simple-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EasyCalculator.live">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Simple Calculator | EasyCalculator.live">
+  <meta name="twitter:description" content="Free online standard calculator — just like Windows Calculator. Add, subtract, multiply, divide with memory functions and keyboard support.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Simple Calculator",
+    "url": "https://easycalculator.live/simple-calculator.html",
+    "description": "Free online standard calculator — just like Windows Calculator. Add, subtract, multiply, divide with memory functions and keyboard support.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
   <meta name="keywords" content="simple calculator, basic calculator, online calculator, standard calculator, windows calculator">
   <title>Simple Calculator | EasyCalculator.live</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,128 +129,6 @@
       justify-content: center;
       flex-wrap: wrap;
     }
-
-    /* ── History Panel ── */
-    .history-panel {
-      width: 280px;
-      min-width: 280px;
-      background: #1c1c1c;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
-      display: flex;
-      flex-direction: column;
-      color: #fff;
-    }
-    .hist-section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px 5px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: rgba(255,255,255,0.3);
-    }
-    .hist-tier-badge {
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: #4cc2ff;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-    .hist-session-log {
-      min-height: 100px;
-      max-height: 200px;
-      overflow-y: auto;
-      padding: 2px 14px 8px;
-    }
-    .hist-session-log::-webkit-scrollbar { width: 3px; }
-    .hist-session-log::-webkit-scrollbar-track { background: transparent; }
-    .hist-session-log::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
-    .hist-empty {
-      color: rgba(255,255,255,0.25);
-      font-size: 0.75rem;
-      text-align: center;
-      padding: 18px 8px;
-      font-style: italic;
-      line-height: 1.5;
-    }
-    .hist-entry {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      gap: 8px;
-    }
-    .hist-entry:last-child { border-bottom: none; }
-    .hist-expr {
-      color: rgba(255,255,255,0.45);
-      font-size: 0.75rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .hist-result {
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-    /* .hist-actions and .hist-save-btn moved to session naming block above */
-    .hist-saved-wrap { border-top: 1px solid rgba(255,255,255,0.07); }
-    .hist-saved-list {
-      max-height: 220px;
-      overflow-y: auto;
-      padding: 4px 14px 14px;
-    }
-    .hist-saved-list::-webkit-scrollbar { width: 3px; }
-    .hist-saved-list::-webkit-scrollbar-track { background: transparent; }
-    .hist-saved-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
-    .hist-saved-item {
-      margin-bottom: 6px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.04);
-      overflow: hidden;
-    }
-    .hist-saved-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .hist-saved-header:hover { background: rgba(255,255,255,0.05); }
-    .hist-saved-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.75);
-    }
-    .hist-saved-preview {
-      font-size: 0.68rem;
-      color: rgba(255,255,255,0.3);
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 185px;
-    }
-    .hist-saved-arrow {
-      color: rgba(255,255,255,0.25);
-      font-size: 1.1rem;
-      transition: transform 0.2s;
-      flex-shrink: 0;
-    }
-    .hist-saved-item.open .hist-saved-arrow { transform: rotate(90deg); }
-    .hist-saved-body {
-      display: none;
-      padding: 4px 10px 8px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-    .hist-saved-item.open .hist-saved-body { display: block; }
 
     /* ── Auth Modal ── */
     .auth-overlay {
@@ -345,156 +247,6 @@
       transition: background 0.15s;
     }
     .auth-google-btn:hover { background: #f0f0f0; }
-
-    /* ── Upgrade notice ── */
-    .hist-upgrade-note {
-      padding: 8px 14px 12px;
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.3);
-      text-align: center;
-      line-height: 1.5;
-    }
-    .hist-upgrade-note a {
-      color: #4cc2ff;
-      text-decoration: none;
-    }
-    .hist-upgrade-note a:hover { text-decoration: underline; }
-
-    /* ── Session naming (pre-save) ── */
-    .hist-name-row {
-      padding: 0 14px 8px;
-      display: none;
-    }
-    .hist-name-row.visible { display: block; }
-    .hist-name-input {
-      width: 100%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 8px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 0.8rem;
-      padding: 8px 10px;
-      outline: none;
-      box-sizing: border-box;
-      transition: border-color 0.15s;
-    }
-    .hist-name-input:focus { border-color: #4cc2ff; }
-    .hist-name-input::placeholder { color: rgba(255,255,255,0.3); }
-    .hist-save-row {
-      display: flex;
-      gap: 6px;
-      padding: 0 14px 12px;
-    }
-    .hist-save-btn {
-      flex: 1;
-      background: #4cc2ff;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .hist-save-btn:hover:not(:disabled) { background: #76cfff; }
-    .hist-save-btn:disabled { opacity: 0.35; cursor: default; background: #4cc2ff; }
-    .hist-save-cancel-btn {
-      background: rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.6);
-      border: none;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 0.85rem;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s;
-      display: none;
-    }
-    .hist-save-cancel-btn.visible { display: block; }
-    .hist-save-cancel-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
-
-    /* ── Inline rename (post-save) ── */
-    .hist-edit-btn {
-      background: none;
-      border: none;
-      color: rgba(76,194,255,0.75);
-      cursor: pointer;
-      font-size: 0.72rem;
-      padding: 2px 5px;
-      border-radius: 4px;
-      transition: all 0.15s;
-      flex-shrink: 0;
-      line-height: 1;
-    }
-    .hist-edit-btn:hover { color: #4cc2ff; background: rgba(76,194,255,0.15); }
-    .hist-rename-input {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid #4cc2ff;
-      border-radius: 6px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 3px 7px;
-      outline: none;
-      width: 140px;
-      max-width: 100%;
-    }
-
-    /* ── Delete button + inline confirm ── */
-    .hist-delete-btn {
-      background: none;
-      border: none;
-      color: rgba(255,107,107,0.75);
-      cursor: pointer;
-      font-size: 0.72rem;
-      padding: 2px 5px;
-      border-radius: 4px;
-      transition: all 0.15s;
-      flex-shrink: 0;
-      line-height: 1;
-    }
-    .hist-delete-btn:hover { color: #ff6b6b; background: rgba(255,80,80,0.15); }
-    .hist-item-actions {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      flex-shrink: 0;
-    }
-    .hist-confirm-row {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
-    }
-    .hist-confirm-label {
-      font-size: 0.65rem;
-      color: rgba(255,255,255,0.45);
-      white-space: nowrap;
-    }
-    .hist-confirm-yes, .hist-confirm-no {
-      background: none;
-      border-radius: 4px;
-      font-size: 0.65rem;
-      font-family: inherit;
-      font-weight: 700;
-      padding: 2px 7px;
-      cursor: pointer;
-      transition: all 0.15s;
-      border: 1px solid;
-    }
-    .hist-confirm-yes { color: #ff6b6b; border-color: rgba(255,80,80,0.4); }
-    .hist-confirm-yes:hover { background: rgba(255,80,80,0.15); }
-    .hist-confirm-no  { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.18); }
-    .hist-confirm-no:hover { background: rgba(255,255,255,0.08); color: #fff; }
-
-    @media (max-width: 720px) {
-      .win-calc { width: 100%; min-width: unset; max-width: 340px; }
-      .history-panel { width: 100%; min-width: unset; max-width: 340px; }
-    }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5277511564882514" crossorigin="anonymous"></script>
   <!-- Google Analytics -->
@@ -539,20 +291,26 @@
     <div>
       <div class="calc-main">
         <div class="calc-header" style="padding:28px 32px 0">
-          <h1 class="calc-page-title">Simple Calculator</h1>
-          <nav class="calc-page-breadcrumb">
-            <a href="index.html">Home</a>
-            <span class="bc-sep">&#8250;</span>
-            <a href="index.html#math">Math &amp; Everyday</a>
-            <span class="bc-sep">&#8250;</span>
-            <span>Simple Calculator</span>
-          </nav>
+          <div class="csp-title-wrap">
+            <h1 class="calc-page-title">Simple Calculator</h1>
+            <nav class="calc-page-breadcrumb">
+              <a href="index.html">Home</a>
+              <span class="bc-sep">&#8250;</span>
+              <a href="index.html#math">Math &amp; Everyday</a>
+              <span class="bc-sep">&#8250;</span>
+              <span>Simple Calculator</span>
+            </nav>
+          </div>
+          <div class="csp-header-widget" id="scSaveWidget">
+            <button class="csp-save-btn" id="scSaveBtn" disabled>Save session</button>
+            <a href="saved-sessions.html" class="csp-sessions-link">Your Sessions →</a>
+          </div>
         </div>
 
         <div class="calc-body" style="padding:24px 20px 36px">
           <div class="calc-workspace">
 
-            <!-- ── LEFT: Calculator ── -->
+            <!-- ── Calculator ── -->
             <div class="win-calc" id="winCalc">
               <div class="win-display">
                 <div class="win-expression" id="winExpr">&nbsp;</div>
@@ -597,43 +355,6 @@
                 <button class="win-btn eq"    id="btnEq"   >=</button>
               </div>
             </div><!-- /.win-calc -->
-
-            <!-- ── RIGHT: History Panel ── -->
-            <div class="history-panel" id="historyPanel">
-
-              <!-- Current session -->
-              <div class="hist-section-title">
-                <span>Current Session</span>
-              </div>
-              <div class="hist-session-log" id="histSessionLog">
-                <div class="hist-empty">Start calculating to log your history here.</div>
-              </div>
-
-              <!-- Save button + name row -->
-              <div class="hist-name-row" id="histNameRow">
-                <input type="text" class="hist-name-input" id="histNameInput" placeholder="Name this session…">
-              </div>
-              <div class="hist-save-row">
-                <button class="hist-save-btn" id="histSaveBtn" disabled>💾 Save Session</button>
-                <button class="hist-save-cancel-btn" id="histSaveCancelBtn" title="Cancel">✕</button>
-              </div>
-
-              <!-- Saved sessions -->
-              <div class="hist-saved-wrap">
-                <div class="hist-section-title">
-                  <span>Saved Sessions</span>
-                  <span class="hist-tier-badge" id="histTierBadge"></span>
-                </div>
-                <div class="hist-saved-list" id="histSavedList">
-                  <div class="hist-empty">Sign in to view saved sessions.</div>
-                </div>
-              </div>
-
-              <div class="hist-upgrade-note" id="histUpgradeNote" style="display:none">
-                On the free plan — <a href="#">upgrade</a> for more saves.
-              </div>
-
-            </div><!-- /.history-panel -->
 
           </div><!-- /.calc-workspace -->
         </div>
@@ -797,12 +518,9 @@
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
              signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-    import { getFirestore, collection, addDoc, getDocs, query,
-             orderBy, limit as fsLimit, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp }
+    import { getFirestore, collection, addDoc, doc, getDoc, setDoc, serverTimestamp }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-    // ── Firebase config loaded from external file (kept out of version control) ──
-    // See firebase-config.js — never hardcode credentials here.
     const { firebaseConfig } = await import('./firebase-config.js');
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -811,10 +529,14 @@
     // ── Tier limits ──
     const TIER_LIMITS = { free: 5, basic: 500, executive: 1500, premium: Infinity };
 
-    let currentUser  = null;
-    let userTier     = 'free';
-    let savedCount   = 0;
+    let currentUser    = null;
+    let userTier       = 'free';
+    let savedCount     = 0;
     let currentSession = [];   // { expr, result }[]
+    let savePending    = false;
+
+    const saveBtn    = document.getElementById('scSaveBtn');
+    const saveWidget = document.getElementById('scSaveWidget');
 
     // ════════════════════════════════════════
     //  AUTH STATE
@@ -823,14 +545,10 @@
       currentUser = user;
       if (user) {
         await loadUserProfile();
-        await loadSavedSessions();
       } else {
-        document.getElementById('histSavedList').innerHTML  =
-          '<div class="hist-empty">Sign in to view saved sessions.</div>';
         userTier   = 'free';
         savedCount = 0;
       }
-      updateTierBadge();
       updateNavAuth(user);
     });
 
@@ -864,6 +582,9 @@
               </div>
               <a class="nav-dropdown-item nav-dropdown-link" href="saved-sessions.html">
                 📋 Saved Calculations
+              </a>
+              <a class="nav-dropdown-item nav-dropdown-link nav-upgrade-link" href="pricing.html">
+                ⚡ Upgrade Plan
               </a>
               <div class="nav-dropdown-item nav-dropdown-signout" id="navSignOutBtn">
                 ↪ Sign Out
@@ -905,313 +626,108 @@
       } catch (e) { console.error('Profile error:', e); }
     }
 
-    function updateTierBadge() {
-      const badge = document.getElementById('histTierBadge');
-      const note  = document.getElementById('histUpgradeNote');
-      if (!currentUser) { badge.textContent = ''; note.style.display = 'none'; return; }
-      const lim    = TIER_LIMITS[userTier];
-      const limStr = lim === Infinity ? '∞' : lim;
-      const tierName = userTier[0].toUpperCase() + userTier.slice(1);
-      badge.textContent = `${tierName} · ${savedCount}/${limStr}`;
-      note.style.display = (userTier === 'free' && savedCount >= 3) ? 'block' : 'none';
-      // Also refresh navbar tier info if dropdown exists
-      const navTier = document.getElementById('navDropdownTier');
-      if (navTier) navTier.textContent = `${tierName} Plan · ${savedCount}/${limStr} saves`;
-    }
-
     // ════════════════════════════════════════
-    //  SAVED SESSIONS
+    //  HEADER SAVE WIDGET
     // ════════════════════════════════════════
-    async function loadSavedSessions() {
-      const list = document.getElementById('histSavedList');
-      list.innerHTML = '<div class="hist-empty">Loading…</div>';
-      try {
-        const q    = query(collection(db, 'users', currentUser.uid, 'sessions'),
-                           orderBy('createdAt', 'desc'), fsLimit(20));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-          list.innerHTML = '<div class="hist-empty">No saved sessions yet.</div>';
-          return;
-        }
-        list.innerHTML = '';
-        let count = 0;
-        snap.forEach(d => {
-          const calcId = d.data().calculator;
-          // Show only simple-calculator sessions (or legacy sessions with no calculator field)
-          if (!calcId || calcId === 'simple-calculator') {
-            list.appendChild(buildSavedItem(d.id, d.data()));
-            count++;
-          }
-        });
-        if (count === 0) {
-          list.innerHTML = '<div class="hist-empty">No saved sessions yet.</div>';
-        }
-      } catch (e) {
-        list.innerHTML = '<div class="hist-empty">Error loading sessions.</div>';
-        console.error(e);
-      }
-    }
+    saveBtn.addEventListener('click', () => {
+      if (!currentUser) { showAuthModal(); return; }
+      showSaveForm();
+    });
 
-    function buildSavedItem(id, data) {
-      const calcs   = data.calculations || [];
-      const preview = calcs.slice(0, 3).map(c => c.result).join(', ');
-      const div = document.createElement('div');
-      div.className = 'hist-saved-item';
-      div.innerHTML = `
-        <div class="hist-saved-header">
-          <div style="overflow:hidden;flex:1;min-width:0">
-            <div class="hist-saved-label-wrap">
-              <span class="hist-saved-label">${esc(data.label || 'Session')}</span>
-            </div>
-            <div class="hist-saved-preview">= ${preview}${calcs.length > 3 ? ` +${calcs.length - 3} more` : ''}</div>
-          </div>
-          <div class="hist-item-actions">
-            <button class="hist-edit-btn" title="Rename session">✏️</button>
-            <button class="hist-delete-btn" title="Delete session">🗑️</button>
-          </div>
-          <span class="hist-saved-arrow">›</span>
-        </div>
-        <div class="hist-saved-body">
-          ${calcs.map(c =>
-            `<div class="hist-entry">
-               <span class="hist-expr">${esc(c.expr)}</span>
-               <span class="hist-result">${esc(c.result)}</span>
-             </div>`
-          ).join('')}
-        </div>`;
+    function showSaveForm() {
+      if (savePending) return;
+      savePending = true;
+      saveBtn.disabled = true;
 
-      // Toggle expand on header click (but not on edit button)
-      const header = div.querySelector('.hist-saved-header');
-      header.addEventListener('click', e => {
-        if (!e.target.closest('.hist-item-actions') && !e.target.closest('.hist-rename-input')) {
-          div.classList.toggle('open');
-        }
-      });
-
-      // ── Inline rename ──
-      const editBtn   = div.querySelector('.hist-edit-btn');
-      const labelSpan = div.querySelector('.hist-saved-label');
-
-      editBtn.addEventListener('click', e => {
-        e.stopPropagation();
-
-        // Replace label span with input
-        const currentName = labelSpan.textContent;
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'hist-rename-input';
-        input.value = currentName;
-        labelSpan.replaceWith(input);
-        editBtn.style.display = 'none';
-        input.focus();
-        input.select();
-
-        async function commitRename() {
-          const newName = input.value.trim() || currentName;
-          // Restore label span immediately
-          const newSpan = document.createElement('span');
-          newSpan.className = 'hist-saved-label';
-          newSpan.textContent = newName;
-          input.replaceWith(newSpan);
-          editBtn.style.display = '';
-
-          if (newName !== currentName) {
-            try {
-              await updateDoc(doc(db, 'users', currentUser.uid, 'sessions', id), { label: newName });
-            } catch (err) {
-              console.error('Rename error:', err);
-              newSpan.textContent = currentName; // revert on error
-            }
-          }
-        }
-
-        input.addEventListener('blur', commitRename);
-        input.addEventListener('keydown', e => {
-          if (e.key === 'Enter')  { e.preventDefault(); input.blur(); }
-          if (e.key === 'Escape') {
-            input.value = currentName;
-            input.blur();
-          }
-        });
-      });
-
-      // ── Inline delete with confirm ──
-      const deleteBtn  = div.querySelector('.hist-delete-btn');
-      const actionsDiv = div.querySelector('.hist-item-actions');
-
-      deleteBtn.addEventListener('click', e => {
-        e.stopPropagation();
-
-        // Hide edit + delete, show confirm row
-        editBtn.style.display   = 'none';
-        deleteBtn.style.display = 'none';
-
-        const confirmRow = document.createElement('div');
-        confirmRow.className = 'hist-confirm-row';
-        confirmRow.innerHTML = `
-          <span class="hist-confirm-label">Delete?</span>
-          <button class="hist-confirm-yes">Yes</button>
-          <button class="hist-confirm-no">No</button>`;
-        actionsDiv.appendChild(confirmRow);
-
-        // No — restore buttons
-        confirmRow.querySelector('.hist-confirm-no').addEventListener('click', e => {
-          e.stopPropagation();
-          confirmRow.remove();
-          editBtn.style.display   = '';
-          deleteBtn.style.display = '';
-        });
-
-        // Yes — delete from Firestore + remove from DOM
-        confirmRow.querySelector('.hist-confirm-yes').addEventListener('click', async e => {
-          e.stopPropagation();
-          const yesBtn = e.currentTarget;
-          yesBtn.textContent = '…';
-          yesBtn.disabled = true;
-          try {
-            await deleteDoc(doc(db, 'users', currentUser.uid, 'sessions', id));
-            savedCount = Math.max(0, savedCount - 1);
-            await setDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'),
-                         { savedCount }, { merge: true });
-            updateTierBadge();
-            div.remove();
-            // Show empty state if no sessions remain
-            const list = document.getElementById('histSavedList');
-            if (!list.querySelector('.hist-saved-item')) {
-              list.innerHTML = '<div class="hist-empty">No saved sessions yet.</div>';
-            }
-          } catch (err) {
-            console.error('Delete error:', err);
-            confirmRow.remove();
-            editBtn.style.display   = '';
-            deleteBtn.style.display = '';
-          }
-        });
-      });
-
-      return div;
-    }
-
-    function esc(s) {
-      return String(s)
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    // ════════════════════════════════════════
-    //  SAVE SESSION — two-step: name then save
-    // ════════════════════════════════════════
-    let savePending = false;   // true when name row is showing
-
-    function autoLabel() {
-      return `Session ${new Date().toLocaleString('en-US', {
+      const today = new Date().toLocaleString('en-US', {
         month:'short', day:'numeric', year:'numeric',
         hour:'numeric', minute:'2-digit'
-      })}`;
-    }
+      });
+      const defaultName = `Simple Calc — ${today}`;
 
-    function showNameRow() {
-      const nameRow   = document.getElementById('histNameRow');
-      const nameInput = document.getElementById('histNameInput');
-      const saveBtn   = document.getElementById('histSaveBtn');
-      const cancelBtn = document.getElementById('histSaveCancelBtn');
-      nameInput.value = autoLabel();
-      nameRow.classList.add('visible');
-      cancelBtn.classList.add('visible');
-      saveBtn.textContent = '✓ Confirm Save';
-      saveBtn.style.background = '#34c96a';
-      savePending = true;
+      const form = document.createElement('div');
+      form.className = 'csp-name-form';
+      form.innerHTML = `
+        <input  type="text"  class="csp-name-input"  value="${esc(defaultName)}" placeholder="Session name">
+        <button class="csp-confirm-btn">✓ Save</button>
+        <button class="csp-cancel-btn">✗</button>
+        <div    class="csp-limit-msg" style="display:none"></div>`;
+      saveWidget.insertBefore(form, saveWidget.querySelector('.csp-sessions-link'));
+
+      const nameInput  = form.querySelector('.csp-name-input');
+      const confirmBtn = form.querySelector('.csp-confirm-btn');
+      const cancelBtn  = form.querySelector('.csp-cancel-btn');
+      const limitMsg   = form.querySelector('.csp-limit-msg');
+
       nameInput.focus();
       nameInput.select();
-    }
 
-    function hideNameRow() {
-      const nameRow   = document.getElementById('histNameRow');
-      const saveBtn   = document.getElementById('histSaveBtn');
-      const cancelBtn = document.getElementById('histSaveCancelBtn');
-      nameRow.classList.remove('visible');
-      cancelBtn.classList.remove('visible');
-      saveBtn.textContent = '💾 Save Session';
-      saveBtn.style.background = '';
-      savePending = false;
-    }
+      function cancelSave() {
+        form.remove();
+        saveBtn.disabled = false;
+        savePending = false;
+      }
+      cancelBtn.addEventListener('click', cancelSave);
 
-    document.getElementById('histSaveCancelBtn').addEventListener('click', hideNameRow);
+      async function doSave() {
+        const label = nameInput.value.trim() || defaultName;
+        const limit = TIER_LIMITS[userTier] ?? 5;
 
-    // Enter key in name input confirms save
-    document.getElementById('histNameInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') document.getElementById('histSaveBtn').click();
-      if (e.key === 'Escape') hideNameRow();
-    });
+        if (savedCount >= limit) {
+          limitMsg.textContent   = `You've reached your ${limit}-session limit. Upgrade to save more.`;
+          limitMsg.style.display = 'block';
+          return;
+        }
 
-    document.getElementById('histSaveBtn').addEventListener('click', async () => {
-      if (currentSession.length === 0) return;
-      if (!currentUser) { showAuthModal(); return; }
+        confirmBtn.textContent = '…';
+        confirmBtn.disabled    = true;
 
-      const lim = TIER_LIMITS[userTier];
-      if (savedCount >= lim) {
-        alert(`You've reached the ${userTier} plan limit of ${lim === Infinity ? 'unlimited' : lim} saved sessions.\nUpgrade your plan to save more!`);
-        return;
+        try {
+          await addDoc(collection(db, 'users', currentUser.uid, 'sessions'), {
+            calculator:   'simple-calculator',
+            label,
+            calculations: currentSession.slice(),
+            preview:      currentSession.slice(-1)[0]?.result || '',
+            createdAt:    serverTimestamp()
+          });
+          savedCount++;
+          await setDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'),
+                       { savedCount }, { merge: true });
+
+          // Reset session after save
+          currentSession = [];
+          form.remove();
+          savePending = false;
+
+          // Brief "Saved!" feedback
+          saveBtn.textContent = '✓ Saved!';
+          saveBtn.disabled    = true;
+          setTimeout(() => {
+            saveBtn.textContent = 'Save session';
+            // stays disabled until next calculation
+          }, 2000);
+        } catch (err) {
+          console.error('Save error:', err);
+          confirmBtn.textContent = '✓ Save';
+          confirmBtn.disabled    = false;
+          limitMsg.textContent   = 'Save failed. Please try again.';
+          limitMsg.style.display = 'block';
+        }
       }
 
-      // Step 1 — show name input if not yet showing
-      if (!savePending) { showNameRow(); return; }
-
-      // Step 2 — actually save
-      const label = document.getElementById('histNameInput').value.trim() || autoLabel();
-      const btn   = document.getElementById('histSaveBtn');
-      btn.disabled = true;
-      btn.textContent = 'Saving…';
-
-      try {
-        await addDoc(collection(db, 'users', currentUser.uid, 'sessions'), {
-          calculator: 'simple-calculator',
-          label,
-          calculations: currentSession.slice(),
-          createdAt: serverTimestamp()
-        });
-        savedCount++;
-        await setDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'),
-                     { savedCount }, { merge: true });
-        updateTierBadge();
-        await loadSavedSessions();
-
-        currentSession = [];
-        updateSessionLog();
-        hideNameRow();
-        btn.textContent = '✓ Saved!';
-        btn.disabled = true;
-        setTimeout(() => { btn.textContent = '💾 Save Session'; }, 2000);
-      } catch (e) {
-        console.error('Save error:', e);
-        btn.disabled = false;
-        btn.textContent = '✓ Confirm Save';
-      }
-    });
+      confirmBtn.addEventListener('click', doSave);
+      nameInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter')  doSave();
+        if (e.key === 'Escape') cancelSave();
+      });
+    }
 
     // ════════════════════════════════════════
-    //  SESSION LOG
+    //  SESSION TRACKING
     // ════════════════════════════════════════
-    function updateSessionLog() {
-      const log = document.getElementById('histSessionLog');
-      const btn = document.getElementById('histSaveBtn');
-      if (currentSession.length === 0) {
-        log.innerHTML = '<div class="hist-empty">Start calculating to log your history here.</div>';
-        btn.disabled = true;
-        return;
-      }
-      log.innerHTML = currentSession.map(c =>
-        `<div class="hist-entry">
-           <span class="hist-expr">${esc(c.expr)}</span>
-           <span class="hist-result">${esc(c.result)}</span>
-         </div>`
-      ).join('');
-      log.scrollTop = log.scrollHeight;
-      btn.disabled = false;
-    }
-
     function addToSession(expr, result) {
       currentSession.push({ expr, result });
-      updateSessionLog();
+      saveBtn.disabled = false;
     }
 
     // ════════════════════════════════════════
@@ -1427,6 +943,9 @@
       if (isNaN(n))     return 'Cannot divide by zero';
       if (!isFinite(n)) return 'Overflow';
       return parseFloat(n.toPrecision(14)).toString();
+    }
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
     // ── Button wiring ──

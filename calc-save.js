@@ -1,4 +1,4 @@
-﻿/**
+/**
  * calc-save.js
  * Shared save-panel module for AllCalculate.com calculators.
  * Exports:
@@ -34,7 +34,7 @@ function fmtDate(ts) {
  *   calcId    {string}  — e.g. 'mortgage'
  *   calcLabel {string}  — e.g. 'Mortgage'
  *   calcIcon  {string}  — e.g. '🏠'
- *   container {Element} — panel is injected after this element
+ *   container {Element} — (unused legacy param, kept for compatibility)
  *   getData   {Function}— called at save time; returns snapshot object
  */
 export function initSavePanel({ calcId, calcLabel, calcIcon = '💾', container, getData }) {
@@ -43,38 +43,36 @@ export function initSavePanel({ calcId, calcLabel, calcIcon = '💾', container,
   let userTier    = 'free';
   let savedCount  = 0;
 
-  // ── Inject DOM ──
-  const wrap = document.createElement('div');
-  wrap.className = 'csp-wrap';
-  wrap.innerHTML = `
-    <div class="csp-save-row">
-      <button class="csp-save-btn">${calcIcon} Save this result</button>
-    </div>
-    <div class="csp-list-section">
-      <div class="csp-list-heading">Your saved ${esc(calcLabel)} sessions</div>
-      <ul class="csp-list"></ul>
-    </div>`;
-  container.insertAdjacentElement('afterend', wrap);
+  // ── Inject widget into .calc-header ──
+  const calcHeader = document.querySelector('.calc-header');
 
-  const saveRow    = wrap.querySelector('.csp-save-row');
-  const saveBtn    = wrap.querySelector('.csp-save-btn');
-  const listEl     = wrap.querySelector('.csp-list');
+  const widget = document.createElement('div');
+  widget.className = 'csp-header-widget';
+  widget.innerHTML = `
+    <button class="csp-save-btn" disabled>Save this result</button>
+    <a href="saved-sessions.html" class="csp-sessions-link">Your Sessions →</a>`;
+
+  // Wrap existing h1/breadcrumb in .csp-title-wrap, then append widget alongside it
+  if (calcHeader) {
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'csp-title-wrap';
+    while (calcHeader.firstChild) {
+      titleWrap.appendChild(calcHeader.firstChild);
+    }
+    calcHeader.appendChild(titleWrap);
+    calcHeader.appendChild(widget);
+  } else if (container) {
+    // Fallback: insert after the container element
+    container.insertAdjacentElement('afterend', widget);
+  }
+
+  const saveBtn = widget.querySelector('.csp-save-btn');
 
   // ── Auth state ──
-  document.addEventListener('acAuthChange', async e => {
+  document.addEventListener('acAuthChange', e => {
     currentUser = e.detail.user;
-    userTier    = e.detail.userTier    || 'free';
-    savedCount  = e.detail.savedCount  || 0;
-
-    if (currentUser) {
-      await loadMiniList();
-    } else {
-      listEl.innerHTML = `
-        <li class="csp-item-noauth">
-          <button class="csp-signin-prompt">Sign in to save sessions</button>
-        </li>`;
-      listEl.querySelector('.csp-signin-prompt').addEventListener('click', showAuthModal);
-    }
+    userTier    = e.detail.userTier   || 'free';
+    savedCount  = e.detail.savedCount || 0;
   });
 
   // ── Save button click ──
@@ -87,7 +85,7 @@ export function initSavePanel({ calcId, calcLabel, calcIcon = '💾', container,
     const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const defaultName = `${calcLabel} — ${today}`;
 
-    saveBtn.style.display = 'none';
+    saveBtn.disabled = true;
 
     const form = document.createElement('div');
     form.className = 'csp-name-form';
@@ -96,7 +94,7 @@ export function initSavePanel({ calcId, calcLabel, calcIcon = '💾', container,
       <button class="csp-confirm-btn">✓ Save</button>
       <button class="csp-cancel-btn">✗</button>
       <div    class="csp-limit-msg" style="display:none"></div>`;
-    saveRow.appendChild(form);
+    widget.insertBefore(form, widget.querySelector('.csp-sessions-link'));
 
     const nameInput  = form.querySelector('.csp-name-input');
     const confirmBtn = form.querySelector('.csp-confirm-btn');
@@ -108,7 +106,7 @@ export function initSavePanel({ calcId, calcLabel, calcIcon = '💾', container,
 
     cancelBtn.addEventListener('click', () => {
       form.remove();
-      saveBtn.style.display = '';
+      saveBtn.disabled = false;
     });
 
     async function doSave() {
@@ -138,8 +136,10 @@ export function initSavePanel({ calcId, calcLabel, calcIcon = '💾', container,
                      { savedCount }, { merge: true });
 
         form.remove();
-        saveBtn.style.display = '';
-        await loadMiniList();
+        saveBtn.disabled = false;
+        // Brief "Saved!" confirmation
+        saveBtn.textContent = `✓ Saved!`;
+        setTimeout(() => { saveBtn.textContent = 'Save this result'; }, 2000);
       } catch (err) {
         console.error('Save error:', err);
         confirmBtn.textContent = '✓ Save';
@@ -156,160 +156,13 @@ export function initSavePanel({ calcId, calcLabel, calcIcon = '💾', container,
     });
   }
 
-  // ── Load mini list from Firestore ──
-  async function loadMiniList() {
-    if (!currentUser) return;
-    try {
-      const q    = query(
-        collection(db, 'users', currentUser.uid, 'sessions'),
-        orderBy('createdAt', 'desc')
-      );
-      const snap = await getDocs(q);
-
-      const items = [];
-      snap.forEach(d => {
-        if (d.data().calculator === calcId) items.push({ id: d.id, data: d.data() });
-      });
-
-      listEl.innerHTML = '';
-      if (items.length === 0) {
-        listEl.innerHTML = '<li class="csp-item-empty">No saved sessions yet.</li>';
-        return;
-      }
-      items.forEach(({ id, data }) => listEl.appendChild(buildMiniItem(id, data)));
-    } catch (err) {
-      console.error('Mini list load error:', err);
-    }
-  }
-
-  // ── Build one mini list item ──
-  function buildMiniItem(id, data) {
-    const li = document.createElement('li');
-    li.className = 'csp-item';
-    li.innerHTML = `
-      <div class="csp-item-header">
-        <span class="csp-item-label">${esc(data.label || 'Session')}</span>
-        <span class="csp-item-preview">${esc(data.preview || '')}</span>
-        <span class="csp-item-date">${fmtDate(data.createdAt)}</span>
-        <div class="csp-item-actions">
-          <button class="csp-item-edit-btn" title="Rename">✏️</button>
-          <button class="csp-item-del-btn"  title="Delete">🗑️</button>
-        </div>
-        <span class="csp-item-arrow">›</span>
-      </div>
-      <div class="csp-item-body">${renderCalcTemplate(data)}</div>`;
-
-    const header    = li.querySelector('.csp-item-header');
-    const actions   = li.querySelector('.csp-item-actions');
-    const editBtn   = li.querySelector('.csp-item-edit-btn');
-    const delBtn    = li.querySelector('.csp-item-del-btn');
-    const labelSpan = li.querySelector('.csp-item-label');
-
-    // Toggle expand/collapse
-    header.addEventListener('click', e => {
-      if (!e.target.closest('.csp-item-actions') && !e.target.closest('.csp-rename-input')) {
-        li.classList.toggle('open');
-      }
-    });
-
-    // Inline rename
-    editBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      const currentName = labelSpan.textContent;
-      const input       = document.createElement('input');
-      input.type        = 'text';
-      input.className   = 'csp-rename-input';
-      input.value       = currentName;
-      labelSpan.replaceWith(input);
-      editBtn.style.display = 'none';
-      input.focus();
-      input.select();
-
-      async function commitRename() {
-        const newName = input.value.trim() || currentName;
-        const newSpan = document.createElement('span');
-        newSpan.className   = 'csp-item-label';
-        newSpan.textContent = newName;
-        input.replaceWith(newSpan);
-        editBtn.style.display = '';
-        if (newName !== currentName && currentUser) {
-          try {
-            await updateDoc(doc(db, 'users', currentUser.uid, 'sessions', id), { label: newName });
-          } catch (err) { console.error('Rename error:', err); }
-        }
-      }
-
-      input.addEventListener('blur', commitRename);
-      input.addEventListener('keydown', e2 => {
-        if (e2.key === 'Enter')  { e2.preventDefault(); input.blur(); }
-        if (e2.key === 'Escape') { input.value = currentName; input.blur(); }
-      });
-    });
-
-    // Inline delete with confirm
-    delBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      editBtn.style.display = 'none';
-      delBtn.style.display  = 'none';
-
-      const confirmRow = document.createElement('div');
-      confirmRow.style.cssText = 'display:flex;align-items:center;gap:4px;flex-shrink:0';
-      confirmRow.innerHTML = `
-        <span style="font-size:.72rem;color:rgba(255,255,255,.5);white-space:nowrap">Delete?</span>
-        <button class="csp-del-yes">Yes</button>
-        <button class="csp-del-no">No</button>`;
-      actions.appendChild(confirmRow);
-
-      // Style the confirm buttons
-      confirmRow.querySelector('.csp-del-yes').style.cssText =
-        'padding:2px 8px;font-size:.72rem;font-weight:700;background:none;border:1.5px solid rgba(248,113,113,.5);border-radius:5px;color:#f87171;cursor:pointer';
-      confirmRow.querySelector('.csp-del-no').style.cssText =
-        'padding:2px 8px;font-size:.72rem;font-weight:700;background:none;border:1.5px solid rgba(255,255,255,.2);border-radius:5px;color:rgba(255,255,255,.5);cursor:pointer';
-
-      confirmRow.querySelector('.csp-del-no').addEventListener('click', e2 => {
-        e2.stopPropagation();
-        confirmRow.remove();
-        editBtn.style.display = '';
-        delBtn.style.display  = '';
-      });
-
-      confirmRow.querySelector('.csp-del-yes').addEventListener('click', async e2 => {
-        e2.stopPropagation();
-        const yesBtn       = e2.currentTarget;
-        yesBtn.textContent = '…';
-        yesBtn.disabled    = true;
-        try {
-          await deleteDoc(doc(db, 'users', currentUser.uid, 'sessions', id));
-          savedCount = Math.max(0, savedCount - 1);
-          await setDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'),
-                       { savedCount }, { merge: true });
-          li.remove();
-          if (listEl.querySelectorAll('.csp-item').length === 0) {
-            listEl.innerHTML = '<li class="csp-item-empty">No saved sessions yet.</li>';
-          }
-        } catch (err) {
-          console.error('Delete error:', err);
-          confirmRow.remove();
-          editBtn.style.display = '';
-          delBtn.style.display  = '';
-        }
-      });
-    });
-
-    return li;
-  }
-
   // ── Public API ──
   function onResultReady() {
-    saveRow.classList.add('visible');
-    if (saveBtn) {
-      saveBtn.disabled    = false;
-      saveBtn.textContent = `${calcIcon} Save this result`;
-    }
+    saveBtn.disabled = false;
   }
 
   function onResultCleared() {
-    saveRow.classList.remove('visible');
+    saveBtn.disabled = true;
   }
 
   return { onResultReady, onResultCleared };

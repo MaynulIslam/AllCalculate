@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free plumbing calculator for professionals — drain slope, pipe sizing, water heater sizing, pressure drop, BTU heat loss, and sump pump sizing.">
+  <meta property="og:title" content="Plumbing Calculator | EasyCalculator.live">
+  <meta property="og:description" content="Free plumbing calculator for professionals — drain slope, pipe sizing, water heater sizing, pressure drop, BTU heat loss, and sump pump sizing.">
+  <meta property="og:url" content="https://easycalculator.live/plumbing-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EasyCalculator.live">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Plumbing Calculator | EasyCalculator.live">
+  <meta name="twitter:description" content="Free plumbing calculator for professionals — drain slope, pipe sizing, water heater sizing, pressure drop, BTU heat loss, and sump pump sizing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Plumbing Calculator",
+    "url": "https://easycalculator.live/plumbing-calculator.html",
+    "description": "Free plumbing calculator for professionals — drain slope, pipe sizing, water heater sizing, pressure drop, BTU heat loss, and sump pump sizing.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <meta name="keywords" content="plumbing calculator, drain slope calculator, pipe sizing, water heater sizing, pressure drop, BTU heat loss, sump pump sizing">
+  <title>Plumbing Calculator | EasyCalculator.live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5277511564882514" crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JGP14YZ4V8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JGP14YZ4V8');
+  </script>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-content">
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
+          <div class="nav-logo-tagline">Free Online Calculators for Every Need</div>
+        </div>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#math">📐 Math</a></li>
+        <li><a href="index.html#finance">💰 Finance</a></li>
+        <li><a href="index.html#health">❤️ Health</a></li>
+        <li><a href="index.html#datetime">📅 Date &amp; Time</a></li>
+      </ul>
+      <div class="nav-auth" id="navAuth">
+        <button class="nav-signin-btn" id="navSignInBtn">Sign In</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="ad-wrapper"><div class="ad-slot ad-leaderboard">Advertisement · 728×90</div></div>
+
+  <div class="calc-layout">
+    <div>
+      <div class="calc-main">
+        <div class="calc-body">
+          <div class="calc-header">
+            <h1 class="calc-page-title">Plumbing Calculator</h1>
+            <nav class="calc-page-breadcrumb">
+              <a href="index.html">Home</a>
+              <span class="bc-sep">&#8250;</span>
+              <a href="index.html#math">Math &amp; Everyday</a>
+              <span class="bc-sep">&#8250;</span>
+              <span>Plumbing Calculator</span>
+            </nav>
+          </div>
+
+          <!-- Tabs -->
+          <div style="overflow-x:auto;margin-bottom:24px">
+            <div class="tabs" style="flex-wrap:wrap;gap:8px;min-width:max-content">
+              <button class="tab-btn active" onclick="switchTab(0,this)">🔵 Drain Slope</button>
+              <button class="tab-btn" onclick="switchTab(1,this)">💧 Pipe Sizing</button>
+              <button class="tab-btn" onclick="switchTab(2,this)">🔥 Water Heater</button>
+              <button class="tab-btn" onclick="switchTab(3,this)">📊 Pressure Drop</button>
+              <button class="tab-btn" onclick="switchTab(4,this)">🌡️ BTU Heat Loss</button>
+              <button class="tab-btn" onclick="switchTab(5,this)">💦 Sump Pump</button>
+            </div>
+          </div>
+
+          <!-- TAB 0: Drain Slope -->
+          <div class="tab-panel">
+            <div style="font-size:0.9rem;color:#475569;margin-bottom:20px;padding:12px 16px;background:#f0f9ff;border-radius:8px;border-left:4px solid #0ea5e9">
+              Calculate the required drop and flow capacity for horizontal drain pipes using Manning's equation.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Pipe Diameter</label>
+                <select class="form-select" id="drainDiam">
+                  <option value="1.5">1-1/2"</option>
+                  <option value="2">2"</option>
+                  <option value="3">3"</option>
+                  <option value="4" selected>4"</option>
+                  <option value="6">6"</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Run Length</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="drainRun" placeholder="20" min="0.1" step="0.1">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Slope</label>
+              <select class="form-select" id="drainSlope" onchange="toggleCustomSlope()">
+                <option value="0.125">1/8" per foot (code minimum for 3"+ pipe)</option>
+                <option value="0.25" selected>1/4" per foot (standard)</option>
+                <option value="0.5">1/2" per foot</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div class="form-group" id="customSlopeGroup" style="display:none">
+              <label class="form-label">Custom Slope</label>
+              <div class="input-group">
+                <input class="form-input has-suffix" type="number" id="drainCustomSlope" placeholder="0.25" min="0.01" step="0.01">
+                <span class="input-suffix">in/ft</span>
+              </div>
+            </div>
+            <div id="drainError" style="display:none;color:#dc2626;font-size:0.875rem;margin-bottom:12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>
+            <button class="btn-calculate" onclick="calcDrain()">Calculate Drain Slope</button>
+            <button class="btn-reset" onclick="resetDrain()" style="margin-top:10px">Reset</button>
+            <div id="result0" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result0Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result0Grid"></div>
+              <div id="result0Note" style="margin-top:12px;font-size:0.82rem;color:#475569;padding:8px 12px;background:#fff;border-radius:8px;border:1px solid #e2e8f0"></div>
+            </div>
+          </div>
+
+          <!-- TAB 1: Pipe Sizing -->
+          <div class="tab-panel hidden">
+            <div style="font-size:0.9rem;color:#475569;margin-bottom:20px;padding:12px 16px;background:#f0f9ff;border-radius:8px;border-left:4px solid #0ea5e9">
+              Calculate flow velocity and pressure drop using the Hazen-Williams equation for water supply piping.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Pipe Material</label>
+                <select class="form-select" id="pipeMat">
+                  <option value="copper|130">Copper Type L (C=130)</option>
+                  <option value="pex|150">PEX (C=150)</option>
+                  <option value="cpvc|140">CPVC (C=140)</option>
+                  <option value="pvc|150">PVC Schedule 40 (C=150)</option>
+                  <option value="galv|120">Galvanized Steel (C=120)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Pipe Diameter (Nominal)</label>
+                <select class="form-select" id="pipeDiam">
+                  <option value="0.45">3/8"</option>
+                  <option value="0.61">1/2"</option>
+                  <option value="0.81" selected>3/4"</option>
+                  <option value="1.05">1"</option>
+                  <option value="1.38">1-1/4"</option>
+                  <option value="1.61">1-1/2"</option>
+                  <option value="2.07">2"</option>
+                  <option value="2.47">2-1/2"</option>
+                  <option value="3.07">3"</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Flow Rate</label>
+              <div class="input-group">
+                <input class="form-input has-suffix" type="number" id="pipeFlow" placeholder="5" min="0.1" step="0.1">
+                <span class="input-suffix">GPM</span>
+              </div>
+            </div>
+            <div id="pipeError" style="display:none;color:#dc2626;font-size:0.875rem;margin-bottom:12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>
+            <button class="btn-calculate" onclick="calcPipe()">Calculate Pipe Flow</button>
+            <button class="btn-reset" onclick="resetPipe()" style="margin-top:10px">Reset</button>
+            <div id="result1" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result1Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result1Grid"></div>
+              <div id="result1Note" style="margin-top:12px;font-size:0.82rem;color:#475569;padding:8px 12px;background:#fff;border-radius:8px;border:1px solid #e2e8f0"></div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Water Heater -->
+          <div class="tab-panel hidden">
+            <div style="font-size:0.9rem;color:#475569;margin-bottom:20px;padding:12px 16px;background:#f0f9ff;border-radius:8px;border-left:4px solid #0ea5e9">
+              Determine the right water heater size based on household peak hour hot water demand.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Number of People</label>
+                <input class="form-input" type="number" id="whPeople" placeholder="4" min="1" step="1">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Simultaneous Showers</label>
+                <input class="form-input" type="number" id="whShowers" placeholder="2" min="0" step="1">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Dishwasher</label>
+                <select class="form-select" id="whDishwasher">
+                  <option value="0">None</option>
+                  <option value="6">Standard (6 gal peak)</option>
+                  <option value="4">High Efficiency (4 gal)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Washing Machine</label>
+                <select class="form-select" id="whWasher">
+                  <option value="0">None</option>
+                  <option value="15">Standard (15 gal)</option>
+                  <option value="8">Front Load (8 gal)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Incoming Cold Water Temp</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="whColdTemp" placeholder="55">
+                  <span class="input-suffix">°F</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Desired Hot Water Temp</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="whHotTemp" placeholder="120" value="120">
+                  <span class="input-suffix">°F</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fuel Type</label>
+              <select class="form-select" id="whFuel">
+                <option value="natgas">Natural Gas</option>
+                <option value="propane">Propane</option>
+                <option value="electric">Electric</option>
+                <option value="tankless_gas">Tankless Gas</option>
+                <option value="tankless_elec">Tankless Electric</option>
+              </select>
+            </div>
+            <div id="whError" style="display:none;color:#dc2626;font-size:0.875rem;margin-bottom:12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>
+            <button class="btn-calculate" onclick="calcWH()">Calculate Water Heater Size</button>
+            <button class="btn-reset" onclick="resetWH()" style="margin-top:10px">Reset</button>
+            <div id="result2" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result2Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result2Grid"></div>
+              <div id="result2Note" style="margin-top:12px;font-size:0.82rem;color:#475569;padding:8px 12px;background:#fff;border-radius:8px;border:1px solid #e2e8f0"></div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Pressure Drop -->
+          <div class="tab-panel hidden">
+            <div style="font-size:0.9rem;color:#475569;margin-bottom:20px;padding:12px 16px;background:#f0f9ff;border-radius:8px;border-left:4px solid #0ea5e9">
+              Calculate total pressure drop through a pipe run including fittings and elevation changes.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Pipe Material</label>
+                <select class="form-select" id="pdMat">
+                  <option value="copper|130">Copper Type L (C=130)</option>
+                  <option value="pex|150">PEX (C=150)</option>
+                  <option value="cpvc|140">CPVC (C=140)</option>
+                  <option value="pvc|150">PVC Schedule 40 (C=150)</option>
+                  <option value="galv|120">Galvanized Steel (C=120)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Pipe Diameter (Inside)</label>
+                <select class="form-select" id="pdDiam">
+                  <option value="0.61">1/2" (ID: 0.61 in)</option>
+                  <option value="0.81" selected>3/4" (ID: 0.81 in)</option>
+                  <option value="1.05">1" (ID: 1.05 in)</option>
+                  <option value="1.38">1-1/4" (ID: 1.38 in)</option>
+                  <option value="1.61">1-1/2" (ID: 1.61 in)</option>
+                  <option value="2.07">2" (ID: 2.07 in)</option>
+                  <option value="3.07">3" (ID: 3.07 in)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Flow Rate</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="pdFlow" placeholder="8" min="0.1" step="0.1">
+                  <span class="input-suffix">GPM</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Pipe Length</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="pdLength" placeholder="100" min="0" step="1">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-weight:600;font-size:0.9rem;color:#0f2b4c;margin-bottom:12px;margin-top:4px">Fittings (count)</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">90° Elbows</label>
+                <input class="form-input" type="number" id="pd90elbow" placeholder="0" min="0" step="1" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">45° Elbows</label>
+                <input class="form-input" type="number" id="pd45elbow" placeholder="0" min="0" step="1" value="0">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Tee (Branch Flow)</label>
+                <input class="form-input" type="number" id="pdTee" placeholder="0" min="0" step="1" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gate Valves (open)</label>
+                <input class="form-input" type="number" id="pdGateValve" placeholder="0" min="0" step="1" value="0">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Ball Valves (open)</label>
+                <input class="form-input" type="number" id="pdBallValve" placeholder="0" min="0" step="1" value="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Elevation Change</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="pdElevation" placeholder="0" step="0.5">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Incoming Pressure</label>
+              <div class="input-group">
+                <input class="form-input has-suffix" type="number" id="pdIncomingPSI" placeholder="60" value="60" min="1">
+                <span class="input-suffix">PSI</span>
+              </div>
+            </div>
+            <div id="pdError" style="display:none;color:#dc2626;font-size:0.875rem;margin-bottom:12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>
+            <button class="btn-calculate" onclick="calcPDrop()">Calculate Pressure Drop</button>
+            <button class="btn-reset" onclick="resetPDrop()" style="margin-top:10px">Reset</button>
+            <div id="result3" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result3Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result3Grid"></div>
+            </div>
+          </div>
+
+          <!-- TAB 4: BTU Heat Loss -->
+          <div class="tab-panel hidden">
+            <div style="font-size:0.9rem;color:#475569;margin-bottom:20px;padding:12px 16px;background:#f0f9ff;border-radius:8px;border-left:4px solid #0ea5e9">
+              Calculate room heat loss to size boilers, baseboard heaters, and radiant systems.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Room Length</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="btuLength" placeholder="20" min="1" step="0.5">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Room Width</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="btuWidth" placeholder="15" min="1" step="0.5">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Ceiling Height</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="btuCeiling" placeholder="9" min="6" step="0.5">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Window Area (total)</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="btuWindowArea" placeholder="40" min="0" step="1">
+                  <span class="input-suffix">sq ft</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Wall Insulation R-Value</label>
+                <select class="form-select" id="btuWallR">
+                  <option value="11">R-11 (2×4 wall)</option>
+                  <option value="13" selected>R-13 (2×4 wall)</option>
+                  <option value="19">R-19 (2×6 wall)</option>
+                  <option value="21">R-21 (2×6 wall)</option>
+                  <option value="30">R-30 (well insulated)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Window Type</label>
+                <select class="form-select" id="btuWindowR">
+                  <option value="1">Single Pane (R-1)</option>
+                  <option value="2" selected>Double Pane (R-2)</option>
+                  <option value="3">Triple Pane (R-3)</option>
+                  <option value="3.5">Low-E Double (R-3.5)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Ceiling/Roof R-Value</label>
+                <select class="form-select" id="btuCeilR">
+                  <option value="19">R-19 (min)</option>
+                  <option value="30" selected>R-30 (standard)</option>
+                  <option value="38">R-38 (well insulated)</option>
+                  <option value="49">R-49 (high performance)</option>
+                  <option value="60">R-60 (super insulated)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Air Changes per Hour (ACH)</label>
+                <select class="form-select" id="btuACH">
+                  <option value="0.25">0.25 (Tight new construction)</option>
+                  <option value="0.5" selected>0.5 (Average construction)</option>
+                  <option value="1.0">1.0 (Leaky old construction)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Outdoor Design Temperature</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="btuOutdoor" placeholder="5">
+                  <span class="input-suffix">°F</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Indoor Setpoint</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="btuIndoor" placeholder="70" value="70">
+                  <span class="input-suffix">°F</span>
+                </div>
+              </div>
+            </div>
+            <div id="btuError" style="display:none;color:#dc2626;font-size:0.875rem;margin-bottom:12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>
+            <button class="btn-calculate" onclick="calcBTU()">Calculate Heat Loss</button>
+            <button class="btn-reset" onclick="resetBTU()" style="margin-top:10px">Reset</button>
+            <div id="result4" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result4Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result4Grid"></div>
+            </div>
+          </div>
+
+          <!-- TAB 5: Sump Pump -->
+          <div class="tab-panel hidden">
+            <div style="font-size:0.9rem;color:#475569;margin-bottom:20px;padding:12px 16px;background:#f0f9ff;border-radius:8px;border-left:4px solid #0ea5e9">
+              Size your sump pump based on pit volume, inflow rate, and total dynamic head.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Pit Diameter</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="sumpDiam" placeholder="18" value="18" min="1">
+                  <span class="input-suffix">inches</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Pit Depth</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="sumpDepth" placeholder="24" value="24" min="1">
+                  <span class="input-suffix">inches</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Inflow Rate</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="sumpInflow" placeholder="10" min="0.1" step="0.1">
+                  <span class="input-suffix">GPM</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Vertical Lift (Static Head)</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="sumpLift" placeholder="10" min="0" step="0.5">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Horizontal Discharge Run</label>
+                <div class="input-group">
+                  <input class="form-input has-suffix" type="number" id="sumpHoriz" placeholder="25" min="0" step="1">
+                  <span class="input-suffix">ft</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Discharge Pipe Diameter</label>
+                <select class="form-select" id="sumpPipeDiam">
+                  <option value="1.61">1-1/2" (ID: 1.61 in)</option>
+                  <option value="2.07" selected>2" (ID: 2.07 in)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Check Valve</label>
+              <select class="form-select" id="sumpCheckValve">
+                <option value="yes" selected>Yes (add 3 ft head)</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div id="sumpError" style="display:none;color:#dc2626;font-size:0.875rem;margin-bottom:12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>
+            <button class="btn-calculate" onclick="calcSump()">Calculate Sump Pump Size</button>
+            <button class="btn-reset" onclick="resetSump()" style="margin-top:10px">Reset</button>
+            <div id="result5" class="hidden" style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:12px;padding:20px;margin-top:16px">
+              <div style="font-size:1.4rem;font-weight:800;color:#0f2b4c" id="result5Primary"></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="result5Grid"></div>
+            </div>
+          </div>
+
+          <!-- Middle Ad -->
+          <div class="ad-wrapper" style="margin-top:28px"><div class="ad-slot ad-large-rectangle">Advertisement · 336×280</div></div>
+
+          <!-- Info Section -->
+          <div class="calc-info-section" style="margin-top:32px">
+            <h2>Professional Plumbing Calculator Guide</h2>
+            <p>This plumbing calculator suite gives contractors, engineers, and DIYers six precision tools based on the International Plumbing Code (IPC), Manning's equation, and the Hazen-Williams formula. Each tool is described briefly below.</p>
+
+            <p><strong>Drain Slope Calculator:</strong> Computes the required vertical drop for any horizontal drain run and the full-bore flow capacity using Manning's equation. Validates your slope against IPC Table 704.1 minimums.</p>
+
+            <p><strong>Pipe Sizing / Flow Rate:</strong> Uses the Hazen-Williams friction formula to determine flow velocity and pressure loss per 100 ft for copper, PEX, CPVC, PVC, and galvanized pipe. Flags over-velocity conditions above 8 fps.</p>
+
+            <p><strong>Water Heater Sizing:</strong> Estimates your household's peak-hour hot water demand (gallons) based on occupants, simultaneous showers, and appliances, then recommends the appropriate DOE First Hour Rating (FHR) and tank size.</p>
+
+            <p><strong>Pressure Drop Calculator:</strong> Calculates total system pressure loss through pipe runs, equivalent-length fittings, and elevation changes using Hazen-Williams. Verifies residual pressure against the IPC minimum of 15 PSI at fixtures.</p>
+
+            <p><strong>BTU Heat Loss Calculator:</strong> Applies the Manual J steady-state method to estimate room heat loss through walls, windows, ceiling, and infiltration. Outputs the required boiler or heater size with a 1.25× safety factor.</p>
+
+            <p><strong>Sump Pump Sizing:</strong> Calculates the total dynamic head (TDH) including static lift, pipe friction, and check valve losses, then recommends the appropriate pump horsepower for your inflow rate.</p>
+
+            <h3>IPC Code References</h3>
+            <ul style="line-height:1.9;color:#475569">
+              <li><strong>IPC 704.1</strong> — Minimum slope of horizontal drainage piping: 1/4" per foot for pipe &lt; 3"; 1/8" per foot for pipe 3" and larger.</li>
+              <li><strong>IPC 604.3</strong> — Minimum static pressure at fixtures: 15 PSI; maximum 80 PSI without pressure-reducing valve.</li>
+              <li><strong>IPC 607.1</strong> — Hot water temperature: 110°F maximum at accessible fixtures; 120°F recommended storage temp to inhibit Legionella.</li>
+              <li><strong>IPC 1002.1</strong> — Every fixture trap must maintain a water seal of 2"–4".</li>
+            </ul>
+
+            <h3>Drain Slope Formula (Manning's Equation)</h3>
+            <div class="formula-box" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin:16px 0;font-family:monospace;font-size:0.95rem;color:#0f2b4c">
+              <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">Q = (1.49 / n) &times; A &times; R<sup>2/3</sup> &times; S<sup>1/2</sup></div>
+              <ul style="font-family:inherit;margin:12px 0 0 0;padding-left:20px;line-height:2;color:#475569;font-size:0.85rem">
+                <li><strong>Q</strong> = Flow rate (ft³/s)</li>
+                <li><strong>n</strong> = Manning's roughness coefficient (0.013 for PVC/ABS)</li>
+                <li><strong>A</strong> = Cross-sectional area of pipe (ft²) — full bore = π(D/2)²</li>
+                <li><strong>R</strong> = Hydraulic radius (ft) = D/4 for full circular pipe</li>
+                <li><strong>S</strong> = Slope (ft/ft) — convert in/ft by dividing by 12</li>
+              </ul>
+              <div style="margin-top:12px;font-size:0.82rem;color:#64748b">Multiply Q (ft³/s) by 448.83 to convert to GPM.</div>
+            </div>
+
+            <h3>Safety Note</h3>
+            <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:16px;color:#78350f;font-size:0.9rem;line-height:1.7">
+              <strong>Important:</strong> These calculations are provided for educational and preliminary design purposes only. Plumbing systems must be designed and installed by a licensed plumber in accordance with local codes and ordinances, which may differ from the IPC values used here. Always obtain the required permits and inspections. The authors make no warranty regarding the accuracy or fitness of these results for any specific installation.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="calc-sidebar">
+      <div class="sidebar-widget">
+        <div class="ad-slot ad-rectangle">Advertisement · 300×250</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Related Calculators</div>
+        <ul class="related-calc-list">
+          <li><a href="electrical-calculator.html">⚡ Electrical Calculator</a></li>
+          <li><a href="scientific-calculator.html">🔬 Scientific Calculator</a></li>
+          <li><a href="unit-converter.html">📏 Unit Converter</a></li>
+          <li><a href="square-footage-calculator.html">📐 Square Footage</a></li>
+          <li><a href="percentage-calculator.html">% Percentage Calculator</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-widget" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px">
+        <div class="sidebar-widget-title" style="color:#166534">🔧 Quick Reference</div>
+        <table style="width:100%;font-size:0.8rem;border-collapse:collapse">
+          <thead><tr style="border-bottom:1px solid #bbf7d0"><th style="text-align:left;padding:4px;color:#166534">Pipe</th><th style="text-align:left;padding:4px;color:#166534">Min Slope</th><th style="text-align:left;padding:4px;color:#166534">Max DFU</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:4px">1-1/2"</td><td style="padding:4px">1/4"/ft</td><td style="padding:4px">1</td></tr>
+            <tr style="background:#f0fdf4"><td style="padding:4px">2"</td><td style="padding:4px">1/4"/ft</td><td style="padding:4px">3</td></tr>
+            <tr><td style="padding:4px">3"</td><td style="padding:4px">1/8"/ft</td><td style="padding:4px">20</td></tr>
+            <tr style="background:#f0fdf4"><td style="padding:4px">4"</td><td style="padding:4px">1/8"/ft</td><td style="padding:4px">160</td></tr>
+            <tr><td style="padding:4px">6"</td><td style="padding:4px">1/8"/ft</td><td style="padding:4px">620</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="nav-logo-text">Easy<span>Calculator</span>.live</span>
+          <p>Free online calculators for finance, health, math, and everyday life. Fast, accurate, and easy to use.</p>
+          <div class="footer-stats">
+            <span class="footer-stat"><strong>22+</strong> Calculators</span>
+            <span class="footer-stat"><strong>100%</strong> Free Forever</span>
+            <span class="footer-stat"><strong>Fast</strong> Instant Results</span>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>💰 Finance</h4>
+          <ul>
+            <li><a href="mortgage-calculator.html">Mortgage Calculator</a></li>
+            <li><a href="loan-emi-calculator.html">Loan / EMI Calculator</a></li>
+            <li><a href="compound-interest-calculator.html">Compound Interest</a></li>
+            <li><a href="salary-hourly.html">Salary to Hourly</a></li>
+            <li><a href="salary-tax-calculator.html">Salary Tax Calculator</a></li>
+            <li><a href="retirement-calculator.html">Retirement Calculator</a></li>
+            <li><a href="tip-calculator.html">Tip Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Health &amp; Date</h4>
+          <ul>
+            <li><a href="bmi-calculator.html">BMI Calculator</a></li>
+            <li><a href="calorie-calculator.html">Calorie Calculator</a></li>
+            <li><a href="pregnancy-calculator.html">Pregnancy Calculator</a></li>
+            <li><a href="body-fat-calculator.html">Body Fat Calculator</a></li>
+            <li><a href="age-calculator.html">Age Calculator</a></li>
+            <li><a href="days-between.html">Days Between Dates</a></li>
+            <li><a href="timezone.html">Time Zone Converter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>📐 Math &amp; More</h4>
+          <ul>
+            <li><a href="electrical-calculator.html">Electrical Calculator</a></li>
+            <li><a href="plumbing-calculator.html">Plumbing Calculator</a></li>
+            <li><a href="percentage-calculator.html">Percentage Calculator</a></li>
+            <li><a href="scientific-calculator.html">Scientific Calculator</a></li>
+            <li><a href="gpa-calculator.html">GPA Calculator</a></li>
+            <li><a href="unit-converter.html">Unit Converter</a></li>
+            <li><a href="square-footage-calculator.html">Square Footage</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 EasyCalculator.live &mdash; All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    function switchTab(index, btn) {
+      document.querySelectorAll('.tab-panel').forEach(function(p, i) {
+        p.classList.toggle('hidden', i !== index);
+      });
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+
+    // ── Helper functions ──────────────────────────────────────────────────────
+
+    function makeItem(label, value, highlight) {
+      var color = highlight ? '#f97316' : '#1e293b';
+      return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px">' +
+        '<div style="font-size:0.75rem;color:#64748b;margin-bottom:2px">' + label + '</div>' +
+        '<div style="font-size:1rem;font-weight:700;color:' + color + '">' + value + '</div>' +
+        '</div>';
+    }
+
+    function makeStatusItem(label, value, pass, warn) {
+      var bg = pass ? '#f0fdf4' : (warn ? '#fffbeb' : '#fef2f2');
+      var border = pass ? '#bbf7d0' : (warn ? '#fde68a' : '#fecaca');
+      var color = pass ? '#16a34a' : (warn ? '#d97706' : '#dc2626');
+      return '<div style="background:' + bg + ';border:1px solid ' + border + ';border-radius:8px;padding:10px 14px">' +
+        '<div style="font-size:0.75rem;color:#64748b;margin-bottom:2px">' + label + '</div>' +
+        '<div style="font-size:1rem;font-weight:700;color:' + color + '">' + value + '</div>' +
+        '</div>';
+    }
+
+    function fmtN(n, decimals) {
+      if (!isFinite(n) || isNaN(n)) return 'N/A';
+      if (decimals === undefined) decimals = 2;
+      return parseFloat(n.toFixed(decimals)).toLocaleString('en-US', {maximumFractionDigits: decimals});
+    }
+
+    function showError(id, msg) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.textContent = msg;
+        el.style.display = msg ? 'block' : 'none';
+      }
+    }
+
+    // ── TAB 0: Drain Slope ────────────────────────────────────────────────────
+
+    function toggleCustomSlope() {
+      var sel = document.getElementById('drainSlope');
+      var grp = document.getElementById('customSlopeGroup');
+      grp.style.display = (sel.value === 'custom') ? 'block' : 'none';
+    }
+
+    function formatDrop(inches) {
+      var ft = Math.floor(inches / 12);
+      var remainIn = inches - ft * 12;
+      if (ft === 0) return fmtN(remainIn, 2) + '"';
+      return ft + "' " + fmtN(remainIn, 2) + '"';
+    }
+
+    function calcDrain() {
+      showError('drainError', '');
+      var diam = parseFloat(document.getElementById('drainDiam').value);
+      var run = parseFloat(document.getElementById('drainRun').value);
+      var slopeType = document.getElementById('drainSlope').value;
+      var customSlope = parseFloat(document.getElementById('drainCustomSlope').value);
+
+      if (!run || run <= 0) { showError('drainError', 'Please enter a valid pipe run length greater than 0.'); return; }
+
+      var slopeInPerFt;
+      if (slopeType === 'custom') {
+        if (isNaN(customSlope) || customSlope <= 0) { showError('drainError', 'Please enter a valid custom slope greater than 0.'); return; }
+        slopeInPerFt = customSlope;
+      } else {
+        slopeInPerFt = parseFloat(slopeType);
+      }
+
+      var totalDropInches = slopeInPerFt * run;
+      var slopePct = (slopeInPerFt / 12) * 100;
+
+      // Manning's equation for full-bore flow capacity
+      var n_mann = 0.013; // PVC/ABS
+      var D_ft = diam / 12;
+      var A = Math.PI * Math.pow(D_ft / 2, 2);
+      var R = D_ft / 4;
+      var S = slopeInPerFt / 12;
+      var Q_cfs = (1.49 / n_mann) * A * Math.pow(R, 2/3) * Math.sqrt(S);
+      var Q_gpm = Q_cfs * 448.83;
+      var Q_halffull_gpm = Q_gpm * 0.94;
+
+      // IPC minimum slope
+      var minSlope = (diam >= 3) ? 0.125 : 0.25;
+      var codePass = slopeInPerFt >= minSlope;
+      var minSlopeLabel = (diam >= 3) ? '1/8" per foot' : '1/4" per foot';
+
+      var r0 = document.getElementById('result0');
+      r0.classList.remove('hidden');
+      document.getElementById('result0Primary').textContent = 'Total Drop: ' + formatDrop(totalDropInches);
+
+      var gridHTML = '';
+      gridHTML += makeItem('Total Drop', formatDrop(totalDropInches), true);
+      gridHTML += makeItem('Slope Percentage', fmtN(slopePct, 2) + '%');
+      gridHTML += makeItem('Full-Flow Capacity', fmtN(Q_gpm, 1) + ' GPM');
+      gridHTML += makeItem('Slope per Foot', fmtN(slopeInPerFt, 3) + '" / ft');
+      gridHTML += makeStatusItem('Code Status (IPC 704.1)', codePass ? 'PASS' : 'FAIL', codePass, false);
+      gridHTML += makeItem('Half-Full Capacity', fmtN(Q_halffull_gpm, 1) + ' GPM');
+      document.getElementById('result0Grid').innerHTML = gridHTML;
+      document.getElementById('result0Note').textContent =
+        'IPC 704.1: minimum slope for ' + diam + '" pipe is ' + minSlopeLabel + ' (' + (diam >= 3 ? '1/8"' : '1/4"') + '/ft). ' +
+        (codePass ? 'Your slope meets or exceeds the code minimum.' : 'Your slope is below the code minimum — increase slope to comply.');
+    }
+
+    function resetDrain() {
+      document.getElementById('drainDiam').value = '4';
+      document.getElementById('drainRun').value = '';
+      document.getElementById('drainSlope').value = '0.25';
+      document.getElementById('drainCustomSlope').value = '';
+      document.getElementById('customSlopeGroup').style.display = 'none';
+      document.getElementById('result0').classList.add('hidden');
+      showError('drainError', '');
+    }
+
+    // ── TAB 1: Pipe Sizing ────────────────────────────────────────────────────
+
+    var PIPE_DIAMETERS = [
+      {label: '3/8"',   id: 0.45},
+      {label: '1/2"',   id: 0.61},
+      {label: '3/4"',   id: 0.81},
+      {label: '1"',     id: 1.05},
+      {label: '1-1/4"', id: 1.38},
+      {label: '1-1/2"', id: 1.61},
+      {label: '2"',     id: 2.07},
+      {label: '2-1/2"', id: 2.47},
+      {label: '3"',     id: 3.07}
+    ];
+
+    function calcPipe() {
+      showError('pipeError', '');
+      var matVal = document.getElementById('pipeMat').value;
+      var parts = matVal.split('|');
+      var matName = parts[0];
+      var C = parseFloat(parts[1]);
+      var D = parseFloat(document.getElementById('pipeDiam').value);
+      var Q = parseFloat(document.getElementById('pipeFlow').value);
+
+      if (isNaN(Q) || Q <= 0) { showError('pipeError', 'Please enter a valid flow rate greater than 0.'); return; }
+
+      // Velocity (fps): V = 0.4085 × Q / D²
+      var velocity = 0.4085 * Q / (D * D);
+
+      // Hazen-Williams friction loss (PSI/ft): hf = 4.52 × Q^1.852 / (C^1.852 × D^4.87)
+      var psiPerFt = 4.52 * Math.pow(Q, 1.852) / (Math.pow(C, 1.852) * Math.pow(D, 4.87));
+      var pressDropPer100ft = psiPerFt * 100;
+
+      // Velocity status
+      var velStatus, velPass, velWarn;
+      if (velocity > 8) {
+        velStatus = 'TOO FAST (' + fmtN(velocity, 1) + ' fps) — risk of noise & erosion';
+        velPass = false; velWarn = false;
+      } else if (velocity >= 2) {
+        velStatus = 'OPTIMAL (' + fmtN(velocity, 1) + ' fps)';
+        velPass = true; velWarn = false;
+      } else {
+        velStatus = 'LOW (' + fmtN(velocity, 1) + ' fps) — may cause sediment';
+        velPass = false; velWarn = true;
+      }
+
+      // Find minimum recommended pipe size (velocity ≤ 8 fps)
+      var minRecLabel = null;
+      for (var i = 0; i < PIPE_DIAMETERS.length; i++) {
+        var d = PIPE_DIAMETERS[i].id;
+        var v = 0.4085 * Q / (d * d);
+        if (v <= 8) { minRecLabel = PIPE_DIAMETERS[i].label; break; }
+      }
+      if (!minRecLabel) minRecLabel = '3" or larger';
+
+      var r1 = document.getElementById('result1');
+      r1.classList.remove('hidden');
+      document.getElementById('result1Primary').textContent = 'Velocity: ' + fmtN(velocity, 2) + ' fps';
+
+      var gridHTML = '';
+      gridHTML += makeItem('Velocity', fmtN(velocity, 2) + ' fps', velocity > 8);
+      gridHTML += makeItem('Pressure Drop / 100 ft', fmtN(pressDropPer100ft, 2) + ' PSI');
+      gridHTML += makeStatusItem('Flow Status', velStatus, velPass, velWarn);
+      gridHTML += makeItem('Min. Recommended Size', minRecLabel);
+      document.getElementById('result1Grid').innerHTML = gridHTML;
+      document.getElementById('result1Note').textContent =
+        'Hazen-Williams C = ' + C + ' for ' + matName.toUpperCase() + '. ' +
+        'Recommended velocity range: 2–8 fps. Minimum recommended pipe for ' + fmtN(Q, 1) + ' GPM is ' + minRecLabel + '.';
+    }
+
+    function resetPipe() {
+      document.getElementById('pipeMat').value = 'copper|130';
+      document.getElementById('pipeDiam').value = '0.81';
+      document.getElementById('pipeFlow').value = '';
+      document.getElementById('result1').classList.add('hidden');
+      showError('pipeError', '');
+    }
+
+    // ── TAB 2: Water Heater Sizing ────────────────────────────────────────────
+
+    function calcWH() {
+      showError('whError', '');
+      var people = parseInt(document.getElementById('whPeople').value);
+      var showers = parseInt(document.getElementById('whShowers').value);
+      var dishwasherGal = parseInt(document.getElementById('whDishwasher').value);
+      var washerGal = parseInt(document.getElementById('whWasher').value);
+      var coldTemp = parseFloat(document.getElementById('whColdTemp').value);
+      var hotTemp = parseFloat(document.getElementById('whHotTemp').value);
+      var fuel = document.getElementById('whFuel').value;
+
+      if (isNaN(people) || people < 1) { showError('whError', 'Please enter a valid number of people (at least 1).'); return; }
+      if (isNaN(showers) || showers < 0) { showError('whError', 'Please enter a valid number of showers (0 or more).'); return; }
+      if (isNaN(coldTemp) || coldTemp <= 0) { showError('whError', 'Please enter a valid incoming cold water temperature.'); return; }
+      if (isNaN(hotTemp) || hotTemp <= coldTemp) { showError('whError', 'Hot water temperature must be greater than cold water temperature.'); return; }
+
+      var peopleDemand = people * 20;
+      var showerDemand = showers * 10;
+      var totalPeakDemand = peopleDemand + showerDemand + dishwasherGal + washerGal;
+      var requiredFHR = totalPeakDemand;
+      var tempRise = hotTemp - coldTemp;
+
+      var recommendedTankSize;
+      if (requiredFHR <= 30) recommendedTankSize = '30-gallon tank';
+      else if (requiredFHR <= 40) recommendedTankSize = '40-gallon tank';
+      else if (requiredFHR <= 52) recommendedTankSize = '50-gallon tank';
+      else if (requiredFHR <= 66) recommendedTankSize = '66-gallon tank';
+      else recommendedTankSize = '80-gallon tank or consider tankless';
+
+      var tanklessGPM = showers * 2 + 1;
+      var tankleBTU = tanklessGPM * 500 * tempRise;
+
+      var isTankless = fuel === 'tankless_gas' || fuel === 'tankless_elec';
+      var primaryLabel = isTankless
+        ? 'Recommended Tankless: ' + fmtN(tankleBTU / 1000, 0) + ',000 BTU/hr at ' + fmtN(tanklessGPM, 1) + ' GPM'
+        : 'Recommended: ' + recommendedTankSize;
+
+      var r2 = document.getElementById('result2');
+      r2.classList.remove('hidden');
+      document.getElementById('result2Primary').textContent = primaryLabel;
+
+      var gridHTML = '';
+      gridHTML += makeItem('Peak Hour Demand', fmtN(totalPeakDemand, 0) + ' gal', true);
+      gridHTML += makeItem('Required FHR', fmtN(requiredFHR, 0) + ' gal');
+      gridHTML += makeItem('Temperature Rise', fmtN(tempRise, 0) + ' °F');
+      gridHTML += makeItem('Recommended Tank', recommendedTankSize);
+      gridHTML += makeItem('Tankless Required GPM', fmtN(tanklessGPM, 1) + ' GPM');
+      gridHTML += makeItem('Tankless Required BTU/hr', fmtN(tankleBTU, 0) + ' BTU/hr');
+      document.getElementById('result2Grid').innerHTML = gridHTML;
+      document.getElementById('result2Note').textContent =
+        'DOE First Hour Rating (FHR) measures how many gallons a water heater delivers in the first hour of use starting with a full tank. ' +
+        'Select a water heater whose FHR meets or exceeds ' + fmtN(requiredFHR, 0) + ' gallons.';
+    }
+
+    function resetWH() {
+      document.getElementById('whPeople').value = '';
+      document.getElementById('whShowers').value = '';
+      document.getElementById('whDishwasher').value = '0';
+      document.getElementById('whWasher').value = '0';
+      document.getElementById('whColdTemp').value = '';
+      document.getElementById('whHotTemp').value = '120';
+      document.getElementById('whFuel').value = 'natgas';
+      document.getElementById('result2').classList.add('hidden');
+      showError('whError', '');
+    }
+
+    // ── TAB 3: Pressure Drop ──────────────────────────────────────────────────
+
+    function calcPDrop() {
+      showError('pdError', '');
+      var matVal = document.getElementById('pdMat').value;
+      var C = parseFloat(matVal.split('|')[1]);
+      var D = parseFloat(document.getElementById('pdDiam').value);
+      var Q = parseFloat(document.getElementById('pdFlow').value);
+      var pipeLength = parseFloat(document.getElementById('pdLength').value);
+      var elbows90 = parseFloat(document.getElementById('pd90elbow').value) || 0;
+      var elbows45 = parseFloat(document.getElementById('pd45elbow').value) || 0;
+      var teesBranch = parseFloat(document.getElementById('pdTee').value) || 0;
+      var gateValves = parseFloat(document.getElementById('pdGateValve').value) || 0;
+      var ballValves = parseFloat(document.getElementById('pdBallValve').value) || 0;
+      var elevation = parseFloat(document.getElementById('pdElevation').value) || 0;
+      var incomingPressure = parseFloat(document.getElementById('pdIncomingPSI').value);
+
+      if (isNaN(Q) || Q <= 0) { showError('pdError', 'Please enter a valid flow rate greater than 0.'); return; }
+      if (isNaN(pipeLength) || pipeLength < 0) { showError('pdError', 'Please enter a valid pipe length.'); return; }
+      if (isNaN(incomingPressure) || incomingPressure <= 0) { showError('pdError', 'Please enter a valid incoming pressure.'); return; }
+
+      // Equivalent lengths (ft) for fittings using pipe diameter
+      var eqElbow90 = elbows90 * (D * 2.5);
+      var eqElbow45 = elbows45 * (D * 1.3);
+      var eqTeeBranch = teesBranch * (D * 5.0);
+      var eqGateValve = gateValves * (D * 0.7);
+      var eqBallValve = ballValves * (D * 0.25);
+      var totalFittingEqLen = eqElbow90 + eqElbow45 + eqTeeBranch + eqGateValve + eqBallValve;
+      var totalEquivLength = pipeLength + totalFittingEqLen;
+
+      // Hazen-Williams friction loss (PSI/ft)
+      var frictionLossPerFt = 4.52 * Math.pow(Q, 1.852) / (Math.pow(C, 1.852) * Math.pow(D, 4.87));
+      var totalFrictionLoss = frictionLossPerFt * totalEquivLength;
+
+      // Elevation pressure change (positive = uphill = pressure loss)
+      var elevationLoss = elevation * 0.433;
+
+      var totalDrop = totalFrictionLoss + elevationLoss;
+      var residualPressure = incomingPressure - totalDrop;
+
+      // Code status
+      var codeLabel, codePass, codeWarn;
+      if (residualPressure < 0) {
+        codeLabel = 'INSUFFICIENT — booster pump required';
+        codePass = false; codeWarn = false;
+      } else if (residualPressure < 15) {
+        codeLabel = 'FAIL — below IPC 604.3 minimum (15 PSI)';
+        codePass = false; codeWarn = false;
+      } else if (residualPressure < 20) {
+        codeLabel = 'WARNING — marginal pressure';
+        codePass = false; codeWarn = true;
+      } else if (residualPressure > 40) {
+        codeLabel = 'EXCELLENT — good pressure';
+        codePass = true; codeWarn = false;
+      } else {
+        codeLabel = 'PASS — adequate pressure';
+        codePass = true; codeWarn = false;
+      }
+
+      var r3 = document.getElementById('result3');
+      r3.classList.remove('hidden');
+      document.getElementById('result3Primary').textContent =
+        'Residual Pressure: ' + fmtN(residualPressure, 1) + ' PSI';
+
+      var elevLabel = elevation === 0 ? '0 PSI' :
+        (elevation > 0 ? '+' + fmtN(elevationLoss, 2) + ' PSI loss (uphill)' : fmtN(Math.abs(elevationLoss), 2) + ' PSI gain (downhill)');
+
+      var gridHTML = '';
+      gridHTML += makeItem('Friction Loss', fmtN(totalFrictionLoss, 2) + ' PSI');
+      gridHTML += makeItem('Elevation Loss/Gain', elevLabel);
+      gridHTML += makeItem('Total Pressure Drop', fmtN(totalDrop, 2) + ' PSI', totalDrop > incomingPressure * 0.5);
+      gridHTML += makeItem('Residual Pressure', fmtN(residualPressure, 1) + ' PSI', residualPressure < 15);
+      gridHTML += makeStatusItem('Code Status (IPC 604.3)', codeLabel, codePass, codeWarn);
+      gridHTML += makeItem('Equivalent Pipe Length', fmtN(totalEquivLength, 1) + ' ft');
+      document.getElementById('result3Grid').innerHTML = gridHTML;
+    }
+
+    function resetPDrop() {
+      document.getElementById('pdMat').value = 'copper|130';
+      document.getElementById('pdDiam').value = '0.81';
+      document.getElementById('pdFlow').value = '';
+      document.getElementById('pdLength').value = '';
+      document.getElementById('pd90elbow').value = '0';
+      document.getElementById('pd45elbow').value = '0';
+      document.getElementById('pdTee').value = '0';
+      document.getElementById('pdGateValve').value = '0';
+      document.getElementById('pdBallValve').value = '0';
+      document.getElementById('pdElevation').value = '';
+      document.getElementById('pdIncomingPSI').value = '60';
+      document.getElementById('result3').classList.add('hidden');
+      showError('pdError', '');
+    }
+
+    // ── TAB 4: BTU Heat Loss ──────────────────────────────────────────────────
+
+    function calcBTU() {
+      showError('btuError', '');
+      var length = parseFloat(document.getElementById('btuLength').value);
+      var width = parseFloat(document.getElementById('btuWidth').value);
+      var ceilingH = parseFloat(document.getElementById('btuCeiling').value);
+      var windowArea = parseFloat(document.getElementById('btuWindowArea').value) || 0;
+      var R_wall = parseFloat(document.getElementById('btuWallR').value);
+      var R_window = parseFloat(document.getElementById('btuWindowR').value);
+      var R_ceiling = parseFloat(document.getElementById('btuCeilR').value);
+      var ACH = parseFloat(document.getElementById('btuACH').value);
+      var outdoorTemp = parseFloat(document.getElementById('btuOutdoor').value);
+      var indoorTemp = parseFloat(document.getElementById('btuIndoor').value);
+
+      if (isNaN(length) || length <= 0) { showError('btuError', 'Please enter a valid room length.'); return; }
+      if (isNaN(width) || width <= 0) { showError('btuError', 'Please enter a valid room width.'); return; }
+      if (isNaN(ceilingH) || ceilingH <= 0) { showError('btuError', 'Please enter a valid ceiling height.'); return; }
+      if (isNaN(outdoorTemp)) { showError('btuError', 'Please enter a valid outdoor design temperature.'); return; }
+      if (isNaN(indoorTemp)) { showError('btuError', 'Please enter a valid indoor setpoint temperature.'); return; }
+      if (indoorTemp <= outdoorTemp) { showError('btuError', 'Indoor setpoint must be higher than outdoor design temperature for heating load.'); return; }
+
+      var grossWallArea = 2 * (length + width) * ceilingH;
+      var netWallArea = grossWallArea - windowArea;
+      if (netWallArea < 0) netWallArea = 0;
+      var floorArea = length * width;
+      var ceilArea = length * width;
+      var volume = floorArea * ceilingH;
+      var deltaT = indoorTemp - outdoorTemp;
+
+      var wallLoss = (1 / R_wall) * netWallArea * deltaT;
+      var windowLoss = (1 / R_window) * windowArea * deltaT;
+      var ceilingLoss = (1 / R_ceiling) * ceilArea * deltaT;
+      var infiltrationLoss = 0.018 * volume * ACH * deltaT;
+
+      var totalBTU = wallLoss + windowLoss + ceilingLoss + infiltrationLoss;
+      var requiredBTU = totalBTU * 1.25;
+      var hydronicGPM = requiredBTU / (500 * 20);
+      var btuPerSqFt = totalBTU / floorArea;
+
+      var r4 = document.getElementById('result4');
+      r4.classList.remove('hidden');
+      document.getElementById('result4Primary').textContent =
+        'Total Heat Loss: ' + fmtN(totalBTU, 0) + ' BTU/hr';
+
+      var gridHTML = '';
+      gridHTML += makeItem('Wall Heat Loss', fmtN(wallLoss, 0) + ' BTU/hr');
+      gridHTML += makeItem('Window Heat Loss', fmtN(windowLoss, 0) + ' BTU/hr');
+      gridHTML += makeItem('Ceiling Heat Loss', fmtN(ceilingLoss, 0) + ' BTU/hr');
+      gridHTML += makeItem('Infiltration Loss', fmtN(infiltrationLoss, 0) + ' BTU/hr');
+      gridHTML += makeItem('Total Heat Loss', fmtN(totalBTU, 0) + ' BTU/hr', true);
+      gridHTML += makeItem('Required Boiler Size (1.25×)', fmtN(requiredBTU, 0) + ' BTU/hr', true);
+      gridHTML += makeItem('Hydronic Flow Rate (20°F ΔT)', fmtN(hydronicGPM, 2) + ' GPM');
+      gridHTML += makeItem('Heat Loss / sq ft', fmtN(btuPerSqFt, 1) + ' BTU/hr·ft²');
+      document.getElementById('result4Grid').innerHTML = gridHTML;
+    }
+
+    function resetBTU() {
+      document.getElementById('btuLength').value = '';
+      document.getElementById('btuWidth').value = '';
+      document.getElementById('btuCeiling').value = '';
+      document.getElementById('btuWindowArea').value = '';
+      document.getElementById('btuWallR').value = '13';
+      document.getElementById('btuWindowR').value = '2';
+      document.getElementById('btuCeilR').value = '30';
+      document.getElementById('btuACH').value = '0.5';
+      document.getElementById('btuOutdoor').value = '';
+      document.getElementById('btuIndoor').value = '70';
+      document.getElementById('result4').classList.add('hidden');
+      showError('btuError', '');
+    }
+
+    // ── TAB 5: Sump Pump Sizing ───────────────────────────────────────────────
+
+    function calcSump() {
+      showError('sumpError', '');
+      var pitDiam = parseFloat(document.getElementById('sumpDiam').value);
+      var pitDepth = parseFloat(document.getElementById('sumpDepth').value);
+      var inflowGPM = parseFloat(document.getElementById('sumpInflow').value);
+      var verticalLift = parseFloat(document.getElementById('sumpLift').value);
+      var horizontalRun = parseFloat(document.getElementById('sumpHoriz').value) || 0;
+      var pipeID = parseFloat(document.getElementById('sumpPipeDiam').value);
+      var checkValveVal = document.getElementById('sumpCheckValve').value;
+      var hasCheckValve = checkValveVal === 'yes';
+
+      if (isNaN(pitDiam) || pitDiam <= 0) { showError('sumpError', 'Please enter a valid pit diameter.'); return; }
+      if (isNaN(pitDepth) || pitDepth <= 0) { showError('sumpError', 'Please enter a valid pit depth.'); return; }
+      if (isNaN(inflowGPM) || inflowGPM <= 0) { showError('sumpError', 'Please enter a valid inflow rate greater than 0.'); return; }
+      if (isNaN(verticalLift) || verticalLift < 0) { showError('sumpError', 'Please enter a valid vertical lift (0 or greater).'); return; }
+
+      // Pit volume in gallons
+      var pitRadius_in = pitDiam / 2;
+      var pitVolume_gal = (Math.PI * pitRadius_in * pitRadius_in * pitDepth) / 231;
+
+      // Fill time (minutes) at given inflow
+      var fillTime_min = pitVolume_gal / inflowGPM;
+
+      // TDH components
+      var staticHead = verticalLift;
+
+      // Hazen-Williams friction head loss (feet of head)
+      // H (ft) = 10.67 × L × Q^1.852 / (C^1.852 × D^4.87)  [D in feet, Q in ft³/s]
+      // In US GPM + inches ID version: use pressure loss and convert
+      // friction head (ft) = frictionLoss_PSI × 2.31
+      var C_sump = 150; // PVC
+      var frictionLossPerFt_psi = 4.52 * Math.pow(inflowGPM, 1.852) / (Math.pow(C_sump, 1.852) * Math.pow(pipeID, 4.87));
+      var dischargeRunLength = horizontalRun + verticalLift * 0.5;
+      var frictionHead = frictionLossPerFt_psi * dischargeRunLength * 2.31; // convert PSI to ft of head
+
+      var checkValveHead = hasCheckValve ? 3 : 0;
+
+      var TDH = staticHead + frictionHead + checkValveHead;
+
+      // Pump HP recommendation
+      var pumpHP;
+      if (TDH <= 15) pumpHP = '1/3 HP';
+      else if (TDH <= 20) pumpHP = '1/2 HP';
+      else if (TDH <= 25) pumpHP = '3/4 HP';
+      else if (TDH <= 30) pumpHP = '1 HP';
+      else pumpHP = '1.5+ HP';
+
+      var requiredGPM = inflowGPM * 1.5;
+
+      var r5 = document.getElementById('result5');
+      r5.classList.remove('hidden');
+      document.getElementById('result5Primary').textContent = 'Recommended Pump: ' + pumpHP;
+
+      var gridHTML = '';
+      gridHTML += makeItem('Total Dynamic Head (TDH)', fmtN(TDH, 1) + ' ft', true);
+      gridHTML += makeItem('Pit Volume', fmtN(pitVolume_gal, 1) + ' gal');
+      gridHTML += makeItem('Fill Time at Inflow', fmtN(fillTime_min, 2) + ' min');
+      gridHTML += makeItem('Static Head', fmtN(staticHead, 1) + ' ft');
+      gridHTML += makeItem('Friction Loss', fmtN(frictionHead, 1) + ' ft');
+      gridHTML += makeItem('Required Pump GPM', fmtN(requiredGPM, 1) + ' GPM (1.5× safety)');
+      gridHTML += makeItem('Recommended Pump HP', pumpHP, true);
+      gridHTML += makeItem('Check Valve Head', fmtN(checkValveHead, 0) + ' ft');
+      document.getElementById('result5Grid').innerHTML = gridHTML;
+    }
+
+    function resetSump() {
+      document.getElementById('sumpDiam').value = '18';
+      document.getElementById('sumpDepth').value = '24';
+      document.getElementById('sumpInflow').value = '';
+      document.getElementById('sumpLift').value = '';
+      document.getElementById('sumpHoriz').value = '';
+      document.getElementById('sumpPipeDiam').value = '2.07';
+      document.getElementById('sumpCheckValve').value = 'yes';
+      document.getElementById('result5').classList.add('hidden');
+      showError('sumpError', '');
+    }
+  </script>
+  <script type="module">
+    import { initSavePanel } from './calc-save.js';
+
+    var _plumbData = { tab: '🔵 Drain Slope', inputs: {}, results: {}, preview: 'No result yet' };
+
+    const { onResultReady } = initSavePanel({
+      calcId:    'plumbing',
+      calcLabel: 'Plumbing Calculator',
+      calcIcon:  '🔧',
+      container: null,
+      getData:   () => _plumbData
+    });
+
+    var PLUMB_TABS = [
+      { fn: 'calcDrain', rid: 'result0', name: '🔵 Drain Slope'    },
+      { fn: 'calcPipe',  rid: 'result1', name: '💧 Pipe Sizing'     },
+      { fn: 'calcWH',    rid: 'result2', name: '🔥 Water Heater'    },
+      { fn: 'calcPDrop', rid: 'result3', name: '📊 Pressure Drop'   },
+      { fn: 'calcBTU',   rid: 'result4', name: '🌡️ BTU Heat Loss'  },
+      { fn: 'calcSump',  rid: 'result5', name: '💦 Sump Pump'       }
+    ];
+
+    PLUMB_TABS.forEach(function(t) {
+      var orig = window[t.fn];
+      window[t.fn] = function() {
+        orig.apply(this, arguments);
+        var el = document.getElementById(t.rid);
+        if (el && !el.classList.contains('hidden')) {
+          var primary = document.getElementById(t.rid + 'Primary');
+          var resultText = primary ? primary.textContent : '';
+          _plumbData = {
+            tab:     t.name,
+            inputs:  { 'Calculator': t.name },
+            results: { 'Result': resultText },
+            preview: t.name + ' — ' + resultText
+          };
+          onResultReady();
+        }
+      };
+    });
+  </script>
+  <script type="module" src="firebase-auth.js"></script>
+</body>
+</html>
