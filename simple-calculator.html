@@ -624,6 +624,14 @@
           await setDoc(ref, { tier: 'free', savedCount: 0, createdAt: serverTimestamp() });
           userTier = 'free'; savedCount = 0;
         }
+        // Keep top-level user doc in sync (used by admin dashboard)
+        await setDoc(doc(db, 'users', currentUser.uid), {
+          email:       currentUser.email       || '',
+          displayName: currentUser.displayName || '',
+          tier:        userTier,
+          savedCount:  savedCount,
+          lastSeen:    serverTimestamp(),
+        }, { merge: true });
       } catch (e) { console.error('Profile error:', e); }
     }
 
