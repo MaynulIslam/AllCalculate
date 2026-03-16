@@ -310,13 +310,13 @@ import { initializeApp, getApps, getApp }
 import { getAuth, onAuthStateChanged, signOut,
          signInWithEmailAndPassword }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, getDocs }
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFunctions, httpsCallable }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js';
 import { firebaseConfig } from './firebase-config.js';
 
-const app  = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
+const app       = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth      = getAuth(app);
+const functions = getFunctions(app);
 
 // ── State ─────────────────────────────────────────────────────
 let allUsers = [];
@@ -385,16 +385,10 @@ async function loadDashboard(user) {
     '<div class="state-box"><div class="spinner"></div><p>Fetching user data…</p></div>';
 
   try {
-    const snap = await getDocs(collection(db, 'users'));
-    allUsers = [];
-    snap.forEach(d => allUsers.push({ uid: d.id, ...d.data() }));
-
-    // Sort by most recent join date
-    allUsers.sort((a, b) => {
-      const ta = a.createdAt?.seconds || 0;
-      const tb = b.createdAt?.seconds || 0;
-      return tb - ta;
-    });
+    // Call Cloud Function — uses Firebase Admin SDK to get ALL Auth users
+    const listAllUsers = httpsCallable(functions, 'listAllUsers');
+    const result = await listAllUsers();
+    allUsers = result.data.users;
 
     updateStats();
     renderTable(allUsers);
@@ -407,9 +401,7 @@ async function loadDashboard(user) {
     document.getElementById('tableContent').innerHTML = `
       <div class="state-box">
         <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
-        <h3 style="color:#f87171;">Permission Denied</h3>
-        <p>Firestore rules need to be updated.<br>
-           See the comments at the top of this HTML file for the exact rules to add.</p>
+        <h3 style="color:#f87171;">Error loading users</h3>
         <p style="margin-top:10px;font-size:0.78rem;color:#334155;">${esc(e.message)}</p>
       </div>`;
   }
@@ -461,8 +453,8 @@ function renderTable(users) {
       <td class="td-name">${esc(u.displayName || '—')}</td>
       <td>${planBadge(u.tier)}</td>
       <td class="td-saves">${u.savedCount ?? 0}</td>
-      <td class="td-date">${fmtDate(u.createdAt)}</td>
-      <td class="td-date">${fmtDate(u.lastSeen)}</td>
+      <td class="td-date">${fmtDateStr(u.createdAt)}</td>
+      <td class="td-date">${fmtDateStr(u.lastSignIn)}</td>
     </tr>`).join('');
 
   document.getElementById('tableContent').innerHTML = `
@@ -494,6 +486,13 @@ function fmtDate(ts) {
   try {
     const d = ts.toDate ? ts.toDate() : new Date(ts);
     return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+  } catch { return '—'; }
+}
+
+function fmtDateStr(str) {
+  if (!str) return '—';
+  try {
+    return new Date(str).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
   } catch { return '—'; }
 }
 

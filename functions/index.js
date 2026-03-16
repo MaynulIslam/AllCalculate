@@ -140,3 +140,43 @@ exports.stripeWebhook = onRequest(
     res.json({ received: true });
   }
 );
+
+// ── 3. Admin: List All Users ──────────────────────────────────────────────────
+exports.listAllUsers = onCall(
+  { cors: ALLOWED_ORIGINS },
+  async (request) => {
+    // Only the admin can call this
+    if (!request.auth || request.auth.token.email !== 'mdmaynul0827@gmail.com') {
+      throw new HttpsError('permission-denied', 'Admin access only.');
+    }
+
+    // 1. Get all Firebase Auth users (up to 1000)
+    const authResult  = await admin.auth().listUsers(1000);
+    const authUsers   = authResult.users;
+
+    // 2. Get Firestore data for each user (tier, savedCount, lastSeen, etc.)
+    const fsDocs = await Promise.all(
+      authUsers.map(u => db.collection('users').doc(u.uid).get())
+    );
+
+    // 3. Merge auth + Firestore data
+    const users = authUsers.map((authUser, i) => {
+      const fs = fsDocs[i].exists ? fsDocs[i].data() : {};
+      return {
+        uid:         authUser.uid,
+        email:       authUser.email        || '',
+        displayName: authUser.displayName  || fs.displayName || '',
+        tier:        fs.tier               || 'free',
+        savedCount:  fs.savedCount         || 0,
+        createdAt:   authUser.metadata.creationTime,
+        lastSignIn:  authUser.metadata.lastSignInTime,
+        provider:    authUser.providerData[0]?.providerId || 'password',
+      };
+    });
+
+    // Sort newest first
+    users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    return { users };
+  }
+);
