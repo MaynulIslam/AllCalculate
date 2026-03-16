@@ -504,6 +504,18 @@ function esc(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+// ════════════════════════════════════════════════════════════════
+//  SESSION PERSISTENCE — skip gate if Firebase already has a session
+// ════════════════════════════════════════════════════════════════
+onAuthStateChanged(auth, user => {
+  if (user && user.email === FIREBASE_EMAIL) {
+    // Already signed in (e.g. after a page refresh) — skip the gate
+    document.getElementById('gate').style.display      = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard(user);
+  }
+});
 </script>
 
 </body>
