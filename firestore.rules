@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Each user can read/write their own top-level doc
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      // Admin can read all user docs
+      allow read: if request.auth != null
+        && request.auth.token.email == 'mdmaynul0827@gmail.com';
+    }
+
+    // Profile subcollection — tier, savedCount, createdAt
+    match /users/{uid}/profile/{doc} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      // Admin can read all profiles
+      allow read: if request.auth != null
+        && request.auth.token.email == 'mdmaynul0827@gmail.com';
+    }
+
+    // Sessions subcollection — saved calculator results
+    match /users/{uid}/sessions/{sessionId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+  }
+}
