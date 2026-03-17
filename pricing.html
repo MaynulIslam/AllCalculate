@@ -113,6 +113,50 @@
       cursor: default;
     }
 
+    .cancel-sub-link {
+      display: none;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      font-family: inherit;
+      padding: 0;
+      transition: color .2s;
+    }
+    .cancel-sub-link:hover { color: #ef4444; text-decoration: underline; }
+
+    /* Confirmation Modal */
+    .cancel-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .cancel-modal-overlay.show { display: flex; }
+    .cancel-modal {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 28px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .cancel-modal h3 { font-size: 1.2rem; color: #1e293b; margin: 0 0 10px; }
+    .cancel-modal p  { font-size: .9rem; color: #64748b; margin: 0 0 24px; line-height: 1.6; }
+    .cancel-modal-btns { display: flex; gap: 12px; }
+    .cancel-modal-btns button { flex: 1; padding: 12px; border-radius: 10px; font-size: .95rem; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: .2s; }
+    .btn-keep   { background: #1d4ed8; color: #fff; }
+    .btn-keep:hover { background: #1e40af; }
+    .btn-cancel { background: #fee2e2; color: #dc2626; }
+    .btn-cancel:hover { background: #fecaca; }
+
     .pricing-note {
       text-align: center;
       color: #64748b;
@@ -203,6 +247,7 @@
               onclick="handleUpgrade('price_1TAsSzA4zaUVQc8ceNW3tIJH', 'basic')">
         Upgrade to Basic
       </button>
+      <button class="cancel-sub-link" id="cancel-basic" onclick="openCancelModal()">Cancel subscription</button>
     </div>
 
     <!-- Executive (Popular) -->
@@ -222,6 +267,7 @@
               onclick="handleUpgrade('price_1TAsUYA4zaUVQc8cHyqQHIHy', 'executive')">
         Upgrade to Executive
       </button>
+      <button class="cancel-sub-link" id="cancel-executive" onclick="openCancelModal()">Cancel subscription</button>
     </div>
 
     <!-- Premium -->
@@ -241,6 +287,7 @@
               onclick="handleUpgrade('price_1TAsVBA4zaUVQc8c6ZDxQA4K', 'premium')">
         Upgrade to Premium
       </button>
+      <button class="cancel-sub-link" id="cancel-premium" onclick="openCancelModal()">Cancel subscription</button>
     </div>
 
   </div>
@@ -249,13 +296,25 @@
     💳 Secure payments via Stripe &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; No hidden fees
   </p>
 
+  <!-- Cancel Confirmation Modal -->
+  <div class="cancel-modal-overlay" id="cancelModal">
+    <div class="cancel-modal">
+      <h3>Cancel your subscription?</h3>
+      <p>You'll keep access to your current plan until the end of your billing period. After that, you'll move to the Free plan (5 saved sessions).</p>
+      <div class="cancel-modal-btns">
+        <button class="btn-keep" onclick="closeCancelModal()">Keep My Plan</button>
+        <button class="btn-cancel" id="confirmCancelBtn" onclick="confirmCancel()">Yes, Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script type="module">
-    import { initializeApp }         from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { initializeApp }              from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js';
-    import { firebaseConfig }        from './firebase-config.js';
+    import { firebaseConfig }             from './firebase-config.js';
 
     const app       = initializeApp(firebaseConfig);
     const functions = getFunctions(app);
@@ -279,7 +338,7 @@
       window.history.replaceState({}, '', 'pricing.html');
     }
 
-    // ── Highlight current plan once auth loads ────────────────────
+    // ── Highlight current plan + show cancel link once auth loads ─
     window.addEventListener('easycalc:authReady', (e) => {
       const tier = e.detail?.userTier || 'free';
       highlightCurrentPlan(tier);
@@ -288,21 +347,23 @@
     function highlightCurrentPlan(tier) {
       const tiers = ['free', 'basic', 'executive', 'premium'];
       tiers.forEach(t => {
-        const btn = document.getElementById(`btn-${t}`);
+        const btn        = document.getElementById(`btn-${t}`);
+        const cancelLink = document.getElementById(`cancel-${t}`);
         if (!btn) return;
         if (t === tier) {
           btn.textContent = '✓ Current Plan';
           btn.className   = 'plan-btn current-plan';
           btn.disabled    = true;
+          // Show cancel link only for paid plans
+          if (cancelLink && t !== 'free') cancelLink.style.display = 'block';
         }
       });
     }
 
-    // ── Upgrade handler (exposed to onclick) ─────────────────────
+    // ── Upgrade handler ───────────────────────────────────────────
     window.handleUpgrade = async function(priceId, planName) {
       const btn = event?.target;
 
-      // Must be signed in
       const authEvent = await new Promise(resolve => {
         const cached = window.__easycalcAuth;
         if (cached) return resolve(cached);
@@ -331,6 +392,40 @@
     window.handleFree = function() {
       window.location.href = 'index.html';
     };
+
+    // ── Cancel subscription modal ─────────────────────────────────
+    window.openCancelModal = function() {
+      document.getElementById('cancelModal').classList.add('show');
+    };
+
+    window.closeCancelModal = function() {
+      document.getElementById('cancelModal').classList.remove('show');
+    };
+
+    window.confirmCancel = async function() {
+      const btn = document.getElementById('confirmCancelBtn');
+      btn.disabled    = true;
+      btn.textContent = 'Cancelling…';
+
+      try {
+        const cancelFn = httpsCallable(functions, 'cancelSubscription');
+        await cancelFn({});
+        closeCancelModal();
+        showToast('✅ Subscription cancelled. You keep access until end of billing period.', 6000);
+        // Refresh plan display after short delay
+        setTimeout(() => window.location.reload(), 2000);
+      } catch (err) {
+        console.error(err);
+        btn.disabled    = false;
+        btn.textContent = 'Yes, Cancel';
+        showToast('Something went wrong. Please try again.');
+      }
+    };
+
+    // Close modal on overlay click
+    document.getElementById('cancelModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCancelModal();
+    });
   </script>
 
   <script>

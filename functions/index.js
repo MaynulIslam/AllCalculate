@@ -141,7 +141,44 @@ exports.stripeWebhook = onRequest(
   }
 );
 
-// ── 3. Admin: List All Users ──────────────────────────────────────────────────
+// ── 3. Cancel Subscription ───────────────────────────────────────────────────
+exports.cancelSubscription = onCall(
+  { secrets: [stripeSecretKey], cors: ALLOWED_ORIGINS },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'You must be signed in to cancel.');
+    }
+
+    const stripe = require('stripe')(stripeSecretKey.value());
+    const uid    = request.auth.uid;
+
+    const userRef  = db.collection('users').doc(uid);
+    const userSnap = await userRef.get();
+
+    if (!userSnap.exists) {
+      throw new HttpsError('not-found', 'User record not found.');
+    }
+
+    const { stripeSubscriptionId, tier } = userSnap.data();
+
+    if (!stripeSubscriptionId || tier === 'free') {
+      throw new HttpsError('failed-precondition', 'No active subscription to cancel.');
+    }
+
+    // Cancel at period end — user keeps access until billing cycle ends
+    await stripe.subscriptions.update(stripeSubscriptionId, {
+      cancel_at_period_end: true,
+    });
+
+    // Mark in Firestore that cancellation is pending
+    await userRef.set({ stripeStatus: 'cancelling' }, { merge: true });
+
+    console.log(`ℹ️ User ${uid} scheduled cancellation for subscription ${stripeSubscriptionId}`);
+    return { success: true };
+  }
+);
+
+// ── 4. Admin: List All Users ──────────────────────────────────────────────────
 exports.listAllUsers = onCall(
   { cors: ALLOWED_ORIGINS },
   async (request) => {
